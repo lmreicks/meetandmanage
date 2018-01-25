@@ -12,6 +12,12 @@ export class AppComponent {
     this.http.get('api/events').subscribe(res => {
       console.log(res);
     });
+
+    this.http.post('api/events', {
+      Title: "dfljk",
+      Description: "dlkfjd",
+      Timestamp: new Date()
+    }).subscribe(res => {})
   }
 
 }

@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ID_Web.RestApi.Models;
+using System.Net.Http;
 
 namespace ID_Web.RestApi.Controllers
 {
     [Route("api/events")]
-    public class ValuesController : Controller
+    public class EventsController : Controller
     {
         // GET api/values
         [HttpGet]
@@ -36,13 +37,14 @@ namespace ID_Web.RestApi.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public HttpResponseMessage Post([FromBody]ApiCreateEvent value)
         {
+            return new HttpResponseMessage();
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]ApiCreateEvent value)
         {
         }
 

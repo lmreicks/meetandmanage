@@ -13,11 +13,13 @@ export class AppComponent {
       console.log(res);
     });
 
-    this.http.post('api/events', {
+    let event = {
       Title: "dfljk",
       Description: "dlkfjd",
       Timestamp: new Date()
-    })
+    };
+
+    this.http.post('api/events', event);
   }
 
 }

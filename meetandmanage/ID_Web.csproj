@@ -11,6 +11,7 @@
     <Folder Include="RestApi\Controllers\" />
     <Folder Include="RestApi\Event\" />
     <Folder Include="Config\" />
+    <Folder Include="Logic\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ID_Web.RestApi.Models;
+using System.Net;
 using System.Net.Http;
 
 namespace ID_Web.RestApi.Controllers
@@ -13,11 +14,11 @@ namespace ID_Web.RestApi.Controllers
     {
         // GET api/values
         [HttpGet]
-        public IEnumerable<Event> GetAll()
+        public IEnumerable<ApiEvent> GetAll()
         {
-            return new Event[]
+            return new ApiEvent[]
             {
-                new Event() {
+                new ApiEvent() {
                     Id = 3,
                     Title = "Title"
                 }
@@ -26,9 +27,9 @@ namespace ID_Web.RestApi.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public Event Get(int id)
+        public ApiEvent Get(int id)
         {
-            return new Event()
+            return new ApiEvent()
             {
                 Id = 3,
                 Title = "Title"
@@ -39,7 +40,16 @@ namespace ID_Web.RestApi.Controllers
         [HttpPost]
         public HttpResponseMessage Post([FromBody]ApiCreateEvent value)
         {
-            return new HttpResponseMessage();
+            if (value == null) {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+
+            var ev = logic.Create(value);
+
+            if (ev == null) {
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+            return new HttpResponseMessage(HttpStatusCode.OK) { Content = ev };
         }
 
         // PUT api/values/5

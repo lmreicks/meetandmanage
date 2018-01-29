@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace ID_Web.RestApi.Models;
+namespace ID_Web.RestApi.Models
 {
     public class EventContext : DbContext
     {

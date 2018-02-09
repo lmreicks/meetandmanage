@@ -25,5 +25,5 @@ $app->put('/api/newUser', function (Request $request, Response $response, array 
 
     #do whatever to place the username in the table
     #do whatever to put encrypted password in DB
-
+    #i changed someting
 });

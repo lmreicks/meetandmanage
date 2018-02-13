@@ -12,8 +12,3 @@ $app->get('/api/user', function (Request $request, Response $response, array $ar
     $response->getBody()->write("get all users");
     return $response;
 });
-
-$app->post('/api/user', function (Request $request, Response $response, array $args) {
-    $response->getBody()->write("get all users");
-    return $response;
-});

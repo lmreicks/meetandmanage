@@ -13,5 +13,12 @@ return [
             'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
             'level' => \Monolog\Logger::DEBUG,
         ],
+        'db' => [
+            'driver' => 'mysql',
+            'host' => 'mysql.cs.iastate.edu',
+            'database' => 'db309gk5',
+            'username' => 'dbu309gk5',
+            'password' => 'WC3DCcb5'
+        ]
     ],
 ];

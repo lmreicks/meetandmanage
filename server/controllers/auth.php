@@ -3,6 +3,7 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\User;
+use logic\userCheck;
 
 $app->post('/api/login', function (Request $request, Response $response, array $args) {
     
@@ -35,13 +36,12 @@ $app->post('/api/user', function (Request $request, Response $response, array $a
     $username = $body['username'];
     #this line gets the password from args and encrypts it to store inDB
     $userPassword = hash('sha256', $body['password']);
-
     $user = new User;
-    $user->name = $username;
-    $user->password = $userPassword;
-    $user->email = $body['email'];
+
+    $val = $user->validate($body);
 
     $res = $user->save();
+    echo var_dump($val);
     echo var_dump($res);
 
     #do whatever to place the username in the table

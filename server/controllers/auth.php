@@ -9,22 +9,21 @@ $app->post('/api/login', function (Request $request, Response $response, array $
 
     $body = $request->getParsedBody();
     #encrypts the inputted password to compare with the stored one
-    $username = $body["username"];
+    $email = $body["email"];
     $userPassword = hash('sha256', $body['password']);
 
-    echo $username;
+    echo $email;
     echo $userPassword;
 
-    $user = User::where('name', '=', $username)->first();
+    $user = User::where('email', '=', $email)->first();
+    
+    $userdump = json_encode($user);
+    echo var_dump($userdump);
 
     if ($user->password == $userPassword) {
         echo "Success";
     }
     $response->getBody()->write(User::all());
 
-    #query which will return user 
-    #query which will return stored password
-    #$response->getBody()->write($request->getBody());
-    return $response;
+    return $response.json_encode;
 });
-

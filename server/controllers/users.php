@@ -27,6 +27,8 @@ $app->post('/api/user', function (Request $request, Response $response, array $a
     echo var_dump($val);
     echo var_dump($res);
 
+
+
     #do whatever to place the username in the table
     #do whatever to put encrypted password in DB
     #i changed someting

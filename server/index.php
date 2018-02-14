@@ -15,6 +15,10 @@ session_start();
 $settings = require __DIR__ . '/settings.php';
 $app = new \Slim\App($settings);
 
+$app->add(new \Slim\Middleware\JwtAuthentication([
+    "secret" => "secretSignature"
+]));
+
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 $capsule = new Capsule;

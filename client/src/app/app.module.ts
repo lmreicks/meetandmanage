@@ -11,6 +11,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { CoreCacheService } from './services/core-cache.service';
 import { HeaderComponent } from './header/header.component';
 import { EventComponent} from './dashboard/event/event.component';
+import { LoginComponent } from './login/login.component';
+import { LoginService } from './services/login.service';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { EventComponent} from './dashboard/event/event.component';
     HeaderComponent,
     MiniCalendarComponent,
     DashboardComponent,
-    EventComponent
+    EventComponent,
+    LoginComponent
   ],
   imports: [
     NgbModule.forRoot(),
@@ -29,6 +32,7 @@ import { EventComponent} from './dashboard/event/event.component';
   ],
   providers: [
     CoreCacheService,
+    LoginService,
     {
       provide: Http,
       useFactory: httpFactory,

@@ -3,7 +3,6 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\User;
-use logic\userCheck;
 
 $app->post('/api/login', function (Request $request, Response $response, array $args) {
 

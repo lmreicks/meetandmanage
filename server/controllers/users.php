@@ -25,7 +25,7 @@ $app->post('/api/user', function (Request $request, Response $response, array $a
     $user = new User;
     
     $result = verifyBody($body);
-    if ($result != true) return false; //return whatever error is given by vB
+    if ($result != true) return $result; //return whatever error is given by vB
     
     $user['email'] = $email;
     $user['name'] = $name;
@@ -38,6 +38,7 @@ $app->post('/api/user', function (Request $request, Response $response, array $a
     return $response;
 });
 
+//checks to verify the request has all of the nessecary forms filled out
 function verifyBody($body){
     if ($body["email"] == NULL){
         return false; //return bad email code

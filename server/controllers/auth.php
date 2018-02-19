@@ -3,28 +3,62 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\User;
-use logic\userCheck;
+
 
 $app->post('/api/login', function (Request $request, Response $response, array $args) {
 
+    require "logic/validator.php";
     $body = $request->getParsedBody();
     #encrypts the inputted password to compare with the stored one
-    $username = $body["username"];
+    $email = $body["email"];
     $userPassword = hash('sha256', $body['password']);
 
-    echo $username;
-    echo $userPassword;
+    // $result = verifyBody($body);
+    // if ($result != true) return $result; //change to bad username or password error
+// echo $email;
+  //  echo $userPassword;
 
-    $user = User::where('name', '=', $username)->first();
+    $user = User::where('email', '=', $email)->first();
+    
+    //$userdump = json_encode($user);
+    //echo var_dump($userdump);
 
-    if ($user->password == $userPassword) {
-        echo "Success";
+    if ($user->password != $userPassword) {
+        $response->withStatus(500)->withHeader('Content-Type', 'text/html')->write('Invalid Username or Password');
+        return $respone; //switch to bad username or password error code
     }
-    $response->getBody()->write(User::all());
 
-    #query which will return user 
-    #query which will return stored password
-    #$response->getBody()->write($request->getBody());
-    return $response;
+    // $response->getBody()->write(User::all());
+
+    // echo $user("remember_token");
+    $token = hash('sha256', random_int(0,10000));//creates a random token to be stored and given to the user
+    $user["remember_token"] = $token;
+    $user->save();//saves the newly updated user info to the db
+    echo var_dump($user);
+
+    echo("success");
+    $UserToken = array(
+        "email" => $email,
+        "remember_token" => $token
+    );
+
+    $UserToken = json_encode($UserToken);
+    $response->write($UserToken);
+
+
+    $testvar = validateUser($UserToken);
+    echo($testvar);
+    return $response; #returns a unique token consisting of an email and random token
 });
+
+//checks to make sure all of the necessary fields are filled out
+// function verifyBody($body){
+//     if ($body["email"] == NULL){
+//         return false; //return bad email code
+//     }
+//     if ($body["password"] == NULL){
+//         return false; //return bad password code
+//     }
+//     return true;
+// }
 

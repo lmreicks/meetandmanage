@@ -19,7 +19,6 @@ $app->post('/api/login', function (Request $request, Response $response, array $
   //  echo $userPassword;
 
     $user = User::where('email', '=', $email)->first();
-    
     //$userdump = json_encode($user);
     //echo var_dump($userdump);
 
@@ -34,7 +33,7 @@ $app->post('/api/login', function (Request $request, Response $response, array $
     $token = hash('sha256', random_int(0,10000));//creates a random token to be stored and given to the user
     $user["remember_token"] = $token;
     $user->save();//saves the newly updated user info to the db
-    echo var_dump($user);
+    //echo var_dump($user);
 
     echo("success");
     $UserToken = array(
@@ -51,14 +50,4 @@ $app->post('/api/login', function (Request $request, Response $response, array $
     return $response; #returns a unique token consisting of an email and random token
 });
 
-//checks to make sure all of the necessary fields are filled out
-// function verifyBody($body){
-//     if ($body["email"] == NULL){
-//         return false; //return bad email code
-//     }
-//     if ($body["password"] == NULL){
-//         return false; //return bad password code
-//     }
-//     return true;
-// }
 

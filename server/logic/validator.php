@@ -10,8 +10,10 @@ use Models\User;
 // should route to login if returns false
 function validateUser ($token){
 
-    $token = json_decode($token);
-    $user = User::where('email', '=', $token("email"))->first();
+    $token = (array) json_decode($token);
+    $email = $token['email'];
+    
+    $user = User::where('email', '=', $email)->first();
     if ($token["remember_token"] == $user["remember_token"]){
         return true;
     }

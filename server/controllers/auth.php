@@ -4,8 +4,10 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\User;
 
+
 $app->post('/api/login', function (Request $request, Response $response, array $args) {
 
+    require "logic/validator.php";
     $body = $request->getParsedBody();
     #encrypts the inputted password to compare with the stored one
     $email = $body["email"];
@@ -35,11 +37,18 @@ $app->post('/api/login', function (Request $request, Response $response, array $
     echo var_dump($user);
 
     echo("success");
-    $response->write(json_encode(array(
+    $UserToken = array(
         "email" => $email,
-        "token" => $token
-    )));
-    return $response;
+        "remember_token" => $token
+    );
+
+    $UserToken = json_encode($UserToken);
+    $response->write($UserToken);
+
+
+    $testvar = validateUser($UserToken);
+    echo($testvar);
+    return $response; #returns a unique token consisting of an email and random token
 });
 
 //checks to make sure all of the necessary fields are filled out

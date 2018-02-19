@@ -9,11 +9,15 @@ $app->post('/api/login', function (Request $request, Response $response, array $
 
     require "logic/validator.php";
     $body = $request->getParsedBody();
+    
     #encrypts the inputted password to compare with the stored one
     $email = $body["email"];
+
     if ($body['password'] == NULL){
-        $response->withStatus(400)->withHeader('Content-Type', 'text/html')->write('Password is empty');        
-    } return $response;
+        $response->withStatus(400)->withHeader('Content-Type', 'text/html')->write('Password is empty'); 
+        return $response;       
+    } 
+
     $userPassword = hash('sha256', $body['password']);
 
     if ($email == NULL) {

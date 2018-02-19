@@ -15,7 +15,7 @@ function validateUser ($token){
     
     $user = User::where('email', '=', $email)->first();
     if ($token["remember_token"] == $user["remember_token"]){
-        return true;
+        return $user;
     }
     return false;
 

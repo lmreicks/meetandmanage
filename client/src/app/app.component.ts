@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { Http } from '@angular/http';
-import { API_ROOT } from '../constants.module';
+import { AuthService } from './services/auth.service';
 
 @Component({
   moduleId: 'app',
@@ -9,19 +8,7 @@ import { API_ROOT } from '../constants.module';
   styleUrls: ['app.component.less']
 })
 export class AppComponent {
-
-  constructor(private http: Http) {
-    this.http.get(API_ROOT).subscribe(res => {
-      console.log(res);
-    });
-
-    let event = {
-      Title: "dfljk",
-      Description: "dlkfjd",
-      Timestamp: new Date()
-    };
-
-    this.http.post('api/events', event);
+  constructor(private authService: AuthService) {
+    this.authService.handleAuthentication();
   }
-
 }

@@ -26,6 +26,7 @@ $app->post('/api/login', function (Request $request, Response $response, array $
     #query which will return user 
     #query which will return stored password
     #$response->getBody()->write($request->getBody());
+
     return $response;
 });
 

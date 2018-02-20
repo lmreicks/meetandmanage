@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  origin: ''
+  origin: 'http://proj-309-gk-5.cs.iastate.edu'
 };

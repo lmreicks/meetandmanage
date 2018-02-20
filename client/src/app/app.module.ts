@@ -22,9 +22,6 @@ import { RouterModule } from '@angular/router';
   declarations: [
     AppComponent,
     HeaderComponent,
-    // MiniCalendarComponent,
-    // DashboardComponent,
-    // EventComponent,
     LoginComponent
   ],
   imports: [

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from './services/auth.service';
+import { CoreCacheService } from './services';
 
 @Component({
   moduleId: 'app',
@@ -8,7 +9,9 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['app.component.less']
 })
 export class AppComponent {
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private coreCache: CoreCacheService) {
     this.authService.handleAuthentication();
+
+    this.coreCache.GetPayload();
   }
 }

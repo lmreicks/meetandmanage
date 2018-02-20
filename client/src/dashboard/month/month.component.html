@@ -1,10 +1,16 @@
-<div class="month">
-    <div class="day" *ngFor="let day of days">
-        <div class="header">
-            <h2>{{day}}</h2>
+<div class="month" *ngIf="!loading">
+    <div class="weekdays">
+        <div class="weekday" *ngFor="let weekday of month.weekdays">
+            {{weekday}}
         </div>
-        <div class="weeks" *ngFor="let week of weeks">
-            <p>{{day}}</p>
+    </div> 
+    <div class="weeks" *ngFor="let week of month.weeks">
+        <div class="day"
+             *ngFor="let day of week.days"
+            [ngClass]="{ 'current': day.day.current,
+                         'future': day.day.future,
+                         'past': day.day.past }">
+            <span class="day-number">{{day.day.display}}</span>
         </div>
     </div>
 </div>

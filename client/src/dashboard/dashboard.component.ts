@@ -7,7 +7,13 @@ import { Component } from '@angular/core';
 })
 
 export class DashboardComponent {
-    constructor() {
-        console.log("Dashboard module");
-    }
+    public Granularity = Granularity;
+    public state: Granularity = Granularity.Month;
+    constructor() {}
+}
+
+export enum Granularity {
+    Day,
+    Week,
+    Month
 }

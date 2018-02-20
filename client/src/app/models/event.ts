@@ -5,7 +5,7 @@ export interface ApiEvent {
     /**
      * Id of the event
      */
-    Id: number;
+    Id?: number;
     /**
      * Title ex) Doctors Appointment
      */
@@ -17,23 +17,23 @@ export interface ApiEvent {
     /**
      * Time of day that the event should start
      */
-    StartTime: NgbTime;
+    StartTime: string;
     /**
      * Time of day that the event should end
      */
-    EndTime: NgbTime;
+    EndTime: string;
     /**
-     * Date that event should start
+     * Date of the event (start date)
      */
-    StartDate: Moment;
+    StartDate: Date;
     /**
-     * Date that event should end (same as start if only one event)
+     * End date
      */
-    EndDate: Moment;
+    EndDate?: Date;
     /**
      * Notes or description of the event
      */
-    Description?: string;
+    Notes?: string;
     /**
      * List of member's emails who are invited to the event
      */
@@ -46,4 +46,15 @@ export interface ApiEvent {
      * Id of the group(s) that this event should belong to, if in a group
      */
     GroupId?: number | number[];
+
+    Recurring?: Recurring;
+}
+
+export interface Recurring {
+    /**
+     * Binary number that maps to days of the week that it should be recurring
+     * ex) 0101101, maps to every monday, wednesday, thursday, saturday
+     */
+    Days: number;
+    RepeatWeekly: number;
 }

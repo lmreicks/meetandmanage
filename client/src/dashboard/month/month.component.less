@@ -1,9 +1,58 @@
 .month {
-    display: flex;
+    display: block;
+    max-width: 1051px;
+    border: 1px solid darkgrey;
+    border-radius: 3px;
+
+    .weekdays {
+        display: inline-flex;
+        border-bottom: 1px solid darkgrey;
+
+        .weekday {
+            min-width: 150px;
+            text-align: center;
+            font-size: 16px;
+            border-right: 1px solid darkgrey;
+
+            &:last-child {
+                border-right: none;
+            }
+        }
+    }
 
     .weeks {
-        min-height: 150px;
+        display: inline-flex;
+        border-bottom: 1px solid darkgrey;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    .day {
+        min-height: 125px;
         min-width: 150px;
-        border: 1px solid black;
+        border-right: 1px solid darkgrey;
+
+        &:last-child {
+            border-right: none;
+        }
+
+        .day-number {
+            font-size: 16px;
+            font-weight: 300px;
+        }
+        
+        &.past {
+            background-color: #d6d4ca;
+        }
+        
+        &.current {
+            background-color: rgb(141, 141, 218);
+        }
+
+        &.future {
+            background-color: #d4cccc;
+        }
     }
 }

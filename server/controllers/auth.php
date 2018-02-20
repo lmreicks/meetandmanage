@@ -9,18 +9,16 @@ use Models\User;
 // returns authorization token otherwise  
 
 $app->post('/api/login', function (Request $request, Response $response, array $args) {
-
-    $body = $request->getParsedBody();
-    
+    $body = json_decode($request->getBody());
     #encrypts the inputted password to compare with the stored one
-    $email = $body["email"];
+    $email = $body->email;
 
-    if ($body['password'] == NULL){
+    if ($body->password == NULL){
         $response->withStatus(400)->withHeader('Content-Type', 'text/html')->write('Invalid Username or Password'); 
         return $response;       
     } 
 
-    $userPassword = hash('sha256', $body['password']);
+    $userPassword = hash('sha256', $body->password);
 
     if ($email == NULL) {
         $response->withStatus(400)->withHeader('Content-Type', 'text/html')->write('Invalid Username or Password');        
@@ -30,12 +28,12 @@ $app->post('/api/login', function (Request $request, Response $response, array $
     $user = User::where('email', '=', $email)->first();
 
     if ($user->password != $userPassword || $user == NULL) {
-        $response->withStatus(400)->withHeader('Content-Type', 'text/html')->write('Invalid Username or Password');
+        $response->withStatus(400)->withHeader('Content-Type', 'JSON')->write('Invalid Username or Password');
         return $response; 
     }
 
     $token = hash('sha256', random_int(0,10000));//creates a random token to be stored and given to the user
-    $user["remember_token"] = $token;
+    $user->remember_token = $token;
     $user->save();//saves the newly updated user info to the db
 
     $UserToken = array(

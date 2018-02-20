@@ -3,50 +3,49 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\User;
-use logic\userCheck;
+
+// takes in 'email', 'password' in $body
+// returns 400 error 'Invalid Username or Password' if bad login
+// returns authorization token otherwise  
 
 $app->post('/api/login', function (Request $request, Response $response, array $args) {
-    
-    require_once('./logic/dbconnect.php');
+
     $body = $request->getParsedBody();
+    
     #encrypts the inputted password to compare with the stored one
-    $username = $body["username"];
+    $email = $body["email"];
+
+    if ($body['password'] == NULL){
+        $response->withStatus(400)->withHeader('Content-Type', 'text/html')->write('Invalid Username or Password'); 
+        return $response;       
+    } 
+
     $userPassword = hash('sha256', $body['password']);
 
-    echo $username;
-    echo $userPassword;
-
-    $user = User::where('name', '=', $username)->first();
-
-    if ($user->password == $userPassword) {
-        echo "Success";
+    if ($email == NULL) {
+        $response->withStatus(400)->withHeader('Content-Type', 'text/html')->write('Invalid Username or Password');        
+        return $response; 
     }
-    $response->getBody()->write(User::all());
 
-    #query which will return user 
-    #query which will return stored password
-    #$response->getBody()->write($request->getBody());
+    $user = User::where('email', '=', $email)->first();
 
-    return $response;
+    if ($user->password != $userPassword || $user == NULL) {
+        $response->withStatus(400)->withHeader('Content-Type', 'text/html')->write('Invalid Username or Password');
+        return $response; 
+    }
+
+    $token = hash('sha256', random_int(0,10000));//creates a random token to be stored and given to the user
+    $user["remember_token"] = $token;
+    $user->save();//saves the newly updated user info to the db
+
+    $UserToken = array(
+        "email" => $email,
+        "remember_token" => $token
+    );
+
+    $UserToken = json_encode($UserToken);
+    $response->write($UserToken);
+
+    return $response; #returns a unique token consisting of an email and random token
 });
 
-$app->post('/api/user', function (Request $request, Response $response, array $args){
-    
-    require_once('./logic/dbconnect.php');
-    $body = $request->getParsedBody();
-    $username = $body['username'];
-    #this line gets the password from args and encrypts it to store inDB
-    $userPassword = hash('sha256', $body['password']);
-    $user = new User;
-
-    $val = $user->validate($body);
-
-    $res = $user->save();
-    echo var_dump($val);
-    echo var_dump($res);
-
-    #do whatever to place the username in the table
-    #do whatever to put encrypted password in DB
-    #i changed someting
-    return $response;
-});

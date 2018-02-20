@@ -3,6 +3,7 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\Event;
+use Models\User;
 
 $app->get('/api/event/{id}', function (Request $request, Response $response, array $args) {
     $response->getBody()->write("get event");
@@ -10,46 +11,44 @@ $app->get('/api/event/{id}', function (Request $request, Response $response, arr
 });
 
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
-   $response->getBody()->write("Get all events");
-   return $response;
+    // require "logic/validator.php";
+
+    echo var_dump($request->getHeaders());
+    $token = $request->headers->get('HTTP-AUTHORIZATION');
+    //echo var_dump($headers);
+    echo $token;
+    $email = $request->headers->get('HTTP-EMAIL');
+    echo $userEmail;
+    $user = User::where('email','=',$userEmail);
+    $id = $user->id;
+    $events = Event::where('id','=',$id);
+    //$events = Event::all();
+    $response->getBody()->write(json_encode($events));
+    return $response;
 });
 
 $app->post('/api/event', function (Request $request, Response $response, array $args) {
+    require "logic/validator.php";
 
-    $body = $request->getParsedBody();
-
-    require_once "Models/event.model.php";
-
-    $email = $body["email"];
-    $Title = $body["Title"];
-    $ownerId = $body["ownerId"];
-    $start_time = $body["start_time"];
-    $end_time = $body["end_time"];
-    $Start_Date = $body["Start_Date"];
-    $End_Date = $body["End_Date"];
-    $repeat = $body["repeat"];
-    $notes = $body["notes"];
-    $Location = $body["Location"];
-    $members = $body["members"];
-
+    $body = json_decode($request->getBody());
+    
     $event = new Event;
 
-    $event->email = $email;
-    $event->Title = $Title;
-    $event->ownerId = $ownerId;
-    $event->start_time = $start_time;
-    $event->end_time = $end_time;
-    $event->Start_Date = $Start_Date;
-    $event->End_Date = $End_Date;
-    $event->repeat = $repeat;
-    $event->notes = $notes;
-    $event->Location = $Location;
-    $event->members = $members;
+    $event->Title = $body->Title;
+    $event->OwnerId = $body->OwnerId;
+    $event->StartTime = substr($body->StartTime, 0, 8);
+    $event->EndTime = substr($body->EndTime, 0, 8);
+    $event->StartDate = substr($body->StartDate, 0, 10);
+    $event->EndDate = substr($body->EndDate, 0, 10);
+    $event->Notes = $body->Notes;
+    $event->Location = $body->Location;
+    $event->Members = $body->Members;
 
-    $res = $event->save();
+    
+    $event->save();
 
-    //echo var_dump($val);
-    echo var_dump($res);
+    $response->getBody()->write(json_encode($event));
 
+    #need to query add the event
     return $response;
 });

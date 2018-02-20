@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { days } from '../week/week.model';
 import * as moment from 'moment';
 import { ApiEvent } from '../../app/models/event';
 import { CoreCacheService } from '../../app/services';
+import { DateObject, DateFormat } from '../models/date.model';
+import { Month, Months } from '../models/month.model';
+import { Week, WeekDays } from '../models/week.model';
 
 @Component({
     selector: 'mnm-month',
@@ -20,25 +22,18 @@ export class MonthComponent {
     ngOnInit(): void {
         this.loading = true;
         this.coreCache.payload.subscribe(map => {
-            let selectedDate = moment.utc(moment());
-            let startOfMonth = moment.utc(selectedDate).startOf('month');
-            let endOfMonth = moment.utc(selectedDate).endOf('month');
+            let startOfMonth = moment.utc().startOf('month');
+            let endOfMonth = moment.utc().endOf('month');
 
             let startDate = moment.utc(startOfMonth).subtract(Math.abs(startOfMonth.weekday()), 'days');
 
-            let dayFormat = 'YYYY-MMM-DD';
-
-            let currentFormat = moment().format(dayFormat);
+            let currentFormat = moment().format(DateFormat);
 
             this.month = {
-                key: this.currentMonth,
+                name: Months[this.currentMonth],
                 weeks: [],
-                weekdays: []
+                weekdays: WeekDays
             };
-
-            for (let dayNumber = 0; dayNumber < 7; dayNumber += 1) {
-              this.month.weekdays.push(moment.utc().weekday(dayNumber).format('dddd'));
-            }
 
             for (let i = 0; i < 5; i++) {
               let week: Week = {
@@ -49,7 +44,7 @@ export class MonthComponent {
                 let dayMoment = moment.utc(startDate).add((i * 7) + j, 'days');
 
                 let dateValue: DateObject = {
-                  current: dayMoment.format(dayFormat) === currentFormat,
+                  current: dayMoment.format(DateFormat) === currentFormat,
                   display: dayMoment.format('D'),
                   future: dayMoment.isAfter(endOfMonth),
                   past: dayMoment.isBefore(startOfMonth),
@@ -60,11 +55,10 @@ export class MonthComponent {
                     day: dateValue,
                     events: []
                 };
-                if (map.get(moment().year()).months.has(this.currentMonth)) {
-                    let dayMap = map.get(moment().year()).months.get(this.currentMonth);
-                    if (dayMap.days.has(dayMoment.day())) {
-                        day = dayMap.days.get(dayMoment.day());
-                    }
+
+                if (map.has(dayMoment.format(DateFormat))) {
+                    day.events = map.get(dayMoment.format(DateFormat));
+                    week.current = true;
                 }
 
                 week.days.push(day);
@@ -74,29 +68,11 @@ export class MonthComponent {
             this.loading = false;
         });
     }
-}
 
-export interface Month {
-    key: number;
-    weeks: Week[];
-    weekdays: string[];
-}
-
-export interface Week {
-    days: Day[];
-    current: boolean;
-}
-
-export interface Day {
-    day: DateObject;
-    events: ApiEvent[];
+    friendlyTime(time: string): string {
+        let date = new Date(time);
+        return date.toTimeString();
+    }
 }
 
 
-export interface DateObject {
-    utcDateValue: number;
-    current?: boolean;
-    display?: string;
-    future?: boolean;
-    past?: boolean;
-}

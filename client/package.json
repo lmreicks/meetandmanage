@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "build": "ng build --prod && php -S localhost:8000 -t ../server/",
-    "start": "ng serve"
+    "start": "ng serve --aot"
   },
   "author": "",
   "license": "MIT",

@@ -25,11 +25,11 @@ export interface ApiEvent {
     /**
      * Date of the event (start date)
      */
-    StartDate: Date;
+    StartDate: string;
     /**
      * End date
      */
-    EndDate?: Date;
+    EndDate?: string;
     /**
      * Notes or description of the event
      */

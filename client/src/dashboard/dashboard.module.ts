@@ -8,11 +8,13 @@ import { httpFactory } from '../app/services';
 
 import { DashboardComponent } from './dashboard.component';
 import { MonthComponent } from './month/month.component';
+import { WeekComponent } from './week/week.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
-    MonthComponent
+    MonthComponent,
+    WeekComponent
   ],
   imports: [
     NgbModule.forRoot(),

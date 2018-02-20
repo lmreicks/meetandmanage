@@ -3,7 +3,7 @@ import { Http } from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { DateObject } from '../../dashboard/month/month.component';
+import { DateObject } from '../../dashboard/models/date.model';
 import { ApiEvent } from '../models/event';
 import * as moment from 'moment';
 import { API_ROOT } from '../../constants.module';
@@ -12,8 +12,7 @@ import { ReplaySubject } from 'rxjs';
 @Injectable()
 
 export class CoreCacheService {
-    payload: ReplaySubject<Map<number, Year>> = new ReplaySubject();
-    years: Map<number, Year> = new Map<number, Year>();
+    payload: ReplaySubject<Map<string, ApiEvent[]>> = new ReplaySubject();
     constructor(private http: Http) {}
 
     Payload(): Observable<ApiEvent[]> {
@@ -26,10 +25,10 @@ export class CoreCacheService {
         let event: ApiEvent = {
             Title: 'title',
             OwnerId: 1,
-            StartDate: new Date(),
-            EndDate: new Date(),
-            StartTime: new Date().toTimeString(),
-            EndTime: new Date().toTimeString(),
+            StartDate: moment().format('YYYY-MM-DD'),
+            EndDate: moment().format('YYYY-MM-DD'),
+            StartTime: moment().format('hh:mm:ss'),
+            EndTime: moment().format('hh:mm:ss'),
             Members: []
         };
         return this.http.post(API_ROOT + '/event', event)
@@ -46,35 +45,16 @@ export class CoreCacheService {
 
             this._sortEvents(events);
 
-            let year: Year = {
-                months: new Map<number, Month>()
-            };
-
-            let currMonth = moment(events[0].StartDate).month();
-            let currDay = moment(events[0].StartDate).day();
+            let map = new Map<string, ApiEvent[]>();
 
             events.forEach(event => {
-                if (year.months.has(currMonth)) {
-                    let days = year.months.get(currMonth).days;
-                    if (days.has(currDay)) {
-                        days.get(currDay).events.push(event);
-                    } else {
-                        currDay = moment(event.StartDate).day();
-                        days.set(currDay, {
-                            day: this._getDateObject(event),
-                            events: [event]
-                        });
-                    }
+                if (map.has(event.StartDate)) {
+                    map.get(event.StartDate).push(event);
                 } else {
-                    currMonth = moment(event.StartDate).month();
-                    year.months.set(currMonth, {
-                        days: new Map<number, Day>()
-                    });
+                    map.set(event.StartDate, [event]);
                 }
             });
-
-            this.years.set(moment().year(), year);
-            this.payload.next(this.years);
+            this.payload.next(map);
         });
     }
 
@@ -115,12 +95,4 @@ export class CoreCacheService {
 interface Day {
     day: DateObject;
     events: ApiEvent[];
-}
-
-interface Month {
-    days: Map<number, Day>;
-}
-
-interface Year {
-    months: Map<number, Month>;
 }

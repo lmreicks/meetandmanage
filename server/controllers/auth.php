@@ -49,4 +49,3 @@ $app->post('/api/login', function (Request $request, Response $response, array $
     return $response; #returns a unique token consisting of an email and random token
 });
 
-

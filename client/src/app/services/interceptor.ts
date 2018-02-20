@@ -45,8 +45,7 @@ export class InterceptedHttp extends Http {
             options.headers = new Headers();
         }
 
-        options.headers.append('Access-Control-Allow-Origin', '*');
-        options.headers.append('Content-Type', 'application/json');
+        options.headers.append('Content-Type', 'text/plain');
 
         return options;
     }

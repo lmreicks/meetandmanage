@@ -26,14 +26,14 @@ $app->post('/api/user', function (Request $request, Response $response, array $a
     $name = $body['name'];
 
     if ($email == NULL || $name == NULL || $body['password'] == NULL){
-        $response->withStatus(400)->withHeader('Content-Type', 'text/html')->write('Invalid Name, Email or Password'); 
+        $response->withStatus(400)->write('Invalid Name, Email or Password'); 
         return $response;  
     } // return error if any fields are null
 
     $testUser = User::where('email','=',$email)->first(); // find any user with new email
 
     if ($testUser != NULL) {
-        $response->withStatus(400)->withHeader('Content-Type', 'text/html')->write('Email already exists');
+        $response->withStatus(400)->write('Email already exists');
         return $response;
     } // if email is in database return error saying so
 
@@ -41,21 +41,20 @@ $app->post('/api/user', function (Request $request, Response $response, array $a
     $userPassword = hash('sha256', $body['password']);
     $user = new User; // create new user
     
-    $user['email'] = $email;        // set all required fields of new user
-    $user['name'] = $name;          
-    $user['password'] = $userPassword;
+    $user->email = $email;        // set all required fields of new user
+    $user->name = $name;          
+    $user->password = $userPassword;
 
     $token = hash('sha256', random_int(0,10000)); // creates a random token to be stored and given to the user
-    $user["remember_token"] = $token;
+    $user->remember_token = $token;
     $user->save(); // saves the new user into the Users table
 
     $UserToken = array(
-        "email" => $email,
-        "remember_token" => $token
+        "accessToken" => $token,
+        "user" => $user
     );
-
-    $UserToken = json_encode($UserToken);
-    $response->write($UserToken);
+    
+    $response->write(json_encode($UserToken));
 
     return $response;
 });

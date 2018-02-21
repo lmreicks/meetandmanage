@@ -14,35 +14,35 @@ $app->post('/api/login', function (Request $request, Response $response, array $
     $email = $body->email;
 
     if ($body->password == NULL){
-        $response->withStatus(400)->withHeader('Content-Type', 'text/html')->write('Invalid Username or Password'); 
+        $response->withStatus(400)->write('Invalid Username or Password'); 
         return $response;       
     } 
 
     $userPassword = hash('sha256', $body->password);
 
     if ($email == NULL) {
-        $response->withStatus(400)->withHeader('Content-Type', 'text/html')->write('Invalid Username or Password');        
+        $response->withStatus(400)->write('Invalid Username or Password');        
         return $response; 
     }
 
     $user = User::where('email', '=', $email)->first();
 
     if ($user->password != $userPassword || $user == NULL) {
-        $response->withStatus(400)->withHeader('Content-Type', 'JSON')->write('Invalid Username or Password');
+        $response->withStatus(400)->write('Invalid Username or Password');
         return $response; 
     }
 
     $token = hash('sha256', random_int(0,10000));//creates a random token to be stored and given to the user
     $user->remember_token = $token;
-    $user->save();//saves the newly updated user info to the db
+    $user->save();//saves the newly updated user info to the d
 
     $UserToken = array(
-        "email" => $email,
-        "remember_token" => $token
+        "accessToken" => $token,
+        "user" => $user
     );
 
-    $UserToken = json_encode($UserToken);
-    $response->write($UserToken);
+    //$UserToken = json_encode($UserToken);
+    $response->write(json_encode($UserToken));
 
     return $response; #returns a unique token consisting of an email and random token
 });

@@ -13,17 +13,20 @@ $app->get('/api/event/{id}', function (Request $request, Response $response, arr
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
     // require "logic/validator.php";
 
-    echo var_dump($request->getHeaders());
-    $token = $request->headers->get('HTTP-AUTHORIZATION');
-    //echo var_dump($headers);
-    echo $token;
-    $email = $request->headers->get('HTTP-EMAIL');
-    echo $userEmail;
-    $user = User::where('email','=',$userEmail);
-    $id = $user->id;
-    $events = Event::where('id','=',$id);
+    $token = $request->getHeader('Authorization');
+    echo var_dump($token);
+    $id = $request->getHeader('Cookie');
+    echo 
+    $arr = explode(";",$id[0]);
+    $id = $arr[0];
+    echo var_dump($arr);
+    // echo var_dump($email);
+    // $user = User::where('email','=',$email);
+    // $id = $user->id;
+    $events = Event::where('OwnerId','=',$id);
     //$events = Event::all();
-    $response->getBody()->write(json_encode($events));
+    $return = json_encode($events);
+    $response->getBody()->write($return);
     return $response;
 });
 

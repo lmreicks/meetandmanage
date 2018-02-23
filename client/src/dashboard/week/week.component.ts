@@ -20,7 +20,7 @@ export class WeekComponent {
     ngOnInit(): void {
         this.loading = true;
         this.setHours();
-        this.coreCache.payload.subscribe(map => {
+        this.coreCache.eventMap.subscribe(map => {
             this.week = {
                 current: false,
                 days: []
@@ -56,7 +56,6 @@ export class WeekComponent {
             }
 
             this.loading = false;
-            console.log(this.week);
         });
     }
 
@@ -68,7 +67,5 @@ export class WeekComponent {
                 this.hours.push(i - 12 + 'pm');
             }
         }
-
-        console.log(this.hours);
     }
 }

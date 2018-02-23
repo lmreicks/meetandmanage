@@ -12,17 +12,18 @@ import { AppComponent } from './app.component';
 import { CoreCacheService } from './services/core-cache.service';
 import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
-import { LoginService } from './services/login.service';
 import { AuthGuard } from './services/auth-guard';
 import { AuthService } from './services/auth.service';
 import { DashboardModule } from '../dashboard/dashboard.module';
 import { RouterModule } from '@angular/router';
+import { CreateEventComponent } from './event/create-event/create-event.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    LoginComponent
+    LoginComponent,
+    CreateEventComponent
   ],
   imports: [
     NgbModule.forRoot(),
@@ -35,8 +36,6 @@ import { RouterModule } from '@angular/router';
   ],
   providers: [
     CoreCacheService,
-    LoginService,
-    JwtHelper,
     AuthGuard,
     AuthService,
     {

@@ -2,6 +2,9 @@
     <h1>{{month.name}}</h1>
 </div>
 <div class="month" *ngIf="!loading">
+    <ng-template #popContent>
+       <mnm-event-popover [event]="event"></mnm-event-popover>
+    </ng-template>
     <div class="weekdays">
         <div class="weekday" *ngFor="let weekday of month.weekdays">
             {{weekday}}
@@ -10,12 +13,15 @@
     <div class="weeks" *ngFor="let week of month.weeks" [ngClass]="{'current': week.current}">
         <div class="day"
              *ngFor="let day of week.days"
-            [ngClass]="{ 'current': day.day.current,
-                         'future': day.day.future,
-                         'past': day.day.past }">
+            [ngClass]="{
+                'current': day.day.current,
+                'future': day.day.future,
+                'past': day.day.past }"
+            (dblclick)="doubleClickDay($event, day)">
             <span class="day-number">{{day.day.display}}</span>
             <span class="events" *ngFor="let event of day.events">
-                <div class="event">
+                <div class="event" id="event.id" [ngbPopover]="popContent" popoverTitle="Greeting" #p="ngbPopover" triggers="manual"
+                (click)="togglePopover(p, event)">
                     {{event.Title}}
                     <span class="time">{{ friendlyTime(event.StartTime) }}</span>
                 </div>

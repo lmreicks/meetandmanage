@@ -45,6 +45,8 @@ export class InterceptedHttp extends Http {
             options.headers = new Headers();
         }
 
+        const accessToken = localStorage.getItem('access_token');
+        options.headers.append('Authorization', accessToken);
         options.headers.append('Content-Type', 'text/plain');
 
         return options;

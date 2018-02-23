@@ -39,8 +39,8 @@ export class CoreCacheService {
 
     GetPayload(): void {
         this.Payload().subscribe(events => {
-            if (!events || events.length === 0) {
-                return;
+            if (!events) {
+                events = [];
             }
 
             this._sortEvents(events);

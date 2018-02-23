@@ -1,0 +1,20 @@
+<div *ngIf="!loading">
+    <h1>{{day.day.display}}</h1>
+    <h2>Today's Events:</h2>
+</div>
+<div class="time">
+    <div class="hour" *ngFor="let hour of hours">
+        {{hour}}
+    </div>
+</div>
+<div class="week" *ngIf="!loading">
+    <div class="day" *ngFor="let day of days" [ngClass]="{'current': day.day.current }">
+        <div class="header">
+            {{day.day.display}}
+        </div>
+        <div class="event" *ngFor="let event of day.events">
+            {{event.Title}}
+        </div>
+    </div>
+    <div class="time-markers"><div *ngFor="let hour of hours"></div></div>
+</div>

@@ -9,12 +9,14 @@ import { httpFactory } from '../app/services';
 import { DashboardComponent } from './dashboard.component';
 import { MonthComponent } from './month/month.component';
 import { WeekComponent } from './week/week.component';
+import { EventPopoverComponent } from './event-popover/event-popover.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     MonthComponent,
-    WeekComponent
+    WeekComponent,
+    EventPopoverComponent
   ],
   imports: [
     NgbModule.forRoot(),

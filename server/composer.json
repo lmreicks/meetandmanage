@@ -15,7 +15,8 @@
             "Models"
         ],
         "psr-4": {
-            "Models\\": "Models"
+            "Models\\": "Models",
+            "Logic\\": "Logic"
         }
     }
 }

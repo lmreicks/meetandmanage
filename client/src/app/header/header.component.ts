@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import * as moment from 'moment';
+import { AuthService } from '../services/auth.service';
 
 @Component({
     selector: 'mnm-header',
@@ -8,6 +9,9 @@ import * as moment from 'moment';
 })
 
 export class HeaderComponent {
-    public month: string = moment.months[0];
-    public granularity: string = 'Day';
+    constructor(private auth: AuthService) {}
+
+    Logout(): void {
+        this.auth.logout();
+    }
 }

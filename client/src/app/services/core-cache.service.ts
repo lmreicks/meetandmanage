@@ -8,17 +8,33 @@ import { ApiEvent } from '../models/event';
 import * as moment from 'moment';
 import { API_ROOT } from '../../constants.module';
 import { ReplaySubject } from 'rxjs';
+import { PayloadModel } from '../models/payload';
 
 @Injectable()
 
 export class CoreCacheService {
-    payload: ReplaySubject<Map<string, ApiEvent[]>> = new ReplaySubject();
+    payload: ReplaySubject<PayloadModel> = new ReplaySubject();
     constructor(private http: Http) {}
+    eventMap: ReplaySubject<Map<string, ApiEvent[]>> = new ReplaySubject();
+
+    OnAuth(): void {
+        this.Payload().subscribe(events => {
+            this.payload.next({
+                User: {
+                    id: +(localStorage.getItem('user_id')),
+                    email: 'kdjf@iastate.edu',
+                    remember_token: localStorage.getItem('access_token'),
+                    name: 'ksdlfj'
+                },
+                Events: events
+            });
+            this.ParseEvents(events);
+        });
+    }
 
     Payload(): Observable<ApiEvent[]> {
         return this.http.get(API_ROOT + '/event')
-            .map(res => res.json())
-            .catch(err => err.json());
+            .map(res => res.json(), err => new Observable(err));
     }
 
     CreateEvent(): Observable<any> {
@@ -37,25 +53,24 @@ export class CoreCacheService {
             .share();
     }
 
-    GetPayload(): void {
-        this.Payload().subscribe(events => {
-            if (!events || events.length === 0) {
-                return;
+    ParseEvents(events: ApiEvent[]): void {
+        console.log(events);
+        if (!events || events.length === 0) {
+            return;
+        }
+
+        this._sortEvents(events);
+
+        let map = new Map<string, ApiEvent[]>();
+
+        events.forEach(event => {
+            if (map.has(event.StartDate)) {
+                map.get(event.StartDate).push(event);
+            } else {
+                map.set(event.StartDate, [event]);
             }
-
-            this._sortEvents(events);
-
-            let map = new Map<string, ApiEvent[]>();
-
-            events.forEach(event => {
-                if (map.has(event.StartDate)) {
-                    map.get(event.StartDate).push(event);
-                } else {
-                    map.set(event.StartDate, [event]);
-                }
-            });
-            this.payload.next(map);
         });
+        this.eventMap.next(map);
     }
 
     private _sortEvents(events: ApiEvent[]) {
@@ -68,27 +83,6 @@ export class CoreCacheService {
                 return 1;
             }
         });
-    }
-
-    private _getDateObject(event: ApiEvent): DateObject {
-        let selectedDate = moment.utc(moment());
-        let startOfMonth = moment.utc(selectedDate).startOf('month');
-        let endOfMonth = moment.utc(selectedDate).endOf('month');
-
-        let dayFormat = 'YYYY-MMM-DD';
-
-        let currentFormat = moment().format(dayFormat);
-        let dayMoment = moment(event.StartDate).startOf('day');
-
-        let dateObject: DateObject = {
-            current: dayMoment.format(dayFormat) === currentFormat,
-            display: dayMoment.format('D'),
-            future: dayMoment.isAfter(endOfMonth),
-            past: dayMoment.isBefore(startOfMonth),
-            utcDateValue: dayMoment.valueOf()
-        };
-
-        return dateObject;
     }
 }
 

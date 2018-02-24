@@ -5,10 +5,6 @@ use Slim\Http\Response;
 use Models\Event;
 use Models\User;
 
-$app->get('/api/event/{id}', function (Request $request, Response $response, array $args) {
-    $response->getBody()->write("get event");
-    return $response;
-});
 
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
     // require "logic/validator.php";
@@ -20,18 +16,17 @@ $app->get('/api/event', function (Request $request, Response $response, array $a
     $arr = explode(";",$id[0]);
     $id = $arr[0];
     echo var_dump($arr);
-    // echo var_dump($email);
-    // $user = User::where('email','=',$email);
-    // $id = $user->id;
     $events = Event::where('OwnerId','=',$id);
     //$events = Event::all();
+    //go from 24 hour to 12 hour here
+    //$time_in_12_hour_format  = date("g:i a", strtotime("13:30"));
     $return = json_encode($events);
     $response->getBody()->write($return);
     return $response;
 });
 
 $app->post('/api/event', function (Request $request, Response $response, array $args) {
-    require "logic/validator.php";
+    //require "logic/validator.php";
 
     $body = json_decode($request->getBody());
     
@@ -39,7 +34,9 @@ $app->post('/api/event', function (Request $request, Response $response, array $
 
     $event->Title = $body->Title;
     $event->OwnerId = $body->OwnerId;
-    $event->StartTime = substr($body->StartTime, 0, 8);
+    //write in logic here to convert potentially from varchar to date time... if needed.
+    //$time_in_24_hour_format  = date("H:i", strtotime("1:30 PM"));
+    $event->StartTime = date("H:i", strtotime(substr($body->StartTime, 0, 8)));
     $event->EndTime = substr($body->EndTime, 0, 8);
     $event->StartDate = substr($body->StartDate, 0, 10);
     $event->EndDate = substr($body->EndDate, 0, 10);

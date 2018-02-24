@@ -9,14 +9,10 @@ use Models\User;
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
     // require "logic/validator.php";
 
-    $token = $request->getHeader('Authorization');
-    echo var_dump($token);
-    $id = $request->getHeader('Cookie');
-    echo 
-    $arr = explode(";",$id[0]);
-    $id = $arr[0];
-    echo var_dump($arr);
-    $events = Event::where('OwnerId','=',$id);
+    $user = $request->getAttribute('user');
+    //$user = $body->user;
+    $id = $user->id;
+    $events = Event::where('OwnerId','=',$id)->get();
     //$events = Event::all();
     //go from 24 hour to 12 hour here
     //$time_in_12_hour_format  = date("g:i a", strtotime("13:30"));
@@ -51,4 +47,24 @@ $app->post('/api/event', function (Request $request, Response $response, array $
 
     #need to query add the event
     return $response;
+});
+
+$app->delete('/api/event/{id}', function (Request $request, Response $response, array $args){
+
+    $user = $request->getAttribute('user');
+    $eventID = $args['id'];// trying to 
+    $event = Event::where('id','=',$eventID)->first();
+    if ($event == NULL) {
+        $response->write("Event not found");
+        return $response;
+    }
+    $ownerId = $event->ownerId;
+    $userId = $user->id;
+    if ($ownerId === $id){
+        $event = Event::where('id','=',$eventID)->delete();
+        $response->write(json_encode($event));
+        return $response;
+    }
+    $response->write("Not your event to delete");
+    return $response; //switch to error for not owner of event
 });

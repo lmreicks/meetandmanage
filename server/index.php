@@ -2,8 +2,8 @@
 
 namespace App;
 
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+//error_reporting(E_ALL);
+//ini_set('display_errors', '1');
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -15,7 +15,7 @@ session_start();
 $settings = require __DIR__ . '/settings.php';
 $app = new \Slim\App($settings);
 
-$app->add(new logic/requestValidator($request, $response));
+$app->add(new \Logic\RequestValidator());
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 

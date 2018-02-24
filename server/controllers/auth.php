@@ -32,7 +32,7 @@ $app->post('/api/login', function (Request $request, Response $response, array $
         return $response; 
     }
 
-    $token = hash('sha256', random_int(0,10000));//creates a random token to be stored and given to the user
+    $token = hash('sha256', random_int(0,1000000) + $userPassword);//creates a random token to be stored and given to the user
     $user->remember_token = $token;
     $user->save();//saves the newly updated user info to the d
 

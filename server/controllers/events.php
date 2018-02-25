@@ -50,12 +50,10 @@ $app->post('/api/event', function (Request $request, Response $response, array $
         $response->write('no ownerId');
         return $response;
     }
-
     if ($user->id != $body->OwnerId){
         $resonse->write('user id does not match ownerId');
         return $response;
     }
-    
     if ($body->Title == NULL || $body->Title == '') {
         $response->write('no Title');
         return $response;
@@ -69,10 +67,16 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     $event->EndDate = substr($body->EndDate, 0, 10);
     $event->Notes = $body->Notes;
     $event->Location = $body->Location;
-    $event->Members = $body->Members;
 
     $event->save();
-
+    $eventId = $event->Id;
+    $membersArray = $body->members;
+    foreach($membersArray as $email){
+        $eventLookup = new EventLookup;
+        $eventLookup->Email = $email;
+        $eventLookup->EventId = $eventId;
+        $eventLookup->save();
+    }
     $response->getBody()->write(json_encode($event));
     return $response;
 });
@@ -90,6 +94,7 @@ $app->delete('/api/event/{id}', function (Request $request, Response $response, 
     $userId = $user->id;
     if ($ownerId === $id){
         $event = Event::where('id','=',$eventID)->delete();
+        EventLookup::where('EventId','=',$eventID)->delete();
         $response->write(json_encode($event));
         return $response;
     }

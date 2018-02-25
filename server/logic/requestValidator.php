@@ -4,21 +4,14 @@ namespace Logic;
 
 use Models\User;
 
-
-// this function takes in a user token which is granted during login
-// if the token matches the users stored token returns true giving access to 
-// restricted areas, else returns false
-// !! this should be used before making any restricted http requests such as creating or accessing events
-// should route to login if returns false
+// this is used before a request that requires the user to be logged in is made
+// iff the user is logged in, then a user model is given to the request to make life easier
+// if the request is login or user, goes to correct request
 
 class RequestValidator {
 
 
     public function __invoke($request, $response, $next) {
-        #validate user logic
-        #if checks out
-        #response = next
-        #else return error
 
         $token = $request->getHeader('Authorization');
         $user = User::where('remember_token', '=', $token)->first();
@@ -31,7 +24,7 @@ class RequestValidator {
         $uri = $request->getUri();
         $path = $uri->getPath();
         
-        if (substr($path, 5) === 'login') {
+        if (substr($path, 5) === 'login' || substr($path, 5) === 'user') {
             $response = $next($request, $response);
             return $response;
         }

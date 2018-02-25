@@ -10,7 +10,6 @@ use Models\User;
 
 $app->post('/api/login', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());
-    #encrypts the inputted password to compare with the stored one
     $email = $body->email;
 
     if ($body->password == NULL){
@@ -34,14 +33,13 @@ $app->post('/api/login', function (Request $request, Response $response, array $
 
     $token = hash('sha256', random_int(0,1000000) + $userPassword);//creates a random token to be stored and given to the user
     $user->remember_token = $token;
-    $user->save();//saves the newly updated user info to the d
+    $user->save();
 
     $UserToken = array(
         "accessToken" => $token,
         "user" => $user
     );
 
-    //$UserToken = json_encode($UserToken);
     $response->write(json_encode($UserToken));
 
     return $response; #returns a unique token consisting of an email and random token

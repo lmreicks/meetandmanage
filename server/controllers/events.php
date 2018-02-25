@@ -4,34 +4,65 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\Event;
 use Models\User;
+use Models\EventLookup;
 
 
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
-    // require "logic/validator.php";
 
+    #have to go through event mappings, and get all events which the user is included in and add
+    #them to the array of events to be returned to lexi
     $user = $request->getAttribute('user');
-    //$user = $body->user;
-    $id = $user->id;
-    $events = Event::where('OwnerId','=',$id)->get();
-    //$events = Event::all();
-    //go from 24 hour to 12 hour here
-    //$time_in_12_hour_format  = date("g:i a", strtotime("13:30"));
+    $events = getAllEvents($user);
     $return = json_encode($events);
     $response->getBody()->write($return);
     return $response;
 });
 
+function getAllEvents($user){
+    $email = $user->email;
+    $eventIds = EventLookup::where('Email','=',$email)->get();// $eventIds <-- all eventIds where the user email is the email
+    echo $eventIds;
+    $events = array(); 
+    foreach ($eventIds as $eventId){
+        $eventId = $eventId->EventId;
+        $event = Event::where('Id','=',$eventId)->first();
+        echo $event;
+        if ($event != null){
+            echo $event;
+            array_push($events, $event);
+        }
+    }
+    return $events;
+}
+
 $app->post('/api/event', function (Request $request, Response $response, array $args) {
-    //require "logic/validator.php";
+    
+    # need to parse through list of members given in the $request body
+    # if the email is in the database, add it to the table mapping events with all of it's members
+    # at some point down the road we will add an email api to this to include non members into all of the "fun"
 
     $body = json_decode($request->getBody());
-    
+    $user = $body->getAttributes('user');
     $event = new Event;
+
+
+    if ($body->OwnerId == NULL) {
+        $response->write('no ownerId');
+        return $response;
+    }
+
+    if ($user->id != $body->OwnerId){
+        $resonse->write('user id does not match ownerId');
+        return $response;
+    }
+    
+    if ($body->Title == NULL || $body->Title == '') {
+        $response->write('no Title');
+        return $response;
+    }
 
     $event->Title = $body->Title;
     $event->OwnerId = $body->OwnerId;
-    //write in logic here to convert potentially from varchar to date time... if needed.
-    //$time_in_24_hour_format  = date("H:i", strtotime("1:30 PM"));
     $event->StartTime = date("H:i", strtotime(substr($body->StartTime, 0, 8)));
     $event->EndTime = substr($body->EndTime, 0, 8);
     $event->StartDate = substr($body->StartDate, 0, 10);
@@ -40,19 +71,16 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     $event->Location = $body->Location;
     $event->Members = $body->Members;
 
-    
     $event->save();
 
     $response->getBody()->write(json_encode($event));
-
-    #need to query add the event
     return $response;
 });
 
 $app->delete('/api/event/{id}', function (Request $request, Response $response, array $args){
 
     $user = $request->getAttribute('user');
-    $eventID = $args['id'];// trying to 
+    $eventID = $args['id'];
     $event = Event::where('id','=',$eventID)->first();
     if ($event == NULL) {
         $response->write("Event not found");

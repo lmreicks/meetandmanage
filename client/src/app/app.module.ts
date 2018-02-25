@@ -1,11 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule, Http, XHRBackend, RequestOptions } from '@angular/http';
 import { appRoutes } from './app.routing';
 
-import { JwtHelper } from 'angular2-jwt';
 import { httpFactory } from './services';
 
 import { AppComponent } from './app.component';
@@ -16,14 +15,17 @@ import { AuthGuard } from './services/auth-guard';
 import { AuthService } from './services/auth.service';
 import { DashboardModule } from '../dashboard/dashboard.module';
 import { RouterModule } from '@angular/router';
-import { CreateEventComponent } from './event/create-event/create-event.component';
+import { EditEventComponent } from './event/edit-event/edit-event.component';
+import { EventService } from './event/event.service';
+import { SessionService } from './services/session.service';
+import { NgbDateNativeAdapter } from './shared/datepicker-adapter.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     LoginComponent,
-    CreateEventComponent
+    EditEventComponent
   ],
   imports: [
     NgbModule.forRoot(),
@@ -38,6 +40,12 @@ import { CreateEventComponent } from './event/create-event/create-event.componen
     CoreCacheService,
     AuthGuard,
     AuthService,
+    EventService,
+    SessionService,
+    {
+      provide: NgbDateAdapter,
+      useClass: NgbDateNativeAdapter
+    },
     {
       provide: Http,
       useFactory: httpFactory,

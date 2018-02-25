@@ -45,6 +45,9 @@ $capsule->setAsGlobal();
 // Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
 $capsule->bootEloquent();
 
+// error list
+require __DIR__ . '/Logic/error_list.php';
+
 // set up depencencies
 require __DIR__ . '/dependencies.php';
 

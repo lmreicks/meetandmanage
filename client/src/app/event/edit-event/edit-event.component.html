@@ -1,0 +1,33 @@
+<form #form="ngForm" [formGroup]="eventForm">
+    <div class="form-group">
+        <input class="form-control"
+                type="text"
+                formControlName="Title"
+                placeholder="Add Title...">
+    </div>
+    <div class="form-group">
+        <div class="col-xs-3">
+            <label class="control-label">
+                    Start Date
+            </label>
+        </div>
+        <div class="col-xs-5">
+            <div class="input-group">
+                <input class="form-control"
+                        formControlName="StartDate" ngbDatepicker #d="ngbDatepicker">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                    <i class="fa fa-calendar"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <div class="">
+                
+            </div>
+        </div>
+    </div>
+</form>

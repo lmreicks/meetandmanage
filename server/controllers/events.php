@@ -11,6 +11,7 @@ $app->get('/api/event/{id}', function (Request $request, Response $response, arr
 
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
    $response->getBody()->write("Get all events");
+   $user = $response->getAttribute('user');
    return $response;
 });
 

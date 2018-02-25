@@ -9,10 +9,12 @@ import * as moment from 'moment';
 import { API_ROOT } from '../../constants.module';
 import { ReplaySubject } from 'rxjs';
 import { PayloadModel } from '../models/payload';
+import { ApiUser } from '../models/user';
 
 @Injectable()
 
 export class CoreCacheService {
+    currentUser: ApiUser;
     payload: ReplaySubject<PayloadModel> = new ReplaySubject();
     constructor(private http: Http) {}
     eventMap: ReplaySubject<Map<string, ApiEvent[]>> = new ReplaySubject();
@@ -35,22 +37,6 @@ export class CoreCacheService {
     Payload(): Observable<ApiEvent[]> {
         return this.http.get(API_ROOT + '/event')
             .map(res => res.json(), err => new Observable(err));
-    }
-
-    CreateEvent(): Observable<any> {
-        let event: ApiEvent = {
-            Title: 'title',
-            OwnerId: 1,
-            StartDate: moment().format('YYYY-MM-DD'),
-            EndDate: moment().format('YYYY-MM-DD'),
-            StartTime: moment().format('hh:mm:ss'),
-            EndTime: moment().format('hh:mm:ss'),
-            Members: []
-        };
-        return this.http.post(API_ROOT + '/event', event)
-            .map(res => res.json())
-            .catch(err => err.json())
-            .share();
     }
 
     ParseEvents(events: ApiEvent[]): void {

@@ -6,4 +6,5 @@ export interface DateObject {
     past?: boolean;
 }
 
-export const DateFormat: string = 'YYYY-MM-DD';
+export const DATE_FORMAT: string = 'YYYY-MM-DD';
+export const TIME_FORMAT: string = 'h:mm:ss';

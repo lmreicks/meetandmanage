@@ -20,7 +20,7 @@
             (dblclick)="doubleClickDay($event, day)">
             <span class="day-number">{{day.day.display}}</span>
             <span class="events" *ngFor="let event of day.events">
-                <div class="event" id="event.id" [ngbPopover]="popContent" popoverTitle="Greeting" #p="ngbPopover" triggers="manual"
+                <div class="event" id="{{event.Id}}" [ngbPopover]="popContent" popoverTitle="Greeting" #p="ngbPopover" triggers="manual"
                 (click)="togglePopover(p, event)">
                     {{event.Title}}
                     <span class="time">{{ friendlyTime(event.StartTime) }}</span>

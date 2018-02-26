@@ -21,15 +21,15 @@ $app->get('/api/event', function (Request $request, Response $response, array $a
 function getAllEvents($user){
     $email = $user->email;
     $eventIds = EventLookup::where('Email','=',$email)->get();// $eventIds <-- all eventIds where the user email is the email
-    echo $eventIds;
     $events = array(); 
+    echo $eventsIds;
     foreach ($eventIds as $eventId){
         $eventId = $eventId->EventId;
         $event = Event::where('Id','=',$eventId)->first();
-        echo $event;
         if ($event != null){
-            echo $event;
-            array_push($events, $event);
+            if (!in_array($event, $events)){
+                array_push($events, $event);
+            }
         }
     }
     return $events;

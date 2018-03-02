@@ -13,6 +13,8 @@ export class DayComponent {
     public day: Day;
     public hours: string[] = [];
     public loading: boolean = true;
+    public Granularity = Granularity;
+    public state: Granularity = Granularity.None;
 
 
 
@@ -22,11 +24,11 @@ export class DayComponent {
         this.loading = true;
         this.setHours();
         let date = moment().format(DateFormat);
-        this.coreCache.payload.subscribe(map => {
+        this.coreCache.eventMap.subscribe(map => {
             let dayMoment = moment();
             let dateValue: DateObject = {
                 current: dayMoment.format(DateFormat) === date,
-                display: dayMoment.format('dddd D'),
+                display: dayMoment.format('dddd, MMMM D'),
                 utcDateValue: dayMoment.utc().valueOf()
             };
 
@@ -53,4 +55,10 @@ export class DayComponent {
 
         console.log(this.hours);
     }
+}
+
+export enum Granularity {
+    None,
+    Workout,
+    Budget
 }

@@ -1,3 +1,6 @@
+.line{
+    color: black;
+}
 .day-container {
     display: flex;
     width: 100%;
@@ -8,12 +11,11 @@
 
 .time {
     justify-content: space-between;
+    border: 1px solid #fff;
     display: flex;
     flex-direction: column;
     height: 150vh;
 }
-
-
 
 .day {
     height: 150vh;
@@ -29,10 +31,77 @@
     }
 }
 
-
 .time-markers {
-
+    
     div {
-        border-bottom: 1px solid darkgrey;
+        border-bottom: 1px solid black;
     }
 }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .header-container {
+    color: darkblue;
+    background-color: lightblue;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .header {
+    width: 900px;
+    height: 50px;
+    display: flex;
+    color: darkblue;
+    font-size: 18pt;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .list-grid-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .list-grid {
+    width: 900px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .list-grid-item {
+    border: 10px solid #fff;
+    width: 500px;
+    height: 620px;
+  }
+
+  .activity-grid-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .activity-grid {
+    width: 900px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .activity-grid-item {
+    border: 10px solid #fff;
+    width: 350px;
+    height: 350px;
+  }
+
+  .btn{
+    width: 150px;
+    height: 40px;
+    display: flex;
+    color: darkblue;
+    background-color: lightblue;
+    font-size: 18pt;
+    justify-content: center;
+    flex-direction: row;
+  }

@@ -1,5 +1,7 @@
 <div class="month-header" *ngIf="!loading">
+    <div class="glyphicon glyphicon-chevron-left"></div>
     <h1>{{month.name}}</h1>
+    <div class="glyphicon glyphicon-chevron-right"></div>
 </div>
 <div class="month" *ngIf="!loading">
     <ng-template #popContent>

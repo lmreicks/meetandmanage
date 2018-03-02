@@ -1,20 +1,55 @@
-<div *ngIf="!loading">
-    <h1>{{day.day.display}}</h1>
-    <h2>Today's Events:</h2>
-</div>
-<div class="time">
-    <div class="hour" *ngFor="let hour of hours">
-        {{hour}}
+<div class='header-container'>
+    <div class='header'>
+      <div class="glyphicon glyphicon-chevron-left"></div>
+      <div *ngIf="!loading">
+        <h1>{{day.day.display}}</h1>
+      </div>
+      <div class="glyphicon glyphicon-chevron-right"></div>
     </div>
 </div>
-<div class="week" *ngIf="!loading">
-    <div class="day" *ngFor="let day of days" [ngClass]="{'current': day.day.current }">
-        <div class="header">
-            {{day.day.display}}
+<div class='list-grid-container'>
+    <div class='list-grid'>
+        <div class='list-grid-item first-item'>
+            <div class='header-container'>
+                <div class='header'>Events</div>
+            </div>
+            <div class="day-container">
+                <div class="time">
+                    <div class="hour" *ngFor="let hour of hours">
+                        {{hour}}
+                        <hr class='line'/>
+                    </div>
+                </div>
+                <div class="day" *ngIf="!loading">
+                    <div class="day" *ngFor="let day of days" [ngClass]="{'current': day.day.current }">
+                        <div class="event" *ngFor="let event of day.events">
+                            {{event.Title}}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="event" *ngFor="let event of day.events">
-            {{event.Title}}
+        <div class='list-grid-item'>
+            <div class='header-container'>
+                <div class='header'>To-Do</div>
+            </div>
         </div>
     </div>
-    <div class="time-markers"><div *ngFor="let hour of hours"></div></div>
+</div>
+<hr class='line'/>
+<div class='activity-grid-container'>
+    <div class='activity-grid'>
+        <div class='activity-grid-item first-item'>
+            <div class='header-container'>
+                <div class='header'>
+                    <button class="btn" [ngClass]="{ 'active' : state === 1 }" (click)="state = 1">Workout</button></div>
+            </div>
+        </div>
+        <div class='activity-grid-item'>
+                <div class='header-container'>
+                    <div class='header'>
+                        <button class="btn" [ngClass]="{ 'active' : state === 2 }" (click)="state = 2">Budget</button></div>
+                </div>
+        </div>
+    </div>
 </div>

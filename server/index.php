@@ -50,6 +50,7 @@ require __DIR__ . '/dependencies.php';
 require __DIR__ . '/controllers/events.php';
 require __DIR__ . '/controllers/users.php';
 require __DIR__ . '/controllers/auth.php';
+require __DIR__ . '/controllers/todo.php';
 
 $app->run();
 

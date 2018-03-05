@@ -19,13 +19,19 @@ import { EditEventComponent } from './event/edit-event/edit-event.component';
 import { EventService } from './event/event.service';
 import { SessionService } from './services/session.service';
 import { NgbDateNativeAdapter } from './shared/datepicker-adapter.component';
+import { Dropdown, DropdownMenu, DropdownToggle } from './shared/dropdown/dropdown.directive';
+import { ComboBoxComponent } from './shared/combo-box/combo-box.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     LoginComponent,
-    EditEventComponent
+    EditEventComponent,
+    //Dropdown,
+    //DropdownMenu,
+    //DropdownToggle,
+    //ComboBoxComponent
   ],
   imports: [
     NgbModule.forRoot(),

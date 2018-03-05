@@ -32,18 +32,28 @@ export class EditEventComponent {
     }
 
     private _setStartTime(): FormControl {
-        let time = {
-            hours: moment(this.event.StartTime, TIME_FORMAT).hour(),
-            minutes: moment(this.event.StartTime, TIME_FORMAT).minute()
-        };
-        return new FormControl(time, Validators.required);
+        let start = moment(this.event.StartTime, TIME_FORMAT);
+
+        for (let i = 0 ; i < 12; i++) {
+            let tempTime = moment(start).add(i, 'hours');
+            // this.startTimes[i] = {
+            //     value: tempTime.format(TIME_FORMAT),
+            //     label: tempTime.format('hh:mma')
+            // };
+        }
+        return new FormControl(start.format(TIME_FORMAT), Validators.required);
     }
 
     private _setEndTime(): FormControl {
-        let time = {
-            hours: moment(this.event.EndTime, TIME_FORMAT).hour(),
-            minutes: moment(this.event.EndTime, TIME_FORMAT).minute()
-        };
-        return new FormControl(time, Validators.required);
+        let start = moment(this.event.EndTime, TIME_FORMAT);
+
+        for (let i = 0; i < 12; i++) {
+            let tempTime = moment(start).add(i, 'hours');
+            // this.endTimes[i] = {
+            //     value: tempTime.format(TIME_FORMAT),
+            //     label: tempTime.format('hh:mma')
+            // };
+        }
+        return new FormControl(start.format(TIME_FORMAT), Validators.required);
     }
 }

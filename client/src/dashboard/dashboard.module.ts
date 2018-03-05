@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule, Http, XHRBackend, RequestOptions } from '@angular/http';
-import { JwtHelper } from 'angular2-jwt';
 import { httpFactory } from '../app/services';
 
 import { DashboardComponent } from './dashboard.component';
@@ -29,7 +28,6 @@ import { EventPopoverComponent } from './event-popover/event-popover.component';
       DashboardComponent
   ],
   providers: [
-    JwtHelper,
     {
       provide: Http,
       useFactory: httpFactory,

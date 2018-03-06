@@ -37,6 +37,8 @@ export class DayComponent {
                 events: map.has(date) ? map.get(date) : []
             };
 
+            console.log(map);
+
             this.loading = false;
         });
     }

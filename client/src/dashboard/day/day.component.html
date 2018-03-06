@@ -21,10 +21,8 @@
                     </div>
                 </div>
                 <div class="day" *ngIf="!loading">
-                    <div class="day" *ngFor="let day of days" [ngClass]="{'current': day.day.current }">
-                        <div class="event" *ngFor="let event of day.events">
-                            {{event.Title}}
-                        </div>
+                    <div class="event" *ngFor="let event of day.events">
+                        {{event.Title}}
                     </div>
                 </div>
             </div>

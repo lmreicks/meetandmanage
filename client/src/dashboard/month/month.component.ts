@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import * as moment from 'moment';
 import { ApiEvent, ApiCreateEvent } from '../../app/models/event';
 import { CoreCacheService } from '../../app/services';
-import { DateObject, DATE_FORMAT, TIME_FORMAT } from '../models/date.model';
+import { DateObject } from '../models/date.model';
+import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import { Month, Months } from '../models/month.model';
 import { Week, WeekDays } from '../models/week.model';
 import { Day } from '../models';
@@ -20,7 +21,7 @@ export class MonthComponent {
     public month: Month;
     private eventMap: Map<string, ApiEvent[]>;
     public loading: boolean = true;
-    public currentMonth: number = moment().month();
+    public currentMonth: moment.Moment = moment();
     public event: ApiEvent;
 
     constructor(private coreCache: CoreCacheService, private eventService: EventService, private sessionService: SessionService) {}
@@ -29,21 +30,30 @@ export class MonthComponent {
         this.loading = true;
         this.coreCache.eventMap.subscribe(map => {
             this.eventMap = map;
-            this.parseMonth();
+            this.parseMonth(this.currentMonth.clone());
             this.loading = false;
         });
     }
 
-    parseMonth(): void {
-        let startOfMonth = moment.utc().startOf('month');
-        let endOfMonth = moment.utc().endOf('month');
+    changeMonth(next: number): void {
+        this.loading = true;
+        console.log(this.currentMonth);
+        this.currentMonth.add(next, 'months');
+        console.log(this.currentMonth);
+        this.parseMonth(this.currentMonth.clone());
+        this.loading = false;
+    }
+
+    parseMonth(month: moment.Moment): void {
+        let startOfMonth = moment.utc(month).startOf('month');
+        let endOfMonth = moment.utc(month).endOf('month');
 
         let startDate = moment.utc(startOfMonth).subtract(Math.abs(startOfMonth.weekday()), 'days');
 
         let currentFormat = moment().format(DATE_FORMAT);
 
         this.month = {
-            name: Months[this.currentMonth],
+            name: Months[this.currentMonth.month()],
             weeks: [],
             weekdays: WeekDays
         };
@@ -98,7 +108,7 @@ export class MonthComponent {
         };
         if (click.srcElement.classList.contains('event')) {
             day.events.forEach(e => {
-                if (e.Id == parseInt(click.srcElement.id)) {
+                if (e.Id == parseInt(click.srcElement.id, 10)) {
                     this.eventService.EditEvent(e);
                     return;
                 }

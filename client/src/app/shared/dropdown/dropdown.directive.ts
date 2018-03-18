@@ -8,19 +8,39 @@ import {
     ElementRef,
     ContentChild,
     Renderer2,
-    OnInit
+    OnInit,
+    HostListener
 } from '@angular/core';
 
 /**
+ * 
  */
-@Directive(
-    { selector: '[dropdownMenu]', host: { '[class.dropdown-menu]': 'true', '[class.show]': 'dropdown.isOpen()' } })
+@Directive({
+    selector: '[dropdownMenu]',
+    host: {
+        '[class.dropdown-menu]': 'true',
+        '[class.show]': 'dropdown.isOpen()',
+    }
+})
 export class DropdownMenu {
     isOpen = false;
+    private _focused: ElementRef;
 
     constructor(
         @Inject(forwardRef(() => Dropdown)) public dropdown, private _elementRef: ElementRef,
         private _renderer: Renderer2) { }
+
+    getChildren(): HTMLCollection {
+        return this._elementRef.nativeElement.children;
+    }
+
+    get focused(): ElementRef {
+        return this._focused;
+    }
+
+    set focused(element: ElementRef) {
+        this._focused = element;
+    }
 
     isEventFrom($event) { return this._elementRef.nativeElement.contains($event.target); }
 }
@@ -42,9 +62,28 @@ export class DropdownToggle {
 
     constructor(@Inject(forwardRef(() => Dropdown)) public dropdown, private _elementRef: ElementRef) {
         this.anchorEl = _elementRef.nativeElement;
+        console.log(this.anchorEl);
     }
 
     toggleOpen() { this.dropdown.toggle(); }
+
+    @HostListener('click')
+    onClick() {
+        console.log(this.dropdown.open());
+        this.dropdown.toggle();
+    }
+
+    @HostListener('blur')
+    onBlur() {
+        console.log(this.dropdown.open());
+        this.dropdown.toggle();
+    }
+
+    @HostListener('touch')
+    onTouch() {
+        console.log(this.dropdown.open());
+        this.dropdown.toggle();
+    }
 
     isEventFrom($event) { return this._elementRef.nativeElement.contains($event.target); }
 }
@@ -53,17 +92,15 @@ export class DropdownToggle {
  * Transforms a node into a dropdown.
  */
 @Directive({
-    selector: '[ngbDropdown]',
-    exportAs: 'ngbDropdown',
+    selector: '[dropdown]',
+    exportAs: 'dropdown',
     host: {
         '[class.show]': 'isOpen()',
         '(keyup.esc)': 'closeFromOutsideEsc()',
-        '(keydown)': 'handleKey($event)',
         '(document:click)': 'closeFromClick($event)'
     }
 })
 export class Dropdown implements OnInit {
-
     @ContentChild(DropdownMenu) private _menu: DropdownMenu;
 
     @ContentChild(DropdownToggle) private _toggle: DropdownToggle;
@@ -147,11 +184,8 @@ export class Dropdown implements OnInit {
         }
     }
 
-    handleKey(event: any) {
-        console.log(event);
-    }
-
     private _isEventFromToggle($event) { return this._toggle ? this._toggle.isEventFrom($event) : false; }
 
     private _isEventFromMenu($event) { return this._menu ? this._menu.isEventFrom($event) : false; }
 }
+

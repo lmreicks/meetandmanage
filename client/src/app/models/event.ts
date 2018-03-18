@@ -26,6 +26,10 @@ export interface ApiCreateEvent {
      * End date
      */
     EndDate?: string;
+    /** 
+     * Either basic location or address
+     */
+    Location?: string;
     /**
      * Notes or description of the event
      */
@@ -33,7 +37,7 @@ export interface ApiCreateEvent {
     /**
      * List of member's emails who are invited to the event
      */
-    Members: string[];
+    Members: number[];
     /**
      * How many minutes before the event that the user should be notifed
      */

@@ -1,34 +1,47 @@
 <form #form="ngForm" [formGroup]="eventForm">
     <div class="form-group">
-        <input class="form-control"
+        <div class="col-sm-12">
+            <input class="form-control"
                 type="text"
                 formControlName="Title"
                 placeholder="Add Title...">
+        </div>
     </div>
     <div class="form-group">
-        <div class="col-xs-3">
-            <label class="control-label">
-                    Start Date
-            </label>
-        </div>
-        <div class="col-xs-5">
-            <div class="input-group">
-                <input class="form-control"
-                        formControlName="StartDate" ngbDatepicker #d="ngbDatepicker">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
-                    <i class="fa fa-calendar"></i>
-                    </button>
+        <div class="col-sm-6">
+            <div ngbDropdown>
+                <label class="control-label">
+                        Start Date
+                </label>
+                <input  class="form-control"
+                        id="datepicker"
+                        [value]="formatDate(eventForm.get('StartDate').value)"
+                        ngbDropdownToggle/>
+                <div ngbDropdownMenu aria-labelledby="datepicker">
+                    <dl-date-time-picker
+                        formControlName="StartDate"
+                        [upIconClass]="''"
+                        [minView]="'day'"
+                        [startView]="'day'">
+                    </dl-date-time-picker>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="input-group">
-            <div class="">
-                <!-- <combo-box>
-
-                </combo-box> -->
+            <div ngbDropdown *ngIf="eventForm.get('Recurring').value">
+                <label class="control-label">
+                        End Date
+                </label>
+                <input  class="form-control"
+                        id="datepicker"
+                        [value]="formatDate(eventForm.get('EndDate').value)"
+                        ngbDropdownToggle/>
+                <div ngbDropdownMenu aria-labelledby="datepicker">
+                    <dl-date-time-picker
+                        formControlName="EndDate"
+                        [upIconClass]="''"
+                        [minView]="'day'"
+                        [startView]="'day'">
+                    </dl-date-time-picker>
+                </div>
             </div>
         </div>
     </div>

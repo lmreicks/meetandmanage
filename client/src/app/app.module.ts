@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DlDateTimePickerDateModule } from 'angular-bootstrap-datetimepicker';
 import { HttpModule, Http, XHRBackend, RequestOptions } from '@angular/http';
 import { appRoutes } from './app.routing';
 
@@ -19,8 +20,9 @@ import { EditEventComponent } from './event/edit-event/edit-event.component';
 import { EventService } from './event/event.service';
 import { SessionService } from './services/session.service';
 import { NgbDateNativeAdapter } from './shared/datepicker-adapter.component';
-import { Dropdown, DropdownMenu, DropdownToggle } from './shared/dropdown/dropdown.directive';
+import { DropdownModule } from './shared/dropdown/dropdown.module';
 import { ComboBoxComponent } from './shared/combo-box/combo-box.component';
+import { SearchFilterPipe } from './shared/combo-box/search.pipe';
 
 @NgModule({
   declarations: [
@@ -28,18 +30,18 @@ import { ComboBoxComponent } from './shared/combo-box/combo-box.component';
     HeaderComponent,
     LoginComponent,
     EditEventComponent,
-    //Dropdown,
-    //DropdownMenu,
-    //DropdownToggle,
-    //ComboBoxComponent
+    ComboBoxComponent,
+    SearchFilterPipe
   ],
   imports: [
     NgbModule.forRoot(),
+    DropdownModule,
     RouterModule.forRoot(appRoutes),
     DashboardModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
+    DlDateTimePickerDateModule,
     HttpModule
   ],
   providers: [

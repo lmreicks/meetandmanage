@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CoreCacheService } from '../../app/services/core-cache.service';
-import { Week, DateObject, DATE_FORMAT, WeekDays } from '../models';
+import { Week, DateObject, WeekDays } from '../models';
+import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import * as moment from 'moment';
 
 @Component({

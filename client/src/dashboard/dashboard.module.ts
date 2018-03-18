@@ -3,18 +3,19 @@ import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule, Http, XHRBackend, RequestOptions } from '@angular/http';
-import { JwtHelper } from 'angular2-jwt';
 import { httpFactory } from '../app/services';
 
 import { DashboardComponent } from './dashboard.component';
 import { MonthComponent } from './month/month.component';
 import { WeekComponent } from './week/week.component';
+import { EventPopoverComponent } from './event-popover/event-popover.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     MonthComponent,
-    WeekComponent
+    WeekComponent,
+    EventPopoverComponent
   ],
   imports: [
     NgbModule.forRoot(),
@@ -27,7 +28,6 @@ import { WeekComponent } from './week/week.component';
       DashboardComponent
   ],
   providers: [
-    JwtHelper,
     {
       provide: Http,
       useFactory: httpFactory,

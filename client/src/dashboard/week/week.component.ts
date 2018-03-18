@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CoreCacheService } from '../../app/services/core-cache.service';
-import { Week, DateObject, DateFormat, WeekDays } from '../models';
+import { Week, DateObject, WeekDays } from '../models';
+import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import * as moment from 'moment';
 
 @Component({
@@ -20,14 +21,14 @@ export class WeekComponent {
     ngOnInit(): void {
         this.loading = true;
         this.setHours();
-        this.coreCache.payload.subscribe(map => {
+        this.coreCache.eventMap.subscribe(map => {
             this.week = {
                 current: false,
                 days: []
             };
 
             let today = moment();
-            let current = today.format(DateFormat)
+            let current = today.format(DATE_FORMAT);
             let startOfWeek = today.startOf('week');
             let startDate = moment.utc(startOfWeek);
 
@@ -35,7 +36,7 @@ export class WeekComponent {
                 let dayMoment = startDate.clone().add(i, 'days');
 
                 let dateValue: DateObject = {
-                    current: dayMoment.format(DateFormat) === current,
+                    current: dayMoment.format(DATE_FORMAT) === current,
                     display: dayMoment.format('dddd D'),
                     future: dayMoment.isAfter(today.endOf('month')),
                     past: dayMoment.isBefore(today.startOf('month')),
@@ -47,8 +48,8 @@ export class WeekComponent {
                     events: []
                 };
 
-                if (map.has(dayMoment.format(DateFormat))) {
-                    day.events = map.get(dayMoment.format(DateFormat));
+                if (map.has(dayMoment.format(DATE_FORMAT))) {
+                    day.events = map.get(dayMoment.format(DATE_FORMAT));
                     this.week.current = true;
                 }
 
@@ -56,7 +57,6 @@ export class WeekComponent {
             }
 
             this.loading = false;
-            console.log(this.week);
         });
     }
 
@@ -68,7 +68,5 @@ export class WeekComponent {
                 this.hours.push(i - 12 + 'pm');
             }
         }
-
-        console.log(this.hours);
     }
 }

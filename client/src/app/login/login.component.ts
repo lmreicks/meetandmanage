@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'mnm-login',
@@ -10,12 +10,26 @@ import { AuthService } from '../services/auth.service';
 })
 
 export class LoginComponent {
-    public username: string = null;
-    public password: string = null;
+    public loginForm: FormGroup;
 
-    constructor(private loginService: LoginService, public router: Router, private authService: AuthService) {}
+    constructor(public router: Router, private authService: AuthService, private fb: FormBuilder) {
+        this.loginForm = this.fb.group({
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required]]
+        });
+    }
 
-    Login(): void {
-        this.authService.login();
+    Login(userInfo: { email: string, password: string }, valid: boolean): void {
+        console.log(userInfo, valid);
+        if (valid) {
+            this.authService.login(userInfo).subscribe(res => {
+                console.log(res);
+                this.router.navigate(['/']);
+            }, err => {
+                console.log(err);
+            });
+        } else {
+            return;
+        }
     }
 }

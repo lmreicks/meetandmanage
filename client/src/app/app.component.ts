@@ -9,9 +9,5 @@ import { CoreCacheService } from './services';
   styleUrls: ['app.component.less']
 })
 export class AppComponent {
-  constructor(private authService: AuthService, private coreCache: CoreCacheService) {
-    this.authService.handleAuthentication();
-
-    this.coreCache.GetPayload();
-  }
+  constructor(private authService: AuthService, private coreCache: CoreCacheService) {}
 }

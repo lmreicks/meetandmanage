@@ -1,7 +1,11 @@
 <div class="month-header" *ngIf="!loading">
-    <div class="glyphicon glyphicon-chevron-left"></div>
+    <a (click)="changeMonth(-1)" class="shifter pull-left">
+        <i class="fas fa-2x fa-angle-left"></i>
+    </a>
     <h1>{{month.name}}</h1>
-    <div class="glyphicon glyphicon-chevron-right"></div>
+    <a (click)="changeMonth(1)" class="shifter pull-right">
+        <i class="fas fa-2x fa-angle-right"></i>
+    </a>
 </div>
 <div class="month" *ngIf="!loading">
     <ng-template #popContent>
@@ -22,11 +26,11 @@
             (dblclick)="doubleClickDay($event, day)">
             <span class="day-number">{{day.day.display}}</span>
             <span class="events" *ngFor="let event of day.events">
-                <div class="event" id="event.id" [ngbPopover]="popContent" popoverTitle="Greeting" #p="ngbPopover" triggers="manual"
+                <a class="event" id="{{event.Id}}" [ngbPopover]="popContent" popoverTitle="Greeting" #p="ngbPopover" triggers="manual"
                 (click)="togglePopover(p, event)">
-                    {{event.Title}}
+                    <span class="event-title">{{event.Title}}</span>
                     <span class="time">{{ friendlyTime(event.StartTime) }}</span>
-                </div>
+                </a>
             </span>
         </div>
     </div>

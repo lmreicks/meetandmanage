@@ -29,6 +29,7 @@ export class AuthService {
   private setSession(authResult): void {
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('user_id', authResult.user.id);
+    this.coreCache.currentUser = authResult.user;
     this.coreCache.OnAuth();
   }
 

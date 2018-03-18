@@ -5,5 +5,3 @@ export interface DateObject {
     future?: boolean;
     past?: boolean;
 }
-
-export const DateFormat: string = 'YYYY-MM-DD';

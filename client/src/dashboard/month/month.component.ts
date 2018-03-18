@@ -1,13 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import * as moment from 'moment';
-import { ApiEvent } from '../../app/models/event';
+import { ApiEvent, ApiCreateEvent } from '../../app/models/event';
 import { CoreCacheService } from '../../app/services';
-import { DateObject, DateFormat } from '../models/date.model';
+import { DateObject } from '../models/date.model';
+import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import { Month, Months } from '../models/month.model';
 import { Week, WeekDays } from '../models/week.model';
 import { Day } from '../models';
-import { Router } from '@angular/router';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
+import { SessionService } from '../../app/services/session.service';
+import { EventService } from '../../app/event/event.service';
 
 @Component({
     selector: 'mnm-month',
@@ -16,34 +18,42 @@ import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 })
 
 export class MonthComponent {
-    @ViewChild('p') popover: NgbPopover;
     public month: Month;
     private eventMap: Map<string, ApiEvent[]>;
     public loading: boolean = true;
-    public currentMonth: number = moment().month();
+    public currentMonth: moment.Moment = moment();
     public event: ApiEvent;
 
-    constructor(private coreCache: CoreCacheService, private router: Router) {}
+    constructor(private coreCache: CoreCacheService, private eventService: EventService, private sessionService: SessionService) {}
 
     ngOnInit(): void {
         this.loading = true;
         this.coreCache.eventMap.subscribe(map => {
             this.eventMap = map;
-            this.parseMonth();
+            this.parseMonth(this.currentMonth.clone());
             this.loading = false;
         });
     }
 
-    parseMonth(): void {
-        let startOfMonth = moment.utc().startOf('month');
-        let endOfMonth = moment.utc().endOf('month');
+    changeMonth(next: number): void {
+        this.loading = true;
+        console.log(this.currentMonth);
+        this.currentMonth.add(next, 'months');
+        console.log(this.currentMonth);
+        this.parseMonth(this.currentMonth.clone());
+        this.loading = false;
+    }
+
+    parseMonth(month: moment.Moment): void {
+        let startOfMonth = moment.utc(month).startOf('month');
+        let endOfMonth = moment.utc(month).endOf('month');
 
         let startDate = moment.utc(startOfMonth).subtract(Math.abs(startOfMonth.weekday()), 'days');
 
-        let currentFormat = moment().format(DateFormat);
+        let currentFormat = moment().format(DATE_FORMAT);
 
         this.month = {
-            name: Months[this.currentMonth],
+            name: Months[this.currentMonth.month()],
             weeks: [],
             weekdays: WeekDays
         };
@@ -57,7 +67,7 @@ export class MonthComponent {
             let dayMoment = moment.utc(startDate).add((i * 7) + j, 'days');
 
             let dateValue: DateObject = {
-              current: dayMoment.format(DateFormat) === currentFormat,
+              current: dayMoment.format(DATE_FORMAT) === currentFormat,
               display: dayMoment.format('D'),
               future: dayMoment.isAfter(endOfMonth),
               past: dayMoment.isBefore(startOfMonth),
@@ -69,8 +79,8 @@ export class MonthComponent {
                 events: []
             };
 
-            if (this.eventMap.has(dayMoment.format(DateFormat))) {
-                day.events = this.eventMap.get(dayMoment.format(DateFormat));
+            if (this.eventMap.has(dayMoment.format(DATE_FORMAT))) {
+                day.events = this.eventMap.get(dayMoment.format(DATE_FORMAT));
                 week.current = true;
             }
 
@@ -81,17 +91,30 @@ export class MonthComponent {
     }
 
     friendlyTime(time: string): string {
-        let date = moment(time);
-        console.log(date);
-        console.log(moment(moment().format('h:mma')));
-        return moment().format('hh:mm:ss a');
+        let date = moment(time, TIME_FORMAT);
+        return date.format('hh:mm a');
     }
 
-    doubleClickDay(event: MouseEvent, day: Day) {
-        if (event.srcElement.classList.contains('event')) {
-            console.log(event);
+    doubleClickDay(click: MouseEvent, day: Day) {
+        let event: ApiCreateEvent | ApiEvent = {
+            Title: "",
+            OwnerId: this.sessionService.currentUserId,
+            StartDate: moment(day.day.utcDateValue).format(DATE_FORMAT),
+            EndDate: moment(day.day.utcDateValue).format(DATE_FORMAT),
+            StartTime: moment().format(TIME_FORMAT),
+            EndTime: moment().add(1, 'hour').format(TIME_FORMAT),
+            Notes: "",
+            Members: []
+        };
+        if (click.srcElement.classList.contains('event')) {
+            day.events.forEach(e => {
+                if (e.Id == parseInt(click.srcElement.id, 10)) {
+                    this.eventService.EditEvent(e);
+                    return;
+                }
+            });
         } else {
-            this.router.navigate(['event/create']);
+            this.eventService.EditEvent(event);
         }
     }
 

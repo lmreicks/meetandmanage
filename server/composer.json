@@ -4,19 +4,35 @@
         "php": ">=5.5.0",
         "slim/slim": "^3.0",
         "monolog/monolog": "^1.22",
-        "illuminate/database": "~5.1",
-        "tuupola/slim-jwt-auth": "^2.3"
+        "illuminate/database": "5.2.*",
+        "illuminate/events": "5.2.*",
+        "illuminate/cache": "5.2.*",
+        "illuminate/filesystem": "5.2.*",
+        "luracast/config": "2.*",
+        "vlucas/phpdotenv": "~1.0",
+        "league/flysystem": "~1.0",
+        "illuminate/pagination": "5.2.*"
+    },
+    "require-dev": {
+        "illuminate/console": "5.2.*",
+        "psy/psysh": "0.7.*",
+        "symfony/process": "3.0.*"
     },
     "config": {
         "process-timeout" : 0
     },
     "autoload": {
         "classmap": [
-            "Models"
+            "models",
+            "logic",
+            "database/migrations",
+            "database/seeds"
         ],
         "psr-4": {
-            "Models\\": "Models",
-            "Logic\\": "Logic"
+            "Bootstrap\\": "../bootstrap/",
+            "App\\": "",
+            "Models\\": "models/",
+            "Logic\\": "logic/"
         }
     }
 }

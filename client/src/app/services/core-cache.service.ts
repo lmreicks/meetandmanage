@@ -9,48 +9,31 @@ import * as moment from 'moment';
 import { API_ROOT } from '../../constants.module';
 import { ReplaySubject } from 'rxjs';
 import { PayloadModel } from '../models/payload';
+import { ApiUser } from '../models/user';
+import { MockPayload } from '../models/mock-payload';
 
 @Injectable()
 
 export class CoreCacheService {
+    currentUser: ApiUser;
     payload: ReplaySubject<PayloadModel> = new ReplaySubject();
     constructor(private http: Http) {}
     eventMap: ReplaySubject<Map<string, ApiEvent[]>> = new ReplaySubject();
+    tempPayload: Observable<PayloadModel> = new Observable(observable => {
+        observable.next(MockPayload);
+    });
 
     OnAuth(): void {
-        this.Payload().subscribe(events => {
-            this.payload.next({
-                User: {
-                    id: +(localStorage.getItem('user_id')),
-                    email: 'kdjf@iastate.edu',
-                    remember_token: localStorage.getItem('access_token'),
-                    name: 'ksdlfj'
-                },
-                Events: events
-            });
-            this.ParseEvents(events);
+        this.tempPayload.subscribe(payload => {
+        //this.Payload().subscribe(events => {
+            this.currentUser = payload.User;
+            this.ParseEvents(payload.Events);
         });
     }
 
     Payload(): Observable<ApiEvent[]> {
         return this.http.get(API_ROOT + '/event')
             .map(res => res.json(), err => new Observable(err));
-    }
-
-    CreateEvent(): Observable<any> {
-        let event: ApiEvent = {
-            Title: 'title',
-            OwnerId: 1,
-            StartDate: moment().format('YYYY-MM-DD'),
-            EndDate: moment().format('YYYY-MM-DD'),
-            StartTime: moment().format('hh:mm:ss'),
-            EndTime: moment().format('hh:mm:ss'),
-            Members: []
-        };
-        return this.http.post(API_ROOT + '/event', event)
-            .map(res => res.json())
-            .catch(err => err.json())
-            .share();
     }
 
     ParseEvents(events: ApiEvent[]): void {

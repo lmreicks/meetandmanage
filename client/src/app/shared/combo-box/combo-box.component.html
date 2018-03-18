@@ -1,0 +1,15 @@
+<div ngbDropdown (keydown)="handleKey($event)">
+<input (click)="onTouched($event)"
+            class="form-control"
+            id="dropdownBasic1"
+            [(ngModel)]="searchText"
+            ngbDropdownToggle/>
+    <div ngbDropdownMenu #menu aria-labelledby="dropdownBasic1">
+        <li *ngFor="let option of options | filter: searchText"
+            class="dropdown-item"
+            (click)="model = option"
+            [ngClass]="{ 'active': option === model }">
+            {{ option[render] }}
+        </li>
+    </div>
+</div>

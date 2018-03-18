@@ -1,7 +1,6 @@
 
 export interface ApiUser {
-    id: number;
-    email: string;
-    name: string;
-    remember_token: string;
+    Id: number;
+    Email: string;
+    Name: string;
 }

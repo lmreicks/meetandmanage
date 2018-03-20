@@ -56,14 +56,14 @@ export class DayComponent {
         if(moment.duration(end.diff(start)).asDays()>=1){
             end = moment(v.StartDate + " " + "24:00:00")
         }
-        console.log(moment.duration(end.diff(start)).asHours() * 120);
+        //console.log(moment.duration(end.diff(start)).asHours() * 120);
         
         return this.height = moment.duration(end.diff(start)).asHours() * 120;
     }
 
     public getStart(v) {
         var start = moment(v.StartDate + " " + v.StartTime);
-        console.log((start.hours() + (start.minutes()/60)) * 120);
+        //console.log((start.hours() + (start.minutes()/60)) * 120);
         return this.diff = ((start.hours() + (start.minutes()/60)) * 120) - this.diff;
     }
 

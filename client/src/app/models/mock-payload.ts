@@ -4,6 +4,7 @@ import { PayloadModel } from './payload';
 import * as moment from 'moment';
 import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import { ApiUser } from './user';
+import { ApiTodo } from './todo';
 
 export const MockEvents: ApiEvent[] = [
     {
@@ -127,9 +128,12 @@ export const MockUser: ApiUser = {
 
 export const MockGroups: ApiGroup[] = [];
 
+export const MockTodos: ApiTodo[] = [];
+
 export const MockPayload: PayloadModel = {
     User: MockUser,
     Events: MockEvents,
-    Groups: MockGroups
+    Groups: MockGroups,
+    Todo: MockTodos
 };
 

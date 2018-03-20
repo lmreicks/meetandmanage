@@ -14,14 +14,15 @@
                 <div class='header'>Events</div>
             </div>
             <div class="day-container">
-                <div class="time">
-                    <div class="hour" *ngFor="let hour of hours">
+                <div class='time'>
+                    <div class='hour' *ngFor="let hour of hours">
                         {{hour}}
                         <hr class='line'/>
                     </div>
                 </div>
-                <div class="day" *ngIf="!loading">
-                    <div class="event" *ngFor="let event of day.events">
+                
+                <div class='day' *ngIf="!loading">
+                    <div class='event' *ngFor="let event of day.events" [ngStyle]="{'margin-top': getStart(event) + 'px', 'height': getDuration(event) + 'px'}">
                         {{event.Title}}
                     </div>
                 </div>
@@ -34,7 +35,7 @@
         </div>
     </div>
 </div>
-<hr class='line'/>
+<hr/>
 <div class='activity-grid-container'>
     <div class='activity-grid'>
         <div class='activity-grid-item first-item'>

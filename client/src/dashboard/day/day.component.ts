@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CoreCacheService } from '../../app/services/core-cache.service';
-import { Week, DateObject, DateFormat, WeekDays, Day } from '../models';
+import { Week, DateObject, WeekDays, Day } from '../models';
+import {DATE_FORMAT} from '../../constants.module';
 import * as moment from 'moment';
+import { toInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
 
 @Component({
     selector: 'mnm-day',
@@ -15,6 +17,8 @@ export class DayComponent {
     public loading: boolean = true;
     public Granularity = Granularity;
     public state: Granularity = Granularity.None;
+    private diff = 0;
+    private height = 0;
 
 
 
@@ -23,11 +27,11 @@ export class DayComponent {
     ngOnInit(): void {
         this.loading = true;
         this.setHours();
-        let date = moment().format(DateFormat);
+        let date = moment().format(DATE_FORMAT);
         this.coreCache.eventMap.subscribe(map => {
             let dayMoment = moment();
             let dateValue: DateObject = {
-                current: dayMoment.format(DateFormat) === date,
+                current: dayMoment.format(DATE_FORMAT) === date,
                 display: dayMoment.format('dddd, MMMM D'),
                 utcDateValue: dayMoment.utc().valueOf()
             };
@@ -41,6 +45,26 @@ export class DayComponent {
 
             this.loading = false;
         });
+    }
+
+
+
+    public getDuration(v) {
+        var end = moment(v.EndDate + " " + v.EndTime);
+        
+        var start = moment(v.StartDate + " " + v.StartTime);
+        if(moment.duration(end.diff(start)).asDays()>=1){
+            end = moment(v.StartDate + " " + "24:00:00")
+        }
+        console.log(moment.duration(end.diff(start)).asHours() * 120);
+        
+        return this.height = moment.duration(end.diff(start)).asHours() * 120;
+    }
+
+    public getStart(v) {
+        var start = moment(v.StartDate + " " + v.StartTime);
+        console.log((start.hours() + (start.minutes()/60)) * 120);
+        return this.diff = ((start.hours() + (start.minutes()/60)) * 120) - this.diff;
     }
 
     private setHours(): void {

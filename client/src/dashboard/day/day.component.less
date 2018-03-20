@@ -1,5 +1,6 @@
 .line{
-    color: black;
+    color: darkblue;
+    height: 100px;
 }
 .day-container {
     display: flex;
@@ -18,24 +19,33 @@
 }
 
 .day {
-    height: 150vh;
-    width: 100%;
-    border-right: 1px solid darkgrey;
+  width: 100%;
+  border-right: 1px solid darkgrey;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    &:last-child {
-        border: none;
-    }
+  &:last-child {
+      border-right: none;
+  }
 
-    &.current {
-        background-color: lightblue;
-    }
-}
+  .day-number {
+      font-size: 16px;
+      font-weight: 300;
+      width: 100%;
+  }
 
-.time-markers {
-    
-    div {
-        border-bottom: 1px solid black;
-    }
+  .events {
+      justify-content: center;
+      align-content: space-between;
+  }
+
+  .event {
+      background-color: burlywood;
+      width: 140px;
+      border-radius: 4px;
+      padding-left: 5px;
+  }
 }
 
   * {

@@ -1,9 +1,11 @@
 <div class='header-container'>
-        <div class='header'>
-          <div class="glyphicon glyphicon-chevron-left"></div>
-          
-          <div class="glyphicon glyphicon-chevron-right"></div>
-        </div>
+    <div class='header'>
+      <div class="glyphicon glyphicon-chevron-left"></div>
+      <div *ngIf="!loading">
+        <h1>{{day.day.display}}</h1>
+      </div>
+      <div class="glyphicon glyphicon-chevron-right"></div>
+    </div>
 </div>
 <div class="week-container">
     <div class="time">
@@ -13,9 +15,6 @@
     </div>
     <div class="week" *ngIf="!loading">
         <div class="day" *ngFor="let day of week.days" [ngClass]="{'current': day.day.current }">
-            <div class="header">
-                {{day.day.display}}
-            </div>
             <div class="event" *ngFor="let event of day.events">
                 {{event.Title}}
             </div>

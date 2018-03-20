@@ -46,6 +46,7 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     $user = $body->getAttributes('user');
     $event = new Event;
     $validate = new EventValidator($body);
+    if ($validate != true) return $validate;
 
     if ($body->OwnerId == NULL) {
         $response->write('no ownerId');
@@ -73,7 +74,7 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     $eventId = $event->Id;
     $membersArray = $body->members;
     foreach($membersArray as $email){
-        $eventLookup = new EventLookup;
+        $eventLookup = new EventLookup
         $eventLookup->Email = $email;
         $eventLookup->EventId = $eventId;
         $eventLookup->save();
@@ -145,16 +146,18 @@ class EventValidator{
     public function __invoke($body){
         if ($body->StartDate == NULL) return false;
         if ($body->EndDate == NULL) return false;
-        if ($body->StartTime == NULL) return false;
-        if ($body->EndTime == NULL) return false;
+
+
+        
+        $title = $body->Title;
+        if ()
+        $location = $body->Location;
         $StartDate = explode('-',$body->StartDate);
         $endDate = explode('-',$body->EndDate);
-        $title = $body->Title;
         $startTime = explode(':', $body->StartTime);
         $endTime = explode(':', $body->EndTime);
         $eTime = $endTime[0] * 3600 + $endTime[1] * 60 + $endTime[2];
         $sTime = $startTime[0] * 3600 + $startTime[1] * 60 + $startTime[2];
-        $location = $body->Location;
         if ($endDate[2] < $startDate[2]) return false;
         if ($endDate[2] == $startDate[2] && $endDate[0] < $startDate[0]) return false;
         if ($endDate[2] == $startDate[2] && $endDate[0] == $startDate[0] && $endDate[1] < $startDate[1]) return false;

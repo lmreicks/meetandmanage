@@ -45,7 +45,7 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     $body = json_decode($request->getBody());
     $user = $body->getAttributes('user');
     $event = new Event;
-
+    $validate = new EventValidator($body);
 
     if ($body->OwnerId == NULL) {
         $response->write('no ownerId');
@@ -140,3 +140,27 @@ $app->put('/api/event', function (Request $request, Response $response, array $a
     return $response;
 
 });
+
+class EventValidator{
+    public function __invoke($body){
+        if ($body->StartDate == NULL) return false;
+        if ($body->EndDate == NULL) return false;
+        if ($body->StartTime == NULL) return false;
+        if ($body->EndTime == NULL) return false;
+        $StartDate = explode('-',$body->StartDate);
+        $endDate = explode('-',$body->EndDate);
+        $title = $body->Title;
+        $startTime = explode(':', $body->StartTime);
+        $endTime = explode(':', $body->EndTime);
+        $eTime = $endTime[0] * 3600 + $endTime[1] * 60 + $endTime[2];
+        $sTime = $startTime[0] * 3600 + $startTime[1] * 60 + $startTime[2];
+        $location = $body->Location;
+        if ($endDate[2] < $startDate[2]) return false;
+        if ($endDate[2] == $startDate[2] && $endDate[0] < $startDate[0]) return false;
+        if ($endDate[2] == $startDate[2] && $endDate[0] == $startDate[0] && $endDate[1] < $startDate[1]) return false;
+        if ($endDate[2] == $startDate[2] && $endDate[0] == $startDate[0] && $endDate[1] == $startDate[1]) return false;
+        if ($endDate[2] == $startDate[2] && $endDate[0] == $startDate[0] && $endDate[1] == $startDate[1] && $eTime < $sTime) return false;
+        if ($title == NULL) return false;
+        
+    }
+}

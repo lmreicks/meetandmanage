@@ -1,0 +1,48 @@
+<form #form="ngForm" [formGroup]="eventForm">
+    <div class="form-group">
+        <div class="col-sm-12">
+            <input class="form-control"
+                type="text"
+                formControlName="Title"
+                placeholder="Add Title...">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-6">
+            <div ngbDropdown>
+                <label class="control-label">
+                        Start Date
+                </label>
+                <input  class="form-control"
+                        id="datepicker"
+                        [value]="formatDate(eventForm.get('StartDate').value)"
+                        ngbDropdownToggle/>
+                <div ngbDropdownMenu aria-labelledby="datepicker">
+                    <dl-date-time-picker
+                        formControlName="StartDate"
+                        [upIconClass]="''"
+                        [minView]="'day'"
+                        [startView]="'day'">
+                    </dl-date-time-picker>
+                </div>
+            </div>
+            <div ngbDropdown *ngIf="eventForm.get('Recurring').value">
+                <label class="control-label">
+                        End Date
+                </label>
+                <input  class="form-control"
+                        id="datepicker"
+                        [value]="formatDate(eventForm.get('EndDate').value)"
+                        ngbDropdownToggle/>
+                <div ngbDropdownMenu aria-labelledby="datepicker">
+                    <dl-date-time-picker
+                        formControlName="EndDate"
+                        [upIconClass]="''"
+                        [minView]="'day'"
+                        [startView]="'day'">
+                    </dl-date-time-picker>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

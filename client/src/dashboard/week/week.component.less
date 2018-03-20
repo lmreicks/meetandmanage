@@ -1,0 +1,44 @@
+.week-container {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    height: 75vh;
+    overflow: scroll;
+}
+
+.time {
+    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
+    height: 150vh;
+}
+
+.week {
+    display: flex;
+    border: 1px solid darkgrey;
+    border-radius: 3px;
+    width: 100%;
+    height: 150vh;
+
+    .day {
+        height: 150vh;
+        width: 100%;
+        border-right: 1px solid darkgrey;
+
+        &:last-child {
+            border: none;
+        }
+
+        &.current {
+            background-color: lightblue;
+        }
+    }
+}
+
+
+.time-markers {
+
+    div {
+        border-bottom: 1px solid darkgrey;
+    }
+}

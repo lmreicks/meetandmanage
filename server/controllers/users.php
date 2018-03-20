@@ -3,6 +3,7 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\User;
+use Logic\ErrorList;
 
 $app->get('/api/user/{id}', function (Request $request, Response $response, array $args) {
     $response->getBody()->write("get user");

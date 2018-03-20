@@ -1,11 +1,7 @@
 import { Moment } from "moment";
 import { NgbTime } from "@ng-bootstrap/ng-bootstrap/timepicker/ngb-time";
 
-export interface ApiEvent {
-    /**
-     * Id of the event
-     */
-    Id?: number;
+export interface ApiCreateEvent {
     /**
      * Title ex) Doctors Appointment
      */
@@ -25,11 +21,15 @@ export interface ApiEvent {
     /**
      * Date of the event (start date)
      */
-    StartDate: Date;
+    StartDate: string;
     /**
      * End date
      */
-    EndDate?: Date;
+    EndDate?: string;
+    /** 
+     * Either basic location or address
+     */
+    Location?: string;
     /**
      * Notes or description of the event
      */
@@ -37,7 +37,7 @@ export interface ApiEvent {
     /**
      * List of member's emails who are invited to the event
      */
-    Members: string[];
+    Members: number[];
     /**
      * How many minutes before the event that the user should be notifed
      */
@@ -48,6 +48,13 @@ export interface ApiEvent {
     GroupId?: number | number[];
 
     Recurring?: Recurring;
+}
+
+export interface ApiEvent extends ApiCreateEvent {
+    /**
+     * Id of the event
+     */
+    Id: number;
 }
 
 export interface Recurring {

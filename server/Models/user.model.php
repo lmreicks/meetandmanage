@@ -8,6 +8,10 @@ class User extends \Illuminate\Database\Eloquent\Model {
     protected $fillable = [
         'name', 'email', 'password'
     ];
+
+    public function events() {
+        return $this->belongsToMany('Models\Event');
+    }
 }
 
 ?>

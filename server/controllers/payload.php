@@ -6,44 +6,36 @@ use Slim\Http\Response;
 use Models\Event;
 use Models\User;
 use Models\EventLookup;
+use Logic\ModelSerializers\GroupSerializer;
+use Logic\ModelSerializers\UserSerializer;
+use Logic\ModelSerializers\EventSerializer;
 
 $app->get('/api/payload', function (Request $request, Response $response, array $args) {
     $user = $request->getAttribut('user');
     $events = $user->events();
     $groups = $user->groups();
-    $payload = new payload($events);
-
-});
-
-function getAllEvents($user){
-    $email = $user->email;
-    $eventIds = EventLookup::where('Email','=',$email)->get();// $eventIds <-- all eventIds where the user email is the email
-    $events = array(); 
-    echo $eventsIds;
-    foreach ($eventIds as $eventId){
-        $eventId = $eventId->EventId;
-        $event = Event::where('Id','=',$eventId)->first();
-        if ($event != null){
-            if (!in_array($event, $events)){
-                array_push($events, $event);
-            }
-        }
+    $groupEvents = array();
+    foreach ($groups as $group){
+        array_push($groupEvents, $group->events());
     }
-    return $events;
-}
+    $payload = new payload(EventSerializer.toApiList($events), GroupSerializer.toApiList($groups), EventSerializer.toApiList($groupEvents));//need to be serialized
 
-function getAllGroups($user){
-    //waiting on the group lookup table to be made
-}
+    return json_encode($payload);
+});
 
 class payload{
 
     private $userEvents;
     private $userGroups;
-
-    public function __construct($events, $groups){
+    private $userGroupEvents;
+    public function __construct($events, $groups, $groupEvents){
         $this->userEvents = $events;
         $this->userGroups = $groups;
-        return $this->userEvents . ' ' . $this->userGroups;
+        $this->userGroupEvents = $groupEvents;
+        return array(
+            'Events' => $this->userEvents,
+            'Groups' => $this->userGroups,
+            'GroupEvents' => $this->userGroupEvents
+        );
     }
 }

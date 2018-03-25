@@ -13,7 +13,7 @@ define('APP_START', microtime(true));
 */
 define('BASE', dirname(__DIR__));
 
-require BASE . '/vendor/autoload.php';
+require BASE . '/server/vendor/autoload.php';
 
 use Bootstrap\Container\Application;
 use Illuminate\Pagination\Paginator;

@@ -23,7 +23,7 @@ class UserGroupTable extends Migration
                   ->on('groups')->onDelete('cascade');
 
             $table->timestamps();
-        }
+        });
     }
 
     /**

@@ -13,7 +13,7 @@ class User extends \Illuminate\Database\Eloquent\Model {
         return $this->belongsToMany('Models\Event');
     }
 
-    public function todoTask(){
+    public function todos(){
         return $this->belongsToMany('Models\todoTask');
     }
 

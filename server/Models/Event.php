@@ -6,7 +6,7 @@ class Event extends \Illuminate\Database\Eloquent\Model {
     protected $table = 'events';
 
     protected $fillable = [
-        'title', 'owner_id', 'start_time', 'end_time', 'start_date', 'end_date', 'notes', 'location', 'group_id'
+        'title', 'owner_id', 'start_time', 'end_time', 'start_date', 'end_date', 'notes', 'location', 'group_id', 'notification', 'recurring'
     ];
 
     public function users() {

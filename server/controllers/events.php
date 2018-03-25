@@ -13,28 +13,11 @@ $app->get('/api/event', function (Request $request, Response $response, array $a
     #have to go through event mappings, and get all events which the user is included in and add
     #them to the array of events to be returned to lexi
     $user = $request->getAttribute('user');
-    $events = getAllEvents($user);
-    $return = json_encode($events);
+    $events = $user->events();
+    $return = json_encode(/*however I call serializer*/);
     $response->getBody()->write($return);
     return $response;
 });
-
-function getAllEvents($user){
-    $email = $user->email;
-    $eventIds = EventLookup::where('Email','=',$email)->get();// $eventIds <-- all eventIds where the user email is the email
-    $events = array(); 
-    echo $eventsIds;
-    foreach ($eventIds as $eventId){
-        $eventId = $eventId->EventId;
-        $event = Event::where('Id','=',$eventId)->first();
-        if ($event != null){
-            if (!in_array($event, $events)){
-                array_push($events, $event);
-            }
-        }
-    }
-    return $events;
-}
 
 $app->post('/api/event', function (Request $request, Response $response, array $args) {
     
@@ -146,7 +129,7 @@ class EventValidator {
 
         
         $title = $body->Title;
-        if ()
+        
         $location = $body->Location;
         $StartDate = explode('-',$body->StartDate);
         $endDate = explode('-',$body->EndDate);
@@ -161,5 +144,6 @@ class EventValidator {
         if ($endDate[2] == $startDate[2] && $endDate[0] == $startDate[0] && $endDate[1] == $startDate[1] && $eTime < $sTime) return false;
         if ($title == NULL) return false;
         
+        return true;
     }
 }

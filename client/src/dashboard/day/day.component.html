@@ -1,10 +1,12 @@
 <div class='header-container'>
     <div class='header'>
-      <div class="glyphicon glyphicon-chevron-left"></div>
-      <div *ngIf="!loading">
-        <h1>{{day.day.display}}</h1>
-      </div>
-      <div class="glyphicon glyphicon-chevron-right"></div>
+        <a>
+            <i class="fas fa-2x fa-angle-left"></i>
+        </a>
+        <h1> &nbsp; {{day.day.display}} &nbsp; </h1>
+        <a>
+            <i class="fas fa-2x fa-angle-right"></i>
+        </a>
     </div>
 </div>
 <div class='list-grid-container'>
@@ -30,7 +32,7 @@
         </div>
         <div class='list-grid-item'>
             <div class='header-container'>
-                <div class='header'>To-Do</div>
+                <div class='header'>To-Dos</div>
             </div>
             <div class="day-container">
                 <div class='day' *ngIf="!loading">
@@ -48,14 +50,14 @@
         <div class='activity-grid-item first-item'>
             <div class='header-container'>
                 <div class='header'>
-                    <button class="btn" [ngClass]="{ 'active' : state === 1 }" (click)="state = 1">Workout</button></div>
+                    <button class="btn" [ngClass]="{ 'active' : state === 1 }" (click)="state = 1">Workouts</button></div>
             </div>
         </div>
         <div class='activity-grid-item'>
-                <div class='header-container'>
-                    <div class='header'>
-                        <button class="btn" [ngClass]="{ 'active' : state === 2 }" (click)="state = 2">Budget</button></div>
-                </div>
+            <div class='header-container'>
+                <div class='header'>
+                    <button class="btn" [ngClass]="{ 'active' : state === 2 }" (click)="state = 2">Groups</button></div>
+            </div>
         </div>
     </div>
 </div>

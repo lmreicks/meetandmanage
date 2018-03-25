@@ -1,23 +1,42 @@
 <div class='header-container'>
     <div class='header'>
-      <div class="glyphicon glyphicon-chevron-left"></div>
-      <div *ngIf="!loading">
-        <h1>{{day.day.display}}</h1>
-      </div>
-      <div class="glyphicon glyphicon-chevron-right"></div>
+        <h1> {{week.days[0].day.display1}} </h1>
+    </div>
+</div>
+<div class='banner-container'>
+    <div class='banner'>
+        <a>
+            <i class="fas fa-2x fa-angle-left"></i>
+        </a>
+        <table style="width: 100%">
+            <tr>
+                <th> {{week.days[0].day.display}} </th>
+                <th> {{week.days[1].day.display}} </th>
+                <th> {{week.days[2].day.display}} </th>
+                <th> {{week.days[3].day.display}} </th>
+                <th> {{week.days[4].day.display}} </th>
+                <th> {{week.days[5].day.display}} </th>
+                <th> {{week.days[6].day.display}} </th>
+            </tr>
+        </table>
+        <a>
+            <i class="fas fa-2x fa-angle-right"></i>
+        </a>
     </div>
 </div>
 <div class="week-container">
     <div class="time">
         <div class="hour" *ngFor="let hour of hours">
             {{hour}}
+            <hr class='line'/>
         </div>
     </div>
     <div class="week" *ngIf="!loading">
         <div class="day" *ngFor="let day of week.days" [ngClass]="{'current': day.day.current }">
-            <div class="event" *ngFor="let event of day.events">
+            <div class="event" *ngFor="let event of day.events" [ngStyle]="{'margin-top': getStart(event) + 'px', 'height': getDuration(event) + 'px'}">
                 {{event.Title}}
             </div>
+            {{resetVars()}}
         </div>
         <div class="time-markers"><div *ngFor="let hour of hours"></div></div>
     </div>

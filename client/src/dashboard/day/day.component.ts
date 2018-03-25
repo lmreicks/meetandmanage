@@ -58,13 +58,13 @@ export class DayComponent {
         }
         //console.log(moment.duration(end.diff(start)).asHours() * 120);
         
-        return this.height = moment.duration(end.diff(start)).asHours() * 120;
+        return this.height = moment.duration(end.diff(start)).asHours() * 100;
     }
 
     public getStart(v) {
         var start = moment(v.StartDate + " " + v.StartTime);
         //console.log((start.hours() + (start.minutes()/60)) * 120);
-        return this.diff = ((start.hours() + (start.minutes()/60)) * 120) - this.diff;
+        return this.diff = ((start.hours() + (start.minutes()/60)) * 100) - this.diff - this.height;
     }
 
     private setHours(): void {

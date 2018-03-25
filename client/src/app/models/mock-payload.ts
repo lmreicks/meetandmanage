@@ -25,9 +25,9 @@ export const MockEvents: ApiEvent[] = [
         Location: 'TLA',
         OwnerId: 3,
         StartDate: moment().format(DATE_FORMAT),
-        EndDate: moment().add(3, 'days').format(DATE_FORMAT),
+        EndDate: moment().format(DATE_FORMAT),
         StartTime: '15:00:00',
-        EndTime: '16:00:00',
+        EndTime: '17:00:00',
         Members: [3, 4, 5]
     },
     {

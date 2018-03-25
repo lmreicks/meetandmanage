@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 import { DateObject } from '../../dashboard/models/date.model';
 import { ApiEvent } from '../models/event';
 import * as moment from 'moment';
@@ -16,19 +17,22 @@ import { MockPayload } from '../models/mock-payload';
 
 export class CoreCacheService {
     currentUser: ApiUser;
-    payload: ReplaySubject<PayloadModel> = new ReplaySubject();
+    payload: PayloadModel;
+    promiseForData: Promise<PayloadModel>;
     constructor(private http: Http) {}
-    eventMap: ReplaySubject<Map<string, ApiEvent[]>> = new ReplaySubject();
-    tempPayload: Observable<PayloadModel> = new Observable(observable => {
-        observable.next(MockPayload);
-    });
+    private dateMap: Map<string, ApiEvent[]>;
+    private eventMap: Map<number, ApiEvent>;
+    tempPayload: Promise<PayloadModel> = Promise.resolve(MockPayload);
 
-    OnAuth(): void {
-        this.tempPayload.subscribe(payload => {
-        //this.Payload().subscribe(events => {
-            this.currentUser = payload.User;
-            this.ParseEvents(payload.Events);
-        });
+    OnAuth(): Promise<PayloadModel> {
+        this.promiseForData = this.tempPayload
+                .then(p => {
+                    this.payload = p;
+                    this.ParseEvents(this.payload.Events);
+                    return this.payload;
+                });
+
+        return this.promiseForData;
     }
 
     Payload(): Observable<ApiEvent[]> {
@@ -36,24 +40,25 @@ export class CoreCacheService {
             .map(res => res.json(), err => new Observable(err));
     }
 
-    ParseEvents(events: ApiEvent[]): void {
-        console.log(events);
+    private ParseEvents(events: ApiEvent[]): void {
         if (!events || events.length === 0) {
             return;
         }
 
         this._sortEvents(events);
 
-        let map = new Map<string, ApiEvent[]>();
+        this.dateMap = new Map<string, ApiEvent[]>();
+        this.eventMap = new Map<number, ApiEvent>();
 
         events.forEach(event => {
-            if (map.has(event.StartDate)) {
-                map.get(event.StartDate).push(event);
+            this.eventMap.set(event.Id, event);
+
+            if (this.dateMap.has(event.StartDate)) {
+                this.dateMap.get(event.StartDate).push(event);
             } else {
-                map.set(event.StartDate, [event]);
+                this.dateMap.set(event.StartDate, [event]);
             }
         });
-        this.eventMap.next(map);
     }
 
     private _sortEvents(events: ApiEvent[]) {
@@ -66,6 +71,22 @@ export class CoreCacheService {
                 return 1;
             }
         });
+    }
+
+    public GetDateMap(): Promise<Map<string, ApiEvent[]>> {
+        if (this.dateMap) {
+            return new Promise(resolve => resolve(this.dateMap));
+        } else {
+            return this.promiseForData.then(payload => this.dateMap);
+        }
+    }
+
+    public GetEventMap(): Promise<Map<number, ApiEvent>> {
+        if (this.eventMap) {
+            return new Promise(resolve => resolve(this.eventMap));
+        } else {
+            return this.promiseForData.then(payload => this.eventMap);
+        }
     }
 }
 

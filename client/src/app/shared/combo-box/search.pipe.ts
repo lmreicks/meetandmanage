@@ -27,7 +27,7 @@ export class SearchFilterPipe implements PipeTransform {
 
     const toCompare = term.toLowerCase();
 
-    return items.filter(function (item: any) {
+    return items.filter((item: any) => {
       for (let property in item) {
         if (item[property] === null) {
           continue;

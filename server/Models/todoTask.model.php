@@ -8,6 +8,10 @@ class todoTask extends \Illuminate\Database\Eloquent\Model {
     protected $fillable = [
         'ownerId', 'description', 'done'
     ];
+
+    public function owner() {
+        return $this->hasOne('Models\User');
+    }
 }
 
 ?>

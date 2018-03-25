@@ -9,7 +9,9 @@ use Models\EventLookup;
 
 $app->get('/api/payload', function (Request $request, Response $response, array $args) {
     $user = $request->getAttribut('user');
-    $events = getAllEvents($user);
+    $events = $user->events();
+    $groups = $user->groups();
+    $payload = new payload($events);
 
 });
 
@@ -28,6 +30,10 @@ function getAllEvents($user){
         }
     }
     return $events;
+}
+
+function getAllGroups($user){
+    //waiting on the group lookup table to be made
 }
 
 class payload{

@@ -70,15 +70,11 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     $event->Notes = $body->Notes;
     $event->Location = $body->Location;
 
+    $event->users()-> attach($body->Members);
+
     $event->save();
     $eventId = $event->Id;
     $membersArray = $body->members;
-    foreach($membersArray as $email){
-        $eventLookup = new EventLookup
-        $eventLookup->Email = $email;
-        $eventLookup->EventId = $eventId;
-        $eventLookup->save();
-    }
     $response->getBody()->write(json_encode($event));
     return $response;
 });
@@ -142,7 +138,7 @@ $app->put('/api/event', function (Request $request, Response $response, array $a
 
 });
 
-class EventValidator{
+class EventValidator {
     public function __invoke($body){
         if ($body->StartDate == NULL) return false;
         if ($body->EndDate == NULL) return false;

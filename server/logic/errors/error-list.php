@@ -9,4 +9,5 @@ class ErrorList {
 
     // event
     const EVENT_NOT_FOUND = "The event requested was not found";
+    const EVENT_START_DATE_NULL = "Event start date is null";
 }

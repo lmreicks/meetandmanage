@@ -12,6 +12,14 @@ class User extends \Illuminate\Database\Eloquent\Model {
     public function events() {
         return $this->belongsToMany('Models\Event');
     }
+
+    public function todoTask(){
+        return $this->belongsToMany('Models\todoTask');
+    }
+
+    public function group(){
+        return $this->belongsToMany('Models\Group');
+    }
 }
 
 ?>

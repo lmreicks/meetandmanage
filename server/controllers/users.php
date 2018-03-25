@@ -4,6 +4,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\User;
 use Logic\ErrorList;
+use Logic\ModelSerializers\UserSerializer;
 
 $app->get('/api/user/{id}', function (Request $request, Response $response, array $args) {
     $response->getBody()->write("get user");
@@ -11,7 +12,13 @@ $app->get('/api/user/{id}', function (Request $request, Response $response, arra
 });
 
 $app->get('/api/user', function (Request $request, Response $response, array $args) {
-    $response->getBody()->write("get all users");
+    $users = User::all();
+    $serializer = new UserSerializer;
+
+    $apiUsers = $serializer->toApiList($users);
+
+    $response->getBody()->write(json_encode($apiUsers));
+
     return $response;
 });
 

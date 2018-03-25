@@ -1,5 +1,11 @@
-import { Moment } from "moment";
-import { NgbTime } from "@ng-bootstrap/ng-bootstrap/timepicker/ngb-time";
+import { ApiUser } from "./user";
+
+export enum NotificationGranularity {
+    Minutes,
+    Hours,
+    Days,
+    Weeks
+}
 
 export interface ApiCreateEvent {
     /**
@@ -35,17 +41,25 @@ export interface ApiCreateEvent {
      */
     Notes?: string;
     /**
-     * List of member's emails who are invited to the event
+     * List of member's who are invited to the event
      */
-    Members: number[];
+    Members: ApiUser[];
     /**
-     * How many minutes before the event that the user should be notifed
+     * How many (minutes/hours/days/weeks) before the event that the user should be notifed
      */
-    Notification?: number;
+    NotificationValue?: number;
+    /**
+     * Notification granularity (minutes/hours/days/weeks)
+     */
+    NotificationGranularity?: NotificationGranularity;
     /**
      * Id of the group(s) that this event should belong to, if in a group
      */
     GroupId?: number | number[];
+    /**
+     * Color of the event in the form of a hash code (#00000)
+     */
+    Color?: string;
 
     Recurring?: Recurring;
 }

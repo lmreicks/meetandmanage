@@ -10,6 +10,7 @@ import { Day } from '../models';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { SessionService } from '../../app/services/session.service';
 import { EventService } from '../../app/event/event.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'mnm-month',
@@ -24,11 +25,14 @@ export class MonthComponent {
     public currentMonth: moment.Moment = moment();
     public event: ApiEvent;
 
-    constructor(private coreCache: CoreCacheService, private eventService: EventService, private sessionService: SessionService) {}
+    constructor(private coreCache: CoreCacheService,
+                private eventService: EventService,
+                private sessionService: SessionService,
+                private router: Router) {}
 
     ngOnInit(): void {
         this.loading = true;
-        this.coreCache.eventMap.subscribe(map => {
+        this.coreCache.GetDateMap().then(map => {
             this.eventMap = map;
             this.parseMonth(this.currentMonth.clone());
             this.loading = false;
@@ -95,27 +99,12 @@ export class MonthComponent {
         return date.format('hh:mm a');
     }
 
-    doubleClickDay(click: MouseEvent, day: Day) {
-        let event: ApiCreateEvent | ApiEvent = {
-            Title: "",
-            OwnerId: this.sessionService.currentUserId,
-            StartDate: moment(day.day.utcDateValue).format(DATE_FORMAT),
-            EndDate: moment(day.day.utcDateValue).format(DATE_FORMAT),
-            StartTime: moment().format(TIME_FORMAT),
-            EndTime: moment().add(1, 'hour').format(TIME_FORMAT),
-            Notes: "",
-            Members: []
-        };
-        if (click.srcElement.classList.contains('event')) {
-            day.events.forEach(e => {
-                if (e.Id == parseInt(click.srcElement.id, 10)) {
-                    this.eventService.EditEvent(e);
-                    return;
-                }
-            });
-        } else {
-            this.eventService.EditEvent(event);
-        }
+    doubleClickDay(click: MouseEvent, day: Day): void {
+        this.router.navigate(['event/create']);
+    }
+
+    doubleClickEvent(click: MouseEvent, event: ApiEvent): void {
+        this.router.navigate(['event', event.Id]);
     }
 
     togglePopover(popover: NgbPopover, event: ApiEvent): void {

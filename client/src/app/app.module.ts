@@ -23,6 +23,12 @@ import { NgbDateNativeAdapter } from './shared/datepicker-adapter.component';
 import { DropdownModule } from './shared/dropdown/dropdown.module';
 import { ComboBoxComponent } from './shared/combo-box/combo-box.component';
 import { SearchFilterPipe } from './shared/combo-box/search.pipe';
+import { NotFoundComponent } from './shared/not-found/not-found.component';
+import { AgmCoreModule } from '@agm/core';
+import { UserService } from './user/user.service';
+import { LocationInput } from './shared/location-input/location-input.component';
+import { GroupService } from './group/group.service';
+import { EditGroupComponent } from './group/edit-group/edit-group.component';
 
 @NgModule({
   declarations: [
@@ -31,10 +37,17 @@ import { SearchFilterPipe } from './shared/combo-box/search.pipe';
     LoginComponent,
     EditEventComponent,
     ComboBoxComponent,
-    SearchFilterPipe
+    SearchFilterPipe,
+    NotFoundComponent,
+    LocationInput,
+    EditGroupComponent
   ],
   imports: [
     NgbModule.forRoot(),
+    AgmCoreModule.forRoot({
+      apiKey: "AIzaSyDUJitlzdDW3SpdwzBzDW5YnTS_I-HeMCs",
+      libraries: ["places"]
+    }),
     DropdownModule,
     RouterModule.forRoot(appRoutes),
     DashboardModule,
@@ -50,6 +63,8 @@ import { SearchFilterPipe } from './shared/combo-box/search.pipe';
     AuthService,
     EventService,
     SessionService,
+    UserService,
+    GroupService,
     {
       provide: NgbDateAdapter,
       useClass: NgbDateNativeAdapter

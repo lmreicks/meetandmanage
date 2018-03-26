@@ -20,8 +20,8 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
     $user = $request->getAttribute('user');
     $body = json_decode($request->getBody());
     $group = $body->group;
-    $members = $body->
-    $group = GroupSerializer.toServer();
+    $members = $body->Members;
+    $group = GroupSerializer.toServer($group);
     $group->save();
     $out = GroupSerializer.toApi($group);
     $response->write($out);
@@ -29,9 +29,26 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
 });
 
 $app->post('/api/group', function (Request $request, Response $response, array $args) {
-
+    $user = $request->getAttribute('user');
+    $body = json_decode($request->getBody());
+    $group = $body->group;
+    $members = $body->Members;
+    $group = GroupSerializer.toServer($group);
+    foreach($members as $member){
+        $group->attach($member->id);
+    }
+    $group->save;
+    $resonse->write(json_encode(GroupSerializer.toApi($group)));
+    return $response;
 });
 
 $app->delete('/api/group', function (Request $request, Response $response, array $args) {
-
+    $user = $request->getAttribute('user');
+    $body = json_decode($request->getBody());
+    $group = $body->group;
+    $group = GroupSerializer.toApi($group);
+    $group->delete();
+    $out = json_encode(GroupSerializer.toApi($group));
+    $response->write($out);
+    return $response;
 }); 

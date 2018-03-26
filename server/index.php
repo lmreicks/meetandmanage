@@ -55,6 +55,8 @@ require __DIR__ . '/controllers/events.php';
 require __DIR__ . '/controllers/users.php';
 require __DIR__ . '/controllers/auth.php';
 require __DIR__ . '/controllers/todo.php';
+require __DIR__ . '/controllers/payload.php';
+require __DIR__ . '/controllers/group.php';
 
 $app->run();
 

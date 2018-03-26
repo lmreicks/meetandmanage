@@ -19,7 +19,7 @@ class GroupSerializer extends ModelSerializer{
             'Description' => $model->description,
             'Members' => UserSerializer.toApi($model->users())
         );
-    }
+    } 
 
     function toApiList($models){
         $serialized = Array();
@@ -31,8 +31,8 @@ class GroupSerializer extends ModelSerializer{
 
     function toServer($model){
         $out = new Group;
-        $out->group_name = $model['Name'];
-        $out->description = $model['Description'];
+        $out->group_name = $model->Name;
+        $out->description = $model->Description;
         return $out;
     }
 

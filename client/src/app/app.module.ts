@@ -10,7 +10,6 @@ import { httpFactory } from './services';
 
 import { AppComponent } from './app.component';
 import { CoreCacheService } from './services/core-cache.service';
-import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './services/auth-guard';
 import { AuthService } from './services/auth.service';
@@ -33,7 +32,6 @@ import { EditGroupComponent } from './group/edit-group/edit-group.component';
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     LoginComponent,
     EditEventComponent,
     ComboBoxComponent,

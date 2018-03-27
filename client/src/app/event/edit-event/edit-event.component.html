@@ -1,19 +1,20 @@
-<form #form="ngForm" [formGroup]="eventForm" *ngIf="eventForm">
+<form #form="ngForm" [formGroup]="eventForm" *ngIf="eventForm" class="pt-4">
     <div class="top-panel">
         <div class="form-group row">
             <div class="pl-3">
-                <div class="font-awesome x-button">
+                <div class="font-awesome x-button" (click)="router.navigate(['dashboard'])">
                     <i class="fas fa-times"></i>
                 </div>
             </div>
             <div class="col-sm-9">
                 <input class="form-control title"
+                    [ngClass]="{ 'border-danger' : eventForm.get('Title').errors }"
                     type="text"
                     formControlName="Title"
                     placeholder="Add Title...">
             </div>
             <div class="col-sm-2">
-                <button class="btn btn-success">{{ edit ? 'Edit' : 'Create' }} Event</button>
+                <button type="submit" (click)="createEvent(eventForm)" class="btn btn-success">{{ edit ? 'Edit' : 'Create' }} Event</button>
             </div>
         </div>
         <div class="form-group row">
@@ -21,7 +22,7 @@
                 <div ngbDropdown class="date">
                     <input  class="form-control"
                             id="datepicker"
-                            [ngClass]="{ 'border-danger': eventForm.get('StartDate').errors?.invalidDate }"
+                            [ngClass]="{ 'border-danger': eventForm.get('StartDate').errors }"
                             [value]="formatDate(eventForm.get('StartDate').value)"
                             ngbDropdownToggle/>
                     <div ngbDropdownMenu aria-labelledby="datepicker">
@@ -74,7 +75,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row px-4">
         <div class="col-sm-7">
             <div class="detail-tab">
                 <div class="mb-1">Event Details</div>
@@ -170,12 +171,11 @@
             </div>
         </div>
         <div class="vl"></div>
-        <div class="col-sm-5">
-            <div class="form-group" formArrayName="Members">
-                <div class="col-sm-12"
-                    ngbDropdown
-                    *ngFor="let member of getMembers(); let i = index">
-
+        <div class="col-sm-5" formArrayName="Members">
+            <div class="form-group"
+                *ngFor="let member of getMembers(); let i = index">
+                <div class="col-sm-11"
+                    ngbDropdown>
                     <input  class="form-control"
                             [id]="i"
                             formControlName="{{i}}"
@@ -188,11 +188,14 @@
                         <li *ngIf="memberNotFound" id="not-found" class="dropdown-item">
                             Member Not Found
                         </li>
-                        <li *ngFor="let user of users | filter: getMember(i)" class="dropdown-item">
+                        <li *ngFor="let user of users | filter: getMember(i)" class="dropdown-item" (click)="addMember(user, i)">
                             {{user.Name}}<br/>
                             <small>{{user.Email}}</small>
                         </li>
                     </div>
+                </div>
+                <div class="font-awesome col-sm-1 clickable" *ngIf="i < getMembers().length - 1" (click)="removeMember(i)">
+                    <i class="fa fa-times"></i>
                 </div>
             </div>
         </div>

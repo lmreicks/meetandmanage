@@ -22,10 +22,15 @@ export class EventService {
                 private router: Router,
                 private fb: FormBuilder) {}
 
-    CreateEvent(event: ApiCreateEvent): Observable<ApiEvent> {
+    CreateEvent(event: ApiCreateEvent): Promise<ApiEvent> {
         return this.http.post(this.url, event)
-            .map(res => res.json())
-            .catch(err => err ? err.json() : "Err");
+            .map(res => {
+                let apiEvent = res.json();
+
+                this.coreCache.AddEvent(apiEvent);
+                return apiEvent;
+            })
+            .toPromise();
     }
 
     BuildEventForm(event: ApiCreateEvent | ApiEvent, form: FormGroup): FormGroup {
@@ -33,6 +38,7 @@ export class EventService {
             Title: [
                 event.Title, Validators.required
             ],
+            OwnerId: this.sessionService.currentUserId,
             StartDate: [
                 moment(event.StartDate, DATE_FORMAT).toDate(),
                 Validators.required
@@ -95,9 +101,17 @@ export class EventService {
     private _validateDate(form: FormGroup): ValidatorFn {
         let startDate = form.controls.StartDate;
         let endDate = form.controls.EndDate;
+
         return (control: AbstractControl): {[key: string]: any} => {
-            const badDate = moment(startDate.value).isAfter(moment(endDate.value));
-            return badDate ? {'invalidDate': { value: false }} : null;
+            let badDate = false;
+            if (!startDate.value || !moment(startDate.value).isValid()) {
+                badDate = true;
+            } else if (!endDate.value || !moment(endDate.value).isValid()) {
+                badDate = true;
+            } else if (moment(startDate.value).isAfter(moment(endDate.value))) {
+                badDate = true;
+            }
+            return badDate ? {'invalidDate': { value: true }} : null;
         };
     }
 

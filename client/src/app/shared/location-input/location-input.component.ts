@@ -59,6 +59,9 @@ export class LocationInput implements ControlValueAccessor {
             this.innerValue = v;
             this.onChangeCallback(v);
         }
+
+        // set latitude, longitude and zoom
+        this.change.emit(this.location);
     }
 
     ngOnInit(): void {
@@ -79,12 +82,13 @@ export class LocationInput implements ControlValueAccessor {
                         return;
                     }
 
-                    // set latitude, longitude and zoom
-                    this.change.emit({
+                    this.location = {
                         Address: place.formatted_address,
                         Latitude: place.geometry.location.lat(),
                         Longitude: place.geometry.location.lng()
-                    });
+                    };
+
+                    this.value = place.formatted_address;
                 });
             });
         });

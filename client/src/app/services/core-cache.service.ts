@@ -73,6 +73,13 @@ export class CoreCacheService {
         });
     }
 
+    public AddEvent(event: ApiEvent): void {
+        if (this.dateMap.has(event.StartDate)) {
+            this.dateMap.get(event.StartDate).push(event);
+        }
+        this.eventMap.set(event.Id, event);
+    }
+
     public GetDateMap(): Promise<Map<string, ApiEvent[]>> {
         if (this.dateMap) {
             return new Promise(resolve => resolve(this.dateMap));

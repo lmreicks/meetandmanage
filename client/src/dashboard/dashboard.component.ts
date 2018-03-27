@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
     selector: 'mnm-dashboard',
@@ -7,13 +9,11 @@ import { Component } from '@angular/core';
 })
 
 export class DashboardComponent {
-    public Granularity = Granularity;
-    public state: Granularity = Granularity.Month;
-    constructor() {}
-}
+    public current: moment.Moment;
 
-export enum Granularity {
-    Day,
-    Week,
-    Month
+    constructor(private router: Router) {}
+
+    public updateDate(date: moment.Moment) {
+        this.current = date;
+    }
 }

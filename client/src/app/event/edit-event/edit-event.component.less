@@ -1,3 +1,14 @@
+@import '../../../config.less';
+
+form {
+    border-bottom: 1px solid @border-grey;
+}
+
+.top-panel {
+    padding-left: 1.5rem!important;
+    padding-right: 1.5rem!important;
+}
+
 .title {
     font-size: 20px;
 }
@@ -33,7 +44,7 @@
         background-color: unset;
         .color {
             transform: scale(1.1);
-            box-shadow: 0px 0px 1px 1px #ccc6c6;
+            box-shadow: 0px 0px 1px 1px @border-grey;
         }
     }
 }
@@ -41,6 +52,8 @@
 .bottom-panel {
     position: relative;
     padding: 25px 0px;
+    padding-left: 1.5rem!important;
+    padding-right: 1.5rem!important;
 }
 
 .dropdown-menu {
@@ -56,13 +69,12 @@
 }
 
 .hr {
-    margin: 0px -40px;
     border-top: 1px solid rgba(0,0,0,.1);
 }
 
 .detail-tab {
     font-size: 14px;
-    border-bottom: 3px solid #2196F3;
+    border-bottom: 3px solid @light-blue;
 }
 
 .x-button {

@@ -9,15 +9,23 @@ import { DashboardComponent } from './dashboard.component';
 import { MonthComponent } from './month/month.component';
 import { WeekComponent } from './week/week.component';
 import { EventPopoverComponent } from './event-popover/event-popover.component';
+import { HeaderComponent } from './header/header.component';
+import { RouterModule } from '@angular/router';
+import { dashboardRoutes } from './dashboard.routing';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { DashboardService } from './dashboard.service';
 
 @NgModule({
   declarations: [
     DashboardComponent,
+    SidebarComponent,
+    HeaderComponent,
     MonthComponent,
     WeekComponent,
     EventPopoverComponent
   ],
   imports: [
+    RouterModule.forChild(dashboardRoutes),
     NgbModule.forRoot(),
     BrowserModule,
     FormsModule,
@@ -28,6 +36,7 @@ import { EventPopoverComponent } from './event-popover/event-popover.component';
       DashboardComponent
   ],
   providers: [
+    DashboardService,
     {
       provide: Http,
       useFactory: httpFactory,

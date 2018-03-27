@@ -1,6 +1,5 @@
 <?php
-include "errors.php";
-#include "const_errors.php";
+
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\Event;
@@ -11,17 +10,45 @@ use Logic\ModelSerializers\UserSerializer;
 use Logic\ModelSerializers\EventSerializer;
 
 $app->get('/api/payload', function (Request $request, Response $response, array $args) {
-    $es = new Logic\ModelSerializers\EventSerializer;
-    $gs = new Logic\ModelSerializers\GroupSerializer;
-    $user = $request->getAttribut('user');
-    $events = $user->events();
-    $groups = $user->groups();
-    foreach ($groups as $group) {
-        $group->Events = $group->events();
-    }
-    $payload = new payload($es->toApiList($events), $gs->toApiList($groups));//need to be serialized
+    $es = new EventSerializer;
+    $gs = new GroupSerializer;
+    $user = $request->getAttribute('user');
+    $events = $user->events;
+    //echo $events;
+    $outGroups = $user->group;
+    $g = $outGroups;
+    if ($outGroups != NULL && count($outGroups) != 0 && $outGroups != []){
+        
+        $outGroups = $gs->toApiList($g);
+        // echo $outGroups;
+        if (count($outGroups) > 1){
+            foreach ($outGroups as $group) {
+                //$group->Events = $group->events;
+            }
+        } 
+        //else $outGroups->Events = $g->events;
+        
 
-    return json_encode($payload);
+        // foreach($events as $event) echo $event;
+        
+        $payload = new payload($es->toApiList($events), $outGroups);//need to be serialized
+
+        $payload = array(
+            'Events' => $es->toApiList($events),
+            'Groups' => $gs->toApiList($g)
+        );
+        $response->getBody()->write(json_encode($payload));
+        return $response;
+    }
+    
+    $out = array(
+        'Events' => $es->toApiList($events),
+        'Groups' => array()
+    );
+    $response->getBody()->write(json_encode($out));
+    return $response;
+
+    
 });
 
 class payload{

@@ -17,7 +17,7 @@ export const MockEvents: ApiEvent[] = [
         StartTime: '10:30:00',
         EndTime: '11:30:00',
         Notes: 'Bring insurance card',
-        Members: [3]
+        Members: []
     },
     {
         Id: 2,
@@ -27,8 +27,9 @@ export const MockEvents: ApiEvent[] = [
         StartDate: moment().format(DATE_FORMAT),
         EndDate: moment().format(DATE_FORMAT),
         StartTime: '15:00:00',
-        EndTime: '17:00:00',
-        Members: [3, 4, 5]
+        EndTime: '16:00:00',
+        Color: '#9C0D38',
+        Members: []
     },
     {
         Id: 3,
@@ -39,7 +40,8 @@ export const MockEvents: ApiEvent[] = [
         EndDate: moment().subtract(7, 'days').format(DATE_FORMAT),
         StartTime: '12:00:00',
         EndTime: '13:00:00',
-        Members: [3, 4, 5]
+        Color: '#CE5374',
+        Members: []
     },
     {
         Id: 4,
@@ -50,7 +52,8 @@ export const MockEvents: ApiEvent[] = [
         EndDate: moment().subtract(3, 'days').format(DATE_FORMAT),
         StartTime: '12:00:00',
         EndTime: '13:00:00',
-        Members: [3, 4, 5]
+        Color: '#DBBBF5',
+        Members: []
     },
     {
         Id: 5,
@@ -61,7 +64,8 @@ export const MockEvents: ApiEvent[] = [
         EndDate: moment().add(3, 'days').format(DATE_FORMAT),
         StartTime: '12:00:00',
         EndTime: '13:00:00',
-        Members: [3, 4, 5]
+        Color: '#DBBBF5',
+        Members: []
     },
     {
         Id: 6,
@@ -72,7 +76,8 @@ export const MockEvents: ApiEvent[] = [
         EndDate: moment().add(6, 'days').format(DATE_FORMAT),
         StartTime: '12:00:00',
         EndTime: '13:00:00',
-        Members: [3, 4, 5]
+        Color: "#731DD8",
+        Members: []
     },
     {
         Id: 7,
@@ -83,7 +88,8 @@ export const MockEvents: ApiEvent[] = [
         EndDate: moment().add(9, 'days').format(DATE_FORMAT),
         StartTime: '15:00:00',
         EndTime: '16:00:00',
-        Members: [3, 4, 5]
+        Color: "#577399",
+        Members: []
     },
     {
         Id: 8,
@@ -94,7 +100,8 @@ export const MockEvents: ApiEvent[] = [
         EndDate: moment().add(9, 'days').format(DATE_FORMAT),
         StartTime: '10:00:00',
         EndTime: '11:00:00',
-        Members: [3, 4, 5]
+        Color: '#006992',
+        Members: []
     },
     {
         Id: 9,
@@ -105,10 +112,11 @@ export const MockEvents: ApiEvent[] = [
         EndDate: moment().add(14, 'days').format(DATE_FORMAT),
         StartTime: '01:00:00',
         EndTime: '23:00:00',
-        Members: [3, 4, 5]
+        Color: '#4286f4',
+        Members: []
     },
     {
-        Id: 9,
+        Id: 10,
         Title: 'Work',
         Location: 'Airport Road',
         OwnerId: 3,
@@ -116,7 +124,7 @@ export const MockEvents: ApiEvent[] = [
         EndDate: moment().add(20, 'days').format(DATE_FORMAT),
         StartTime: '10:00:00',
         EndTime: '13:00:00',
-        Members: [3, 4, 5]
+        Members: []
     }
 ];
 

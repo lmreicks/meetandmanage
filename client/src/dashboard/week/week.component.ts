@@ -23,7 +23,7 @@ export class WeekComponent {
     ngOnInit(): void {
         this.loading = true;
         this.setHours();
-        this.coreCache.eventMap.subscribe(map => {
+        this.coreCache.GetDateMap().then(map => {
             this.week = {
                 current: false,
                 days: []

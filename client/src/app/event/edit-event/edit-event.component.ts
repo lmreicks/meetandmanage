@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { FormGroup, AbstractControl, FormArray } from '@angular/forms';
 import * as moment from 'moment';
 import { EventService } from '../event.service';
-import { ApiEvent, ApiCreateEvent } from '../../models/event';
+import { ApiEvent, ApiCreateEvent, NotificationGranularity } from '../../models/event';
 import { TIME_FORMAT, DATE_FORMAT } from '../../../constants.module';
+import { Colors } from '../../models/colors';
+import { ActivatedRoute } from '@angular/router';
+import { ApiUser } from '../../models/user';
+import { UserService } from '../../user/user.service';
 
 @Component({
     selector: 'mnm-edit-event',
@@ -12,72 +16,89 @@ import { TIME_FORMAT, DATE_FORMAT } from '../../../constants.module';
 })
 
 export class EditEventComponent {
+    @ViewChild('memberDropdown')
+    public memberDropdown: ElementRef;
+    public edit: boolean = false;
     public event: ApiEvent | ApiCreateEvent;
     public eventForm: FormGroup;
-    public startTimes: any[] = [];
-    public endTimes: any[]= [];
+    public colors: string[] = Colors;
+    public notificationGranularity = NotificationGranularity;
+    public showNotification: boolean = true;
+    public memberNotFound: boolean = false;
+    public users: ApiUser[];
 
-    constructor(private fb: FormBuilder, private eventService: EventService) {
-        if (this.eventService.editEvent) {
-            this.eventService.editEvent.subscribe(event => {
-                this.event = event;
-                this._buildForm();
-            });
-        }
-    }
+    constructor(private route: ActivatedRoute,
+                private eventService: EventService,
+                private userService: UserService) {}
 
-    private _buildForm(): void {
-        this.eventForm = this.fb.group({
-            Title: [
-                this.event.Title, Validators.required
-            ],
-            StartDate: [
-                moment(this.event.StartDate, DATE_FORMAT).toDate(),
-                Validators.required
-            ],
-            EndDate: [
-                moment(this.event.EndDate, DATE_FORMAT).toDate(),
-                Validators.required
-            ],
-            StartTime: this._setStartTime(),
-            EndTime: this._setEndTime(),
-            Recurring: false
+    ngOnInit(): void {
+
+        this.userService.GetAll().then(users => {
+            this.users = users;
         });
 
-        this.eventForm.get('StartDate').valueChanges.subscribe(value => {
-            if (!this.eventForm.get('Recurring').value) {
-                this.eventForm.get('EndDate').setValue(value);
-            }
-        });
-    }
-
-    private _setStartTime(): FormControl {
-        let start = moment(this.event.StartTime, TIME_FORMAT);
-
-        for (let i = 0 ; i < 12; i++) {
-            let tempTime = moment(start).add(i, 'hours');
-            this.startTimes[i] = {
-                value: tempTime.format(TIME_FORMAT),
-                label: tempTime.format('hh:mma')
+        let id = this.route.snapshot.paramMap.get('id');
+        if (!!id && id !== 'create') {
+            this.edit = true;
+            this.eventService
+                .GetEventById(+id)
+                .then(event => {
+                    this.eventForm = this.eventService.BuildEventForm(event, this.eventForm);
+                });
+        } else {
+            let createEvent: ApiCreateEvent = {
+                Title: "",
+                OwnerId: 3, // change this!!
+                StartDate: moment().format(DATE_FORMAT),
+                EndDate: moment().format(DATE_FORMAT),
+                StartTime: moment().format(TIME_FORMAT),
+                EndTime: moment().add(1, 'hour').format(TIME_FORMAT),
+                Location: "", Color: "", Notes: "", Members: []
             };
+            this.eventForm = this.eventService.BuildEventForm(createEvent, this.eventForm);
         }
-        return new FormControl(start.format(TIME_FORMAT), Validators.required);
-    }
-
-    private _setEndTime(): FormControl {
-        let start = moment(this.event.EndTime, TIME_FORMAT);
-
-        for (let i = 0; i < 12; i++) {
-            let tempTime = moment(start).add(i, 'hours');
-            this.endTimes[i] = {
-                value: tempTime.format(TIME_FORMAT),
-                label: tempTime.format('hh:mma')
-            };
-        }
-        return new FormControl(start.format(TIME_FORMAT), Validators.required);
     }
 
     public formatDate(date: Date): string {
         return moment(date).format('dddd, MMMM Do YYYY');
+    }
+
+    public memberSearch(): void {
+        let el = this.memberDropdown.nativeElement;
+        if (el.children.length === 0) {
+            this.memberNotFound = true;
+        } else if (el.children.length === 1 && el.children[0].id === "not-found") {
+            this.memberNotFound = true;
+        } else {
+            this.memberNotFound = false;
+        }
+    }
+
+    public setColor(color: string): void {
+        this.eventForm.get('Color').setValue(color);
+    }
+
+    public setNotification(granularity: NotificationGranularity): void {
+        this.eventForm.get('NotificationGranularity').setValue(granularity);
+    }
+
+    public getNotificationGranularity(): string {
+        let value = +this.eventForm.get('NotificationGranularity').value;
+        return this.notificationGranularity[value];
+    }
+
+    public removeNotification(): void {
+        this.eventForm.get('NotificationGranularity').setValue(null);
+        this.eventForm.get('NotificationValue').setValue(null);
+        this.showNotification = false;
+    }
+
+    public getMember(i: number): string {
+        return (<FormArray>this.eventForm.get('Members')).get(i + "").value;
+    }
+
+    public getMembers(): AbstractControl[] {
+        let arr = <FormArray>this.eventForm.controls.Members;
+        return arr.controls;
     }
 }

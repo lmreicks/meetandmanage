@@ -2,7 +2,7 @@
 
 namespace Logic\Errors;
 
-use Errors\StatusCodes;
+use \Errors\StatusCodes;
 
 class ErrorResponse {
     public $statusCode;

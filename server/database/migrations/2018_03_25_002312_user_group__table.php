@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class EventUserLookup extends Migration
+class UserGroupTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,17 +12,16 @@ class EventUserLookup extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('event_user');
-        Schema::create('event_user', function(Blueprint $table)
-        {
-            $table->integer('event_id')->unsigned()->nullable();
-            $table->foreign('event_id')->references('id')
-                  ->on('events')->onDelete('cascade');
-      
-            $table->integer('user_id')->unsigned()->nullable();
+        Schema::dropIfExists('group_user');
+        Schema::create('group_user', function(Blueprint $table){
+            $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')
                   ->on('users')->onDelete('cascade');
-      
+            
+            $table->integer('group_id')->unsigned();
+            $table->foreign('group_id')->references('id')
+                  ->on('group')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -34,6 +33,6 @@ class EventUserLookup extends Migration
      */
     public function down()
     {
-        Schema::drop('event_user');
+        Schema::drop('group_user');
     }
 }

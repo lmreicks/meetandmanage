@@ -9,11 +9,5 @@ import * as moment from 'moment';
 })
 
 export class DashboardComponent {
-    public current: moment.Moment;
-
     constructor(private router: Router) {}
-
-    public updateDate(date: moment.Moment) {
-        this.current = date;
-    }
 }

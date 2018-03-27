@@ -14,6 +14,7 @@ import { RouterModule } from '@angular/router';
 import { dashboardRoutes } from './dashboard.routing';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { DashboardService } from './dashboard.service';
+import { DayComponent } from './day/day.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { DashboardService } from './dashboard.service';
     SidebarComponent,
     HeaderComponent,
     MonthComponent,
+    DayComponent,
     WeekComponent,
     EventPopoverComponent
   ],

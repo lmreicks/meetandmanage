@@ -2,8 +2,8 @@
 
 namespace App;
 
-// error_reporting(E_ALL);
-// ini_set('display_errors', '1');
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
 require __DIR__ . '/vendor/autoload.php';
 require "db-config.php";
@@ -54,6 +54,9 @@ require __DIR__ . '/dependencies.php';
 require __DIR__ . '/controllers/events.php';
 require __DIR__ . '/controllers/users.php';
 require __DIR__ . '/controllers/auth.php';
+require __DIR__ . '/controllers/todo.php';
+require __DIR__ . '/controllers/payload.php';
+require __DIR__ . '/controllers/group.php';
 
 $app->run();
 

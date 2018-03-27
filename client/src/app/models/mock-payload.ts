@@ -4,6 +4,7 @@ import { PayloadModel } from './payload';
 import * as moment from 'moment';
 import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import { ApiUser } from './user';
+import { ApiTodo } from './todo';
 
 export const MockEvents: ApiEvent[] = [
     {
@@ -23,8 +24,8 @@ export const MockEvents: ApiEvent[] = [
         Title: '309 Meeting',
         Location: 'TLA',
         OwnerId: 3,
-        StartDate: moment().subtract(3, 'days').format(DATE_FORMAT),
-        EndDate: moment().subtract(3, 'days').format(DATE_FORMAT),
+        StartDate: moment().format(DATE_FORMAT),
+        EndDate: moment().format(DATE_FORMAT),
         StartTime: '15:00:00',
         EndTime: '16:00:00',
         Color: '#9C0D38',
@@ -135,9 +136,12 @@ export const MockUser: ApiUser = {
 
 export const MockGroups: ApiGroup[] = [];
 
+export const MockTodos: ApiTodo[] = [];
+
 export const MockPayload: PayloadModel = {
     User: MockUser,
     Events: MockEvents,
-    Groups: MockGroups
+    Groups: MockGroups,
+    Todo: MockTodos
 };
 

@@ -7,18 +7,20 @@ use Models\Event;
 use Models\User;
 use Models\EventLookup;
 use Logic\ModelSerializers\ModelSerializer;
+use \UserSerializer;
 
 class GroupSerializer extends ModelSerializer{
 
     public $errors;
     
     function toApi($model){
-        return array(
-            'Id' => $model->id,
-            'Name' => $model->Title,
-            'Description' => $model->description,
-            'Members' => UserSerializer.toApi($model->users())
-        );
+        $us = new UserSerializer;
+        $apiGroup = new \stdClass;
+        $apiGroup->Id = $model->id;
+        $apiGroup->Name = $model->Title;
+        $apiGroup->Description = $model->description;
+        $apiGroup->Members = $us->toApiList($model->users);
+        return $apiGroup;
     } 
 
     function toApiList($models){

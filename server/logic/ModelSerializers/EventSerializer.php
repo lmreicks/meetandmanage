@@ -47,7 +47,7 @@ class EventSerializer extends ModelSerializer{
         foreach ($models as $model){
             array_push($serializedList, $this.toApi($model));
         }
-        return json_encode($serializedList);
+        return $serializedList;
     }
 
     function toServer($model){

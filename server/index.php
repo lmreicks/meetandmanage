@@ -2,8 +2,8 @@
 
 namespace App;
 
-//error_reporting(E_ALL);
-//ini_set('display_errors', '1');
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
 require __DIR__ . '/vendor/autoload.php';
 require "db-config.php";

@@ -6,15 +6,16 @@ use Slim\Http\Response;
 use Models\Event;
 use Models\User;
 use Models\EventLookup;
+use Logic\ModelSerialization\EventSerializer;
 
+$es = new EventSerializer;
 
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
 
-    #have to go through event mappings, and get all events which the user is included in and add
-    #them to the array of events to be returned to lexi
+    $es = new EventSerializer;
     $user = $request->getAttribute('user');
     $events = $user->events();
-    $return = json_encode(/*however I call serializer*/);
+    $return = json_encode($es->toApiList($events));
     $response->getBody()->write($return);
     return $response;
 });
@@ -25,45 +26,49 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     # if the email is in the database, add it to the table mapping events with all of it's members
     # at some point down the road we will add an email api to this to include non members into all of the "fun"
 
+    $es = new EventSerializer;
     $body = json_decode($request->getBody());
     $user = $body->getAttributes('user');
-    $event = new Event;
-    $validate = new EventValidator($body);
-    if ($validate != true) return $validate;
+    // $event = new Event; 
+    // $validate = new EventValidator($body);
+    // if ($validate != true) return $validate;
 
-    if ($body->OwnerId == NULL) {
-        $response->write('no ownerId');
-        return $response;// change to use ann's error handling
-    }
-    if ($user->id != $body->OwnerId){
-        $resonse->write('user id does not match ownerId');
-        return $response;// diddo
-    }
-    if ($body->Title == NULL || $body->Title == '') {
-        $response->write('no Title');
-        return $response; //diddo^2
-    }   
+    // if ($body->OwnerId == NULL) {
+    //     $response->write('no ownerId');
+    //     return $response;// change to use ann's error handling
+    // }
+    // if ($user->id != $body->OwnerId){
+    //     $resonse->write('user id does not match ownerId');
+    //     return $response;// diddo
+    // }
+    // if ($body->Title == NULL || $body->Title == '') {
+    //     $response->write('no Title');
+    //     return $response; //diddo^2
+    // }   
 
-    $event->Title = $body->Title;
-    $event->OwnerId = $body->OwnerId;
-    $event->StartTime = date("H:i", strtotime(substr($body->StartTime, 0, 8)));
-    $event->EndTime = substr($body->EndTime, 0, 8);
-    $event->StartDate = substr($body->StartDate, 0, 10);
-    $event->EndDate = substr($body->EndDate, 0, 10);
-    $event->Notes = $body->Notes;
-    $event->Location = $body->Location;
+    // $event->Title = $body->Title;
+    // $event->OwnerId = $body->OwnerId;
+    // $event->StartTime = date("H:i", strtotime(substr($body->StartTime, 0, 8)));
+    // $event->EndTime = substr($body->EndTime, 0, 8);
+    // $event->StartDate = substr($body->StartDate, 0, 10);
+    // $event->EndDate = substr($body->EndDate, 0, 10);
+    // $event->Notes = $body->Notes;
+    // $event->Location = $body->Location;
 
-    $event->users()-> attach($body->Members);
+    $event = $es->toServer($body);
+
+    $event->users()->attach($body->Members);
 
     $event->save();
     $eventId = $event->Id;
     $membersArray = $body->members;
-    $response->getBody()->write(json_encode($event));
+    $response->getBody()->write(json_encode($es->toApi($event)));
     return $response;
 });
 
 $app->delete('/api/event/{id}', function (Request $request, Response $response, array $args){
 
+    $es = new EventSerializer;
     $user = $request->getAttribute('user');
     $eventID = $args['id'];
     $event = Event::where('id','=',$eventID)->first();
@@ -75,47 +80,33 @@ $app->delete('/api/event/{id}', function (Request $request, Response $response, 
     $userId = $user->id;
     if ($ownerId === $id){
         $event = Event::where('id','=',$eventID)->delete();
-        EventLookup::where('EventId','=',$eventID)->delete();
-        $response->write(json_encode($event));
+        $response->write(json_encode($es->toApi($event)));
         return $response;
     }
-    $response->write("Not your event to delete");
+    // $response->write("Not your event to delete");
     return $response; //switch to error for not owner of event
 });
 
 $app->put('/api/event', function (Request $request, Response $response, array $args) {
+    $es = new EventSerializer;
     $body = json_decode($request->getBody());
-    $event_id = $body->Id;
-
-    $event = Event::find($event_id);
-    echo $event;
+    $event = $es->toServer($body);
+    // $event_id = $es->id;
+    // $event = Event::find($event_id);
+    
     $user = $request->getAttributes('user');
     // if ($user->id != $event->OwnerId){
     //     $response->getBody()->write("not your event to edit");
     //     return $response;
     // }
     if($event != null){
-        $newTitle = $event->title;
-        $event->Title = $newTitle;
-        #should not be able to switch owner
-        //$events->OwnerId = $body->OwnerId;
-        $event->StartTime = substr($body->StartTime, 0, 8);
-        $event->EndTime = substr($body->EndTime, 0, 8);
-        $event->StartDate = substr($body->StartDate, 0, 10);
-        $event->EndDate = substr($body->EndDate, 0, 10);
-        $event->Notes = $body->Notes;
-        $event->Location = $body->Location;
-        $event->Members = $body->Members;
-
-        
+    
         $event->save();
 
         $response->getBody()->write(json_encode($event));
 
     }
     else{
-        $response->getBody()->write(errorResponse('8'));
-
     }
     return $response;
 

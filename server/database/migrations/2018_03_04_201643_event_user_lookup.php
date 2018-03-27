@@ -34,6 +34,6 @@ class EventUserLookup extends Migration
      */
     public function down()
     {
-        Schema::drop('events_users');
+        Schema::drop('event_user');
     }
 }

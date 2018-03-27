@@ -14,7 +14,7 @@ $app->get('/api/user', function (Request $request, Response $response, array $ar
     $response->getBody()->write("get all users");
     return $response;
 });
-
+ 
 
 // takes in 'email', 'password', and 'name' in $body
 // returns error if any fields in $body are null

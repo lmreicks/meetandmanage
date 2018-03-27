@@ -11,14 +11,15 @@ use Logic\ModelSerializers\UserSerializer;
 use Logic\ModelSerializers\EventSerializer;
 
 $app->get('/api/payload', function (Request $request, Response $response, array $args) {
+    $es = new Logic\ModelSerializers\EventSerializer;
+    $gs = new Logic\ModelSerializers\GroupSerializer;
     $user = $request->getAttribut('user');
     $events = $user->events();
     $groups = $user->groups();
-    $groupEvents = array();
-    foreach ($groups as $group){
-        array_push($groupEvents, $group->events());
+    foreach ($groups as $group) {
+        $group->Events = $group->events();
     }
-    $payload = new payload(EventSerializer.toApiList($events), GroupSerializer.toApiList($groups), EventSerializer.toApiList($groupEvents));//need to be serialized
+    $payload = new payload($es->toApiList($events), $gs->toApiList($groups));//need to be serialized
 
     return json_encode($payload);
 });
@@ -26,16 +27,14 @@ $app->get('/api/payload', function (Request $request, Response $response, array 
 class payload{
 
     private $userEvents;
-    private $userGroups;
+    private $userGroups; 
     private $userGroupEvents;
-    public function __construct($events, $groups, $groupEvents){
+    public function __construct($events, $groups){
         $this->userEvents = $events;
         $this->userGroups = $groups;
-        $this->userGroupEvents = $groupEvents;
         return array(
             'Events' => $this->userEvents,
-            'Groups' => $this->userGroups,
-            'GroupEvents' => $this->userGroupEvents
+            'Groups' => $this->userGroups
         );
     }
 }

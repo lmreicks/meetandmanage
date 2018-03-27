@@ -3,7 +3,7 @@
 namespace Models;
 
 class Group extends \Illuminate\Database\Eloquent\Model {
-    protected $table = 'groups';
+    protected $table = 'group';
 
     protected $fillable = [
         'group_name', 'description'

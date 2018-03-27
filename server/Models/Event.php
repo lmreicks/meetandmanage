@@ -16,6 +16,11 @@ class Event extends \Illuminate\Database\Eloquent\Model {
     public function owner() {
         return $this->hasOne('Models\User');
     }
+
+    public function group() {
+        return $this->hasOne('Models\Group');
+    }
+
 }
 
 ?>

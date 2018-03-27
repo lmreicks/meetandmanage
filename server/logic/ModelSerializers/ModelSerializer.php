@@ -1,6 +1,6 @@
 <?php
 
-namespace Logic;
+namespace Logic\ModelSerializers;
 
 abstract class ModelSerializer {
     public $errors;

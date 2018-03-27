@@ -30,7 +30,7 @@ export class DayComponent {
         this.loading = true;
         this.setHours();
         let date = moment().format(DATE_FORMAT);
-        this.coreCache.eventMap.subscribe(map => {
+        this.coreCache.GetDateMap().then(map => {
             let dayMoment = moment();
             let dateValue: DateObject = {
                 current: dayMoment.format(DATE_FORMAT) === date,

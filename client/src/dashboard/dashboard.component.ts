@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 
 export class DashboardComponent {
     public Granularity = Granularity;
-    public state: Granularity = Granularity.Month;
+    public state: Granularity = Granularity.Day;
     constructor() {}
 }
 

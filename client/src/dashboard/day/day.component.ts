@@ -4,6 +4,7 @@ import { Week, DateObject, WeekDays, Day } from '../models';
 import {DATE_FORMAT} from '../../constants.module';
 import * as moment from 'moment';
 import { toInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
+import { ApiEvent } from '../../app/models/event';
 
 @Component({
     selector: 'mnm-day',
@@ -14,6 +15,7 @@ import { toInteger } from '@ng-bootstrap/ng-bootstrap/util/util';
 export class DayComponent {
     public day: Day;
     public hours: string[] = [];
+    public eventElements: EventElement[] = [];
     public loading: boolean = true;
     public Granularity = Granularity;
     public state: Granularity = Granularity.None;
@@ -41,6 +43,14 @@ export class DayComponent {
                 events: map.has(date) ? map.get(date) : []
             };
 
+            this.day.events.forEach(event => {
+                this.eventElements.push({
+                    top: this.getStart(event),
+                    height: this.getDuration(event),
+                    event: event
+                });
+            });
+
             console.log(map);
 
             this.loading = false;
@@ -56,14 +66,12 @@ export class DayComponent {
         if(moment.duration(end.diff(start)).asDays()>=1){
             end = moment(v.StartDate + " " + "24:00:00")
         }
-        //console.log(moment.duration(end.diff(start)).asHours() * 120);
         
-        return this.height = moment.duration(end.diff(start)).asHours() * 100;
+        return this.height = moment.duration(end.clone().diff(start)).asHours() * 100;
     }
 
     public getStart(v) {
         var start = moment(v.StartDate + " " + v.StartTime);
-        //console.log((start.hours() + (start.minutes()/60)) * 120);
         return this.diff = ((start.hours() + (start.minutes()/60)) * 100) - this.diff - this.height;
     }
 
@@ -81,6 +89,12 @@ export class DayComponent {
 
         console.log(this.hours);
     }
+}
+
+export interface EventElement {
+    top: number,
+    height: number,
+    event: ApiEvent;
 }
 
 export enum Granularity {

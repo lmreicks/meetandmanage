@@ -24,8 +24,8 @@
                 </div>
                 
                 <div class='day' *ngIf="!loading">
-                    <div class='event' *ngFor="let event of day.events" [ngStyle]="{'margin-top': getStart(event) + 'px', 'height': getDuration(event) + 'px'}">
-                        {{event.Title}}
+                    <div class='event' *ngFor="let eventEl of eventElements" [ngStyle]="{'margin-top': eventEl.top + 'px', 'height': eventEl.height + 'px'}">
+                        {{eventEl.event.Title}}
                     </div>
                 </div>
             </div>

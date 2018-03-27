@@ -13,7 +13,7 @@ $app->get('/api/event', function (Request $request, Response $response, array $a
 
     $es = new EventSerializer;
     $user = $request->getAttribute('user');
-    $events = $user->events();
+    $events = $user->events;
     $return = json_encode($es->toApiList($events));
     $response->getBody()->write($return);
     return $response;
@@ -55,7 +55,8 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     // $event->Location = $body->Location;
 
     $event = $es->toServer($body);
-    $event->save();    
+    $event->save();
+    $event->attach($user->id);
     $event->users()->attach($body->Members);
 
     $event->save();

@@ -12,8 +12,8 @@ class GroupUser extends Migration
      */
      public function up()
      {
-         Schema::dropIfExists('group_users');
-         Schema::create('group_users', function(Blueprint $table){
+         Schema::dropIfExists('group_user');
+         Schema::create('group_user', function(Blueprint $table){
              $table->integer('user_id')->unsigned();
              $table->foreign('user_id')->references('id')
                    ->on('users')->onDelete('cascade');
@@ -33,6 +33,6 @@ class GroupUser extends Migration
       */
      public function down()
      {
-         Schema::drop('group_users');
+         Schema::drop('group_user');
      }
 }

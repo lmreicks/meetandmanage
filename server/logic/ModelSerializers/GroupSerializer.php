@@ -7,11 +7,9 @@ use Models\Event;
 use Models\User;
 use Models\EventLookup;
 use Logic\ModelSerializers\ModelSerializer;
-use \UserSerializer;
+use Logic\ModelSerializers\UserSerializer;
 
 class GroupSerializer extends ModelSerializer{
-
-    public $errors;
     
     function toApi($model){
         $us = new UserSerializer;

@@ -1,6 +1,5 @@
 <?php
-include "errors.php";
-#include "const_errors.php";
+
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\Event;
@@ -11,8 +10,8 @@ use Logic\ModelSerializers\UserSerializer;
 use Logic\ModelSerializers\EventSerializer;
 
 $app->get('/api/payload', function (Request $request, Response $response, array $args) {
-    $es = new Logic\ModelSerializers\EventSerializer;
-    $gs = new Logic\ModelSerializers\GroupSerializer;
+    $es = new EventSerializer;
+    $gs = new GroupSerializer;
     $user = $request->getAttribut('user');
     $events = $user->events();
     $groups = $user->groups();

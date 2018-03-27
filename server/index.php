@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 require __DIR__ . '/vendor/autoload.php';
-require "db-config.php";
+require __DIR__ . '/config/db-config.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -45,7 +45,7 @@ $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
 // error list
-require __DIR__ . '/logic/error_list.php';
+require __DIR__ . '/Logic/Errors/ErrorList.php';
 
 // set up depencencies
 require __DIR__ . '/dependencies.php';

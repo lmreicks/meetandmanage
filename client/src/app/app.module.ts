@@ -27,7 +27,7 @@ import { AgmCoreModule } from '@agm/core';
 import { UserService } from './user/user.service';
 import { LocationInput } from './shared/location-input/location-input.component';
 import { GroupService } from './group/group.service';
-import { EditGroupComponent } from './group/edit-group/edit-group.component';
+import { CreateGroupComponent } from './group/create-group/create-group.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +38,7 @@ import { EditGroupComponent } from './group/edit-group/edit-group.component';
     SearchFilterPipe,
     NotFoundComponent,
     LocationInput,
-    EditGroupComponent
+    CreateGroupComponent
   ],
   imports: [
     NgbModule.forRoot(),

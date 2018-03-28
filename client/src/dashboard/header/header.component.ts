@@ -12,10 +12,9 @@ import { DashboardService } from '../dashboard.service';
 })
 
 export class HeaderComponent {
-    @Output('change') change: EventEmitter<moment.Moment> = new EventEmitter();
     public current: moment.Moment = moment();
     public monthYearDisplay: string;
-    public granularity: moment.unitOfTime.DurationConstructor;
+    public granularity: string;
     public year: number;
     public month: number;
     public day: number;
@@ -27,7 +26,7 @@ export class HeaderComponent {
 
     ngOnInit(): void {
         this.route.children[0].url.subscribe((url: UrlSegment[]) => {
-            this.granularity = url[0].path as moment.unitOfTime.DurationConstructor;
+            this.granularity = url[0].path;
 
             if (url.length === 4) {
                 this.year = +url[1].path;
@@ -52,13 +51,28 @@ export class HeaderComponent {
     }
 
     public move(index: number): void {
-        this.current.add(index, this.granularity);
+        switch (this.granularity) {
+            case 'week':
+                this.current.add(index * 7, 'days');
+                break;
+            case 'day':
+                this.current.add(index, 'days');
+                break;
+            case 'month':
+                this.current.add(index, 'months');
+                break;
+        }
         this.changeDate(this.current);
     }
 
     public changeDate(moment: moment.Moment): void {
         this.monthYearDisplay = this.current.format('MMMM YYYY');
         this.dashboardService.current.next(this.current);
+    }
+
+    public today(): void {
+        this.current = moment();
+        this.changeDate(this.current);
     }
 
     Logout(): void {

@@ -1,8 +1,8 @@
 import { Routes } from "@angular/router";
 import { WeekComponent } from "./week/week.component";
 import { MonthComponent } from "./month/month.component";
-import { AuthGuard } from "../app/services/auth-guard";
 import { DashboardComponent } from "./dashboard.component";
+import { DayComponent } from "./day/day.component";
 
 export const dashboardRoutes: Routes = [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -13,7 +13,7 @@ export const dashboardRoutes: Routes = [
             { path: 'month/:year/:month/:day', component: MonthComponent },
             { path: 'week', component: WeekComponent },
             { path: 'week/:year/:month/:day', component: WeekComponent },
-            { path: 'day', redirectTo: '/month' },
+            { path: 'day', component: DayComponent },
         ]
     }
 ];

@@ -5,6 +5,9 @@ use Slim\Http\Response;
 use Models\User;
 use Models\todoTask;
 
+/**
+* takes in a user object and returns all of the todo tasks associated with them
+*/
 $app->get('/api/todo', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());
     $user = $body->getAttribute('user');
@@ -22,6 +25,9 @@ $app->get('/api/todo', function (Request $request, Response $response, array $ar
     return $response;
 });
 
+/**
+* takes in a user and a task and adds the task to the user
+*/
 $app->post('/api/todo', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());
     $user = $body->getAttribute('user');
@@ -35,11 +41,17 @@ $app->post('/api/todo', function (Request $request, Response $response, array $a
     return $response; 
 });
 
+/**
+* takes in a task and a user and updates the existing task associated with the user
+*/
 $app->put('/api/todo', function (Request $request, Response $response, array $args) {
     
         
 });
 
+/**
+* takes in a task and a user and deletes the existing task associated with the user
+*/
 $app->delete('/api/todo', function (Request $request, Response $response, array $args) {
     
         

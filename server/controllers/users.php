@@ -5,20 +5,27 @@ use Slim\Http\Response;
 use Models\User;
 use Logic\ErrorList;
 
+/**
+* will return the user associated with the given id
+*/
 $app->get('/api/user/{id}', function (Request $request, Response $response, array $args) {
     $response->getBody()->write("get user");
     return $response;
 });
 
+/**
+* will return all users
+*/
 $app->get('/api/user', function (Request $request, Response $response, array $args) {
     $response->getBody()->write("get all users");
     return $response;
 });
  
 
-// takes in 'email', 'password', and 'name' in $body
-// returns error if any fields in $body are null
-// return auth token if user is successfully made
+/** takes in 'email', 'password', and 'name' in $body
+* returns error if any fields in $body are null
+* return auth token if user is successfully made
+*/
 $app->post('/api/user', function (Request $request, Response $response, array $args){
     
     #user must have timezone ID made in table

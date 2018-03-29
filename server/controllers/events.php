@@ -8,7 +8,10 @@ use Models\EventLookup;
 use Logic\ModelSerializers\EventSerializer;
 
 
-
+/**
+* returns a json formatted serialized list of all events corresponding to the given user
+* is given a request with the user as an attribute
+*/
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
 
     $es = new EventSerializer;
@@ -19,6 +22,10 @@ $app->get('/api/event', function (Request $request, Response $response, array $a
     return $response;
 });
 
+/**
+* adds the given api object to the given user in the attribute
+* returns the added event
+*/
 $app->post('/api/event', function (Request $request, Response $response, array $args) {
     
     # need to parse through list of members given in the $request body
@@ -65,6 +72,9 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     return $response;
 });
 
+/**
+* deletes the event with the given id, if the id exists and the given user owns the event
+*/
 $app->delete('/api/event/{id}', function (Request $request, Response $response, array $args){
 
     $es = new EventSerializer;
@@ -86,6 +96,9 @@ $app->delete('/api/event/{id}', function (Request $request, Response $response, 
     return $response; //switch to error for not owner of event
 });
 
+/**
+* updates the given api event to the given user
+*/
 $app->put('/api/event', function (Request $request, Response $response, array $args) {
     $es = new EventSerializer;
     $body = json_decode($request->getBody());
@@ -111,6 +124,9 @@ $app->put('/api/event', function (Request $request, Response $response, array $a
 
 });
 
+/**
+* takes in an event and validates that there are no errors in the model itself
+*/
 class EventValidator {
     public function __invoke($body){
         if ($body->StartDate == NULL) return false;

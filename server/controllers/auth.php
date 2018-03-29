@@ -4,10 +4,10 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\User;
 
-// takes in 'email', 'password' in $body
-// returns 400 error 'Invalid Username or Password' if bad login
-// returns authorization token otherwise  
-
+/** takes in 'email', 'password' in $body
+* returns 400 error 'Invalid Username or Password' if bad login
+* returns authorization token otherwise  
+*/
 $app->post('/api/login', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());
     $email = $body->email;

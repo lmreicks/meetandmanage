@@ -2,6 +2,9 @@
 
 namespace Models;
 
+/**
+* server side group model
+*/
 class Group extends \Illuminate\Database\Eloquent\Model {
     protected $table = 'group';
 

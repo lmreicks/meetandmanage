@@ -3,24 +3,18 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\User;
-use Models\todoTask;
+use Models\Todo;
+use Logic\ModelSerializers\TodoSerializer;
 
 /**
 * takes in a user object and returns all of the todo tasks associated with them
 */
 $app->get('/api/todo', function (Request $request, Response $response, array $args) {
+    $ts = new TodoSerializer;
     $body = json_decode($request->getBody());
     $user = $body->getAttribute('user');
-
-    // $id = $user->id;
-    // $tasks = todoTask::where('id','=',$id);
-    // $date = $body->date;
-    // $output = Array();
-    // foreach($tasks as $task){
-    //     if ($task->date == $date){
-    //         array_push($output, $task);
-    //     }
-    // }
+    $events = $user->todos;
+    $output = $ts->toApiList($events);
     $response->write(json_encode($output));
     return $response;
 });
@@ -29,15 +23,14 @@ $app->get('/api/todo', function (Request $request, Response $response, array $ar
 * takes in a user and a task and adds the task to the user
 */
 $app->post('/api/todo', function (Request $request, Response $response, array $args) {
+    $ts = new TodoSerializer;
     $body = json_decode($request->getBody());
-    $user = $body->getAttribute('user');
+    $user = $request->getAttribute('user');
     $id = $user->id;
-    $task = new todoTask;
-    $task->date = $body->date;
-    $task->description = $body->description;
-    $task->done = false;
+    $task = $ts->toServer($body->todo);
     $task->save();
-    $response->write(json_encode($task));
+    $user->attach($task);
+    $response->write(json_encode($task));  
     return $response; 
 });
 

@@ -29,7 +29,7 @@ $app->post('/api/todo', function (Request $request, Response $response, array $a
     $id = $user->id;
     $task = $ts->toServer($body->todo);
     $task->save();
-    $user->attach($task);
+    $user->todos()->attach($task);
     $response->write(json_encode($task));  
     return $response; 
 });

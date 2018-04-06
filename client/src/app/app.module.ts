@@ -5,12 +5,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DlDateTimePickerDateModule } from 'angular-bootstrap-datetimepicker';
 import { HttpModule, Http, XHRBackend, RequestOptions } from '@angular/http';
 import { appRoutes } from './app.routing';
+import { TimepickerModule, ModalModule, PopoverModule, CollapseModule } from 'ngx-bootstrap';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import { httpFactory } from './services';
 
 import { AppComponent } from './app.component';
 import { CoreCacheService } from './services/core-cache.service';
-import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './services/auth-guard';
 import { AuthService } from './services/auth.service';
@@ -28,22 +29,30 @@ import { AgmCoreModule } from '@agm/core';
 import { UserService } from './user/user.service';
 import { LocationInput } from './shared/location-input/location-input.component';
 import { GroupService } from './group/group.service';
-import { EditGroupComponent } from './group/edit-group/edit-group.component';
+import { CreateGroupComponent } from './group/create-group/create-group.component';
+import { MemberFormComponent } from './user/member/member.component';
+import { GroupSelectForm } from './group/group-select-form/group-select-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     LoginComponent,
     EditEventComponent,
     ComboBoxComponent,
     SearchFilterPipe,
     NotFoundComponent,
     LocationInput,
-    EditGroupComponent
+    CreateGroupComponent,
+    MemberFormComponent,
+    GroupSelectForm
   ],
   imports: [
     NgbModule.forRoot(),
+    TimepickerModule.forRoot(),
+    ModalModule.forRoot(),
+    PopoverModule.forRoot(),
+    BsDatepickerModule.forRoot(),
+    CollapseModule.forRoot(),
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyDUJitlzdDW3SpdwzBzDW5YnTS_I-HeMCs",
       libraries: ["places"]

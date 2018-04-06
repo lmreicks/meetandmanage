@@ -1,0 +1,42 @@
+<div class="sticky-wrapper">
+    <div class="site-header container">
+        <a routerLink="./dashboard" class="logo">
+            <img src="../../assets/mnmlogo.png">
+        </a>
+        <button class="btn ml-5" (click)="today()">Today</button>
+        <div class="shifters ml-5">
+            <div class="font-awesome clickable" (click)="move(-1)">
+                <i class="fas fa-angle-left"></i>
+            </div>
+            <div class="font-awesome clickable" (click)="move(1)">
+                <i class="fas fa-angle-right"></i>
+            </div>
+        </div>
+        <span class="month-year ml-2">{{monthYearDisplay}}</span>
+        <div class="granularity-dropdown">
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn" id="granularityDropdown" ngbDropdownToggle>{{ granularity }}</button>
+                <div ngbDropdownMenu aria-labelledby="granularityDropdown">
+                    <div class="dropdown-btns">
+                        <button class="dropdown-item btn"
+                                [ngClass]="{ 'active' : granularity === 'day' }"
+                                (click)="changeGranularity('day')">
+                                Day
+                        </button>
+                        <button class="dropdown-item btn"
+                                [ngClass]="{ 'active' : granularity === 'week' }"
+                                (click)="changeGranularity('week')">
+                                Week
+                        </button>
+                        <button class="dropdown-item btn"
+                                [ngClass]="{ 'active' : granularity === 'month' }"
+                                (click)="changeGranularity('month')">
+                                Month
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn logout" (click)="Logout()">Logout</button>
+    </div>
+</div>

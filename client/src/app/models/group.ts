@@ -10,4 +10,5 @@ export interface ApiCreateGroup {
 export interface ApiGroup extends ApiCreateGroup {
     Id: number;
     Events: ApiEvent[];
+    ShowEvents?: boolean;
 }

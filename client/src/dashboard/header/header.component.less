@@ -1,0 +1,59 @@
+@import '../../config.less';
+
+.sticky-wrapper {
+    position: sticky;
+    top: 0;
+    background-color: @light-blue;
+    box-shadow: 1px 1px 1px 0px #a5a4a4;
+
+    .site-header {
+        position: relative;
+        display: flex;
+        height: 4rem;
+        align-items: center;
+        background-color: @light-blue;
+        padding: 0.5rem 0;
+    }
+}
+
+.month-year {
+    width: 200px;
+    font-size: 25px;
+    color: white;
+}
+
+.shifters {
+    display: flex;
+    align-items: center;
+
+    .font-awesome {
+        padding: 10px;
+        font-size: 25px;
+        color: white;
+    }
+}
+
+.logo {
+    height: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+
+    img {
+        height: 100%;
+        width: auto;
+    }
+}
+
+.logout {
+    position: absolute;
+    right: 0;
+}
+
+.granularity-dropdown {
+    position: absolute;
+    right: 15%;
+}
+
+#granularityDropdown {
+    text-transform: capitalize;
+}

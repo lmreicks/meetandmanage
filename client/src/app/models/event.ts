@@ -1,4 +1,5 @@
 import { ApiUser } from "./user";
+import { ApiGroup } from "./group";
 
 export enum NotificationGranularity {
     Minutes,
@@ -53,13 +54,18 @@ export interface ApiCreateEvent {
      */
     NotificationGranularity?: NotificationGranularity;
     /**
-     * Id of the group(s) that this event should belong to, if in a group
+     * group id that this event should belong to, if in a group
      */
-    GroupId?: number | number[];
+    GroupId?: number;
     /**
      * Color of the event in the form of a hash code (#00000)
      */
     Color?: string;
+
+    /**
+     * If it should be hidden on the calendar
+     */
+    Hidden?: boolean;
 
     Recurring?: Recurring;
 }

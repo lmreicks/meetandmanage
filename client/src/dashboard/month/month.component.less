@@ -1,25 +1,33 @@
+@import '../../config.less';
+
 .month-header {
+    padding: 1rem 0;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
+
+    .month-name {
+        font-size: 36px;
+        padding: 0 3rem;
+    }
 }
 
 .month {
     display: block;
     max-width: 1051px;
-    border: 1px solid darkgrey;
+    border: 1px solid @border-grey;
     border-radius: 3px;
 
     .weekdays {
         display: flex;
         justify-content: space-evenly;
-        border-bottom: 1px solid darkgrey;
+        border-bottom: 1px solid @border-grey;
 
         .weekday {
             width: 100%;
             text-align: center;
             font-size: 16px;
-            border-right: 1px solid darkgrey;
+            border-right: 1px solid @border-grey;
 
             &:last-child {
                 border-right: none;
@@ -30,7 +38,7 @@
     .weeks {
         display: flex;
         justify-content: space-evenly;
-        border-bottom: 1px solid darkgrey;
+        border-bottom: 1px solid @border-grey;
         min-height: 125px;
 
         &:last-child {
@@ -40,7 +48,7 @@
 
     .day {
         width: 100%;
-        border-right: 1px solid darkgrey;
+        border-right: 1px solid @border-grey;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -50,21 +58,23 @@
         }
 
         .day-number {
+            padding-left: 5px;
             font-size: 16px;
             font-weight: 300;
             width: 100%;
         }
         
         &.past {
-            background-color: #d6d4ca;
+            background-color: #77777777;
         }
         
         &.current {
-            background-color: rgb(141, 141, 218);
+            background-color: #6F9CEB;
+            color: white;
         }
 
         &.future {
-            background-color: #d4cccc;
+            background-color: #77777777;
         }
 
         .events {
@@ -72,11 +82,12 @@
             justify-content: center;
             align-content: space-between;
             width: 96%;
+            padding-bottom: 3px;
         }
 
         .event {
             padding-left: 5px;
-            border: solid 1px darkgrey;
+            border: solid 1px @border-grey;
             min-width: 100%;
             border-radius: 4px;
             font-size: 12px;

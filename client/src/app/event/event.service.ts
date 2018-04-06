@@ -10,6 +10,7 @@ import { CoreCacheService } from '../services';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Colors } from '../models/colors';
+import { ApiGroup } from '../models/group';
 
 @Injectable()
 
@@ -22,10 +23,15 @@ export class EventService {
                 private router: Router,
                 private fb: FormBuilder) {}
 
-    CreateEvent(event: ApiCreateEvent): Observable<ApiEvent> {
+    CreateEvent(event: ApiCreateEvent): Promise<ApiEvent> {
         return this.http.post(this.url, event)
-            .map(res => res.json())
-            .catch(err => err ? err.json() : "Err");
+            .map(res => {
+                let apiEvent = res.json();
+
+                this.coreCache.AddEvent(apiEvent);
+                return apiEvent;
+            })
+            .toPromise();
     }
 
     BuildEventForm(event: ApiCreateEvent | ApiEvent, form: FormGroup): FormGroup {
@@ -33,6 +39,7 @@ export class EventService {
             Title: [
                 event.Title, Validators.required
             ],
+            OwnerId: this.sessionService.currentUserId,
             StartDate: [
                 moment(event.StartDate, DATE_FORMAT).toDate(),
                 Validators.required
@@ -42,11 +49,11 @@ export class EventService {
                 Validators.required
             ],
             StartTime: [
-                this._setTime(event.StartTime),
+                moment(event.StartTime, TIME_FORMAT).toDate(),
                 Validators.required
             ],
             EndTime: [
-                this._setTime(event.EndTime),
+                moment(event.EndTime, TIME_FORMAT).toDate(),
                 Validators.required
             ],
             AllDay: false,
@@ -65,8 +72,13 @@ export class EventService {
             ],
             Notes: event.Notes,
             Members: this.fb.array([
-                ""
+                this.fb.group({
+                    Id: null,
+                    Name: '',
+                    Email: ''
+                })
             ]),
+            Group: this._setGroup(event.GroupId),
             Recurring: false
         });
 
@@ -92,12 +104,35 @@ export class EventService {
         };
     }
 
+    private _setGroup(groupId?: number): FormGroup {
+        let g = this.fb.group({
+            Id: null,
+            Name: '',
+            Description: ''
+        });
+
+        if (groupId) {
+            this.coreCache.GetGroupById(groupId)
+                .then(group => g.patchValue(group));
+        }
+
+        return g;
+    }
+
     private _validateDate(form: FormGroup): ValidatorFn {
         let startDate = form.controls.StartDate;
         let endDate = form.controls.EndDate;
+
         return (control: AbstractControl): {[key: string]: any} => {
-            const badDate = moment(startDate.value).isAfter(moment(endDate.value));
-            return badDate ? {'invalidDate': { value: false }} : null;
+            let badDate = false;
+            // if (!startDate.value || !moment(startDate.value).isValid()) {
+            //    // badDate = true;
+            // } else if (!endDate.value || !moment(endDate.value).isValid()) {
+            //     // badDate = true;
+            // } else if (moment(startDate.value).isAfter(moment(endDate.value))) {
+            //     badDate = true;
+            // }
+            return badDate ? {'invalidDate': { value: true }} : null;
         };
     }
 

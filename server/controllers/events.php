@@ -1,20 +1,19 @@
 <?php
-include "errors.php";
-#include "const_errors.php";
+
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\Event;
 use Models\User;
 use Models\EventLookup;
-use Logic\ModelSerialization\EventSerializer;
+use Logic\ModelSerializers\EventSerializer;
 
-$es = new EventSerializer;
+
 
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
 
     $es = new EventSerializer;
     $user = $request->getAttribute('user');
-    $events = $user->events();
+    $events = $user->events;
     $return = json_encode($es->toApiList($events));
     $response->getBody()->write($return);
     return $response;
@@ -28,7 +27,7 @@ $app->post('/api/event', function (Request $request, Response $response, array $
 
     $es = new EventSerializer;
     $body = json_decode($request->getBody());
-    $user = $body->getAttributes('user');
+    $user = $request->getAttribute('user');
     // $event = new Event; 
     // $validate = new EventValidator($body);
     // if ($validate != true) return $validate;
@@ -43,7 +42,7 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     // }
     // if ($body->Title == NULL || $body->Title == '') {
     //     $response->write('no Title');
-    //     return $response; //diddo^2
+    //     return $response; //diddo
     // }   
 
     // $event->Title = $body->Title;
@@ -56,11 +55,11 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     // $event->Location = $body->Location;
 
     $event = $es->toServer($body);
-
+    $event->save();
+    $event->attach($user->id);
     $event->users()->attach($body->Members);
 
     $event->save();
-    $eventId = $event->Id;
     $membersArray = $body->members;
     $response->getBody()->write(json_encode($es->toApi($event)));
     return $response;

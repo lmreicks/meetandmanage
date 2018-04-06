@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Logic\ModelSerializers;
 use Slim\Http\Request;
@@ -7,11 +7,9 @@ use Models\Event;
 use Models\User;
 use Models\EventLookup;
 use Logic\ModelSerializers\ModelSerializer;
-use \UserSerializer;
+use Logic\ModelSerializers\UserSerializer;
 
 class GroupSerializer extends ModelSerializer{
-
-    public $errors;
     
     function toApi($model){
         $us = new UserSerializer;
@@ -26,9 +24,9 @@ class GroupSerializer extends ModelSerializer{
     function toApiList($models){
         $serialized = Array();
         foreach($models as $model)
-            array_push($serialized, $this.toApi($model));
+            array_push($serialized, $this->toApi($model));
 
-        return json_encode($serialized);
+        return $serialized;
     }
 
     function toServer($model){
@@ -43,7 +41,7 @@ class GroupSerializer extends ModelSerializer{
         foreach($models as $model)
             array_push($out, $this.toServer($model));
         
-        return json_encode($serialized);
+        return $serialized;
     }
 
 }

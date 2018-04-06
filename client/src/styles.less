@@ -2,6 +2,7 @@
 
 @import '~open-iconic/font/css/open-iconic-bootstrap.css';
 @import './config.less';
+@import './ngx-datepicker.css';
 
 body, html  {
     height:100%;
@@ -18,6 +19,12 @@ body, html  {
     font-size: 20px;
     color: #8e9192;
     height: 100%;
+}
+
+timepicker {
+    .form-group {
+        margin-bottom: 0;
+    }
 }
 
 .clickable {
@@ -149,74 +156,4 @@ small {
     line-height:1;
     color:#777;
 }
-
-.site-footer-container {
-    background:#1b779e;
-    color:#fff;
-    padding:0 20px;
-    font-size:14px;
-}
-
-.site-footer-container a {
-    color:#fff;
-    text-decoration:underline;
-    font-size:14px;
-    font-weight:400;
-}
-
-.site-footer-container a:focus,.site-footer-container a:hover {
-    text-decoration:underline;
-    font-size:14px;
-    font-weight:400;
-    color:#fff!important;
-}
-
-.site-footer-container ul {
-    padding:0
-}
-
-.site-footer-container li,.site-footer-container ul {
-    display:inline
-}
-
-.site-footer-container li+li:before {
-    content:" | "
-}
-
-.footer-content {
-    display:-webkit-box;
-    display:-ms-flexbox;
-    display:flex;
-    -webkit-box-orient:horizontal;
-    -webkit-box-direction:normal;
-    -ms-flex-direction:row;
-    flex-direction:row;
-    -webkit-box-align:center;
-    -ms-flex-align:center;
-    align-items:center;
-    -webkit-box-pack:justify;
-    -ms-flex-pack:justify;
-    justify-content:space-between;
-    -ms-flex-wrap:wrap;
-    flex-wrap:wrap;
-    min-height:40px;
-height:40px
-}
-.footer-section {
-    -webkit-box-flex:0;
-    -ms-flex:0 1 auto;
-    flex:0 1 auto;
-    padding:3px
-}
-.navbar {
-    border:none;
-    color:#fff;
-    background-color:#1b779e;
-    border-radius:0;
-    margin-bottom:0
-}
-
-.navbar .dropdown-toggle:active,.navbar .open .dropdown-toggle {
-    background-color:#00adef
-}
-        
+  

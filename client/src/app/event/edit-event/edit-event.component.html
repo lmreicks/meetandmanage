@@ -1,5 +1,9 @@
 <div class="edit-event">
-    <form #form="ngForm" [formGroup]="eventForm" *ngIf="eventForm" class="pt-4">
+    <form   #form="ngForm"
+            [formGroup]="eventForm"
+            (ngSubmit)="createEvent(eventForm)"
+            *ngIf="eventForm"
+            class="pt-4">
         <div class="top-panel">
             <div class="form-group row">
                 <div class="pl-3">
@@ -15,53 +19,33 @@
                         placeholder="Add Title...">
                 </div>
                 <div class="col-sm-2">
-                    <button type="submit" (click)="createEvent(eventForm)" class="btn btn-success">{{ edit ? 'Edit' : 'Create' }} Event</button>
+                    <button type="submit" class="btn btn-success">{{ edit ? 'Edit' : 'Create' }} Event</button>
                 </div>
             </div>
             <div class="form-group row">
                 <div class="col-sm-12 date-group ml-5">
-                    <div ngbDropdown class="date">
-                        <input  class="form-control"
-                                id="datepicker"
-                                [ngClass]="{ 'border-danger': eventForm.get('StartDate').errors }"
-                                [value]="formatDate(eventForm.get('StartDate').value)"
-                                ngbDropdownToggle/>
-                        <div ngbDropdownMenu aria-labelledby="datepicker">
-                            <dl-date-time-picker
-                                formControlName="StartDate"
-                                [upIconClass]="''"
-                                [minView]="'day'"
-                                [startView]="'day'">
-                            </dl-date-time-picker>
-                        </div>
+                    <div class="date">
+                        <input
+                            class="form-control"
+                            formControlName="StartDate"
+                            placeholder="Start Date"
+                            bsDatepicker
+                            [bsConfig]="{ containerClass: 'theme-blue' }">
                     </div>
                     <div class="mx-2">
-                        <ngb-timepicker formControlName="StartTime"
-                                        [meridian]="true"
-                                        [spinners]="false">
-                        </ngb-timepicker>
+                        <timepicker formControlName="StartTime"></timepicker>
                     </div>
                     <div class="mx-2">to</div>
-                    <div ngbDropdown class="date">
-                        <input  class="form-control"
-                                [ngClass]="{'border-danger': eventForm.get('EndDate').errors}"
-                                id="datepicker"
-                                [value]="formatDate(eventForm.get('EndDate').value)"
-                                ngbDropdownToggle/>
-                        <div ngbDropdownMenu aria-labelledby="datepicker">
-                            <dl-date-time-picker
-                                formControlName="EndDate"
-                                [upIconClass]="''"
-                                [minView]="'day'"
-                                [startView]="'day'">
-                            </dl-date-time-picker>
-                        </div>
+                    <div class="date">
+                        <input
+                            class="form-control"
+                            formControlName="EndDate"
+                            placeholder="Start Date"
+                            bsDatepicker
+                            [bsConfig]="{ containerClass: 'theme-blue' }">
                     </div>
                     <div class="mx-2">
-                        <ngb-timepicker formControlName="EndTime"
-                                        [meridian]="true"
-                                        [spinners]="false">
-                        </ngb-timepicker>
+                        <timepicker formControlName="EndTime" [showSpinners]="false"></timepicker>
                     </div>
                 </div>
             </div>
@@ -91,6 +75,18 @@
         <div class="hr"></div>
         <div class="bottom-panel row">
             <div class="col-sm-7 more-info">
+                <div class="form-group row">
+                    <div class="col-sm-1">
+                        <div class="font-awesome">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="col-sm-11">
+                        <group-select [group]="eventForm.get('Group')"
+                                        [groups]="groups">
+                        </group-select>
+                    </div>
+                </div>
                 <div class="form-group row">
                     <div class="col-sm-1">
                         <div class="font-awesome">
@@ -174,28 +170,17 @@
             <div class="vl"></div>
             <div class="col-sm-5" formArrayName="Members">
                 <div class="form-group"
-                    *ngFor="let member of getMembers(); let i = index">
-                    <div class="col-sm-11"
-                        ngbDropdown>
-                        <input  class="form-control"
-                                [id]="i"
-                                formControlName="{{i}}"
-                                placeholder="Add Guest..."
-                                (keyup)="memberSearch()"
-                                ngbDropdownToggle>
-                        <div    ngbDropdownMenu
-                                [attr.aria-labelledby]="i"
-                                #memberDropdown>
-                            <li *ngIf="memberNotFound" id="not-found" class="dropdown-item">
-                                Member Not Found
-                            </li>
-                            <li *ngFor="let user of users | filter: getMember(i)" class="dropdown-item" (click)="addMember(user, i)">
-                                {{user.Name}}<br/>
-                                <small>{{user.Email}}</small>
-                            </li>
-                        </div>
+                    *ngFor="let member of eventForm.controls.Members.controls; let i = index">
+                    <div [formGroupName]="i" class="col-sm-11">
+                        <member-form
+                            [users]="users"
+                            [member]="eventForm.controls.Members.controls[i]"
+                            (added)="addMember()">
+                        </member-form>
                     </div>
-                    <div class="font-awesome col-sm-1 clickable" *ngIf="i < getMembers().length - 1" (click)="removeMember(i)">
+                    <div class="font-awesome col-sm-1 clickable"
+                        *ngIf="i < eventForm.controls.Members.controls.length - 1"
+                        (click)="removeMember(i)">
                         <i class="fa fa-times"></i>
                     </div>
                 </div>

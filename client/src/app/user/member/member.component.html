@@ -1,0 +1,20 @@
+<div [formGroup]="memberForm" ngbDropdown>
+    <input  class="form-control"
+            id="member"
+            autocomplete="off"
+            formControlName="Name"
+            placeholder="Add Guest..."
+            (keyup)="memberSearch()"
+            ngbDropdownToggle>
+    <div    ngbDropdownMenu
+            aria-labelledby="member"
+            #memberDropdown>
+        <li *ngIf="memberNotFound" id="not-found" class="dropdown-item">
+            Member Not Found
+        </li>
+        <li *ngFor="let user of users | filter: memberForm.get('Name').value" class="dropdown-item" (click)="addMember(user)">
+            {{user.Name}}<br/>
+            <small>{{user.Email}}</small>
+        </li>
+    </div>
+</div>

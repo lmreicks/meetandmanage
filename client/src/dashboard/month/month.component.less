@@ -14,8 +14,6 @@
 
 .month {
     display: block;
-    margin-left: auto;
-    margin-right: auto;
     max-width: 1051px;
     border: 1px solid @border-grey;
     border-radius: 3px;
@@ -60,6 +58,7 @@
         }
 
         .day-number {
+            padding-left: 5px;
             font-size: 16px;
             font-weight: 300;
             width: 100%;
@@ -70,7 +69,8 @@
         }
         
         &.current {
-            background-color: rgba(107, 190, 238, 0.486);
+            background-color: #6F9CEB;
+            color: white;
         }
 
         &.future {
@@ -82,6 +82,7 @@
             justify-content: center;
             align-content: space-between;
             width: 96%;
+            padding-bottom: 3px;
         }
 
         .event {

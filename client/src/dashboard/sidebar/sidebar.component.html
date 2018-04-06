@@ -1,4 +1,22 @@
 <div class="sidebar">
-    <h1>Sidebar</h1>
-    <button class="btn" (click)="newGroup()">New Group</button>
+    <div class="px-2">
+        <h1>Sidebar</h1>
+        <button class="btn form-group" (click)="newGroup()">New Group</button>
+        <div class="panel-heading" (click)="togglePanel()">
+            <label>My Groups</label>
+            <div class="font-awesome">
+                <i class="fas fa-angle-down"></i>
+            </div>
+        </div>
+    </div>
+    <div class="panel-collapse collapse" role="tabpanel" [collapse]="!isOpen">
+        <div class="panel-body card-block card-body">
+            <div *ngFor="let group of groups" class="group checkbox" (click)="filterGroup(group)">
+                <label>
+                    <input type="checkbox" [(ngModel)]="group.ShowEvents">
+                    {{group.Name}}
+                </label>
+            </div>
+        </div>
+    </div>
 </div>

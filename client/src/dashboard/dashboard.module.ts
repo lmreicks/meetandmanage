@@ -15,6 +15,7 @@ import { dashboardRoutes } from './dashboard.routing';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { DashboardService } from './dashboard.service';
 import { DayComponent } from './day/day.component';
+import { CollapseModule } from 'ngx-bootstrap';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { DayComponent } from './day/day.component';
   imports: [
     RouterModule.forChild(dashboardRoutes),
     NgbModule.forRoot(),
+    CollapseModule.forRoot(),
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,

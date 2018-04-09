@@ -13,6 +13,7 @@ import { HeaderComponent } from './header/header.component';
 import { RouterModule } from '@angular/router';
 import { dashboardRoutes } from './dashboard.routing';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { MiniCalendarComponent } from './sidebar/minicalendar/minicalendar.component';
 import { DashboardService } from './dashboard.service';
 import { DayComponent } from './day/day.component';
 import { CollapseModule } from 'ngx-bootstrap';
@@ -21,6 +22,7 @@ import { CollapseModule } from 'ngx-bootstrap';
   declarations: [
     DashboardComponent,
     SidebarComponent,
+    MiniCalendarComponent,
     HeaderComponent,
     MonthComponent,
     DayComponent,

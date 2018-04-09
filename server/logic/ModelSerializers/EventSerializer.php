@@ -11,6 +11,7 @@ class EventSerializer extends ModelSerializer{
 
     function toApi($model){
         $out = new \stdClass;
+        if ($model->id != null) $out->Id = $model->id;
         $out->Title = $model->title;
         $out->OwnerId = $model->owner_id;
         $out->StartTime = $model->start_time;
@@ -35,6 +36,7 @@ class EventSerializer extends ModelSerializer{
 
     function toServer($model){
         $in = new Event;
+        if ($model->Id != null) $in->id = $model->Id;
         $in->title = $model->Title;
         $in->owner_id = $model->OwnerId;
         $in->start_time = $model->StartTime;

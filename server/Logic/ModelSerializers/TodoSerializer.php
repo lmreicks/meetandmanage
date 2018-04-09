@@ -10,6 +10,7 @@ class TodoSerializer extends ModelSerializer {
 
     function toApi($todo) {
         $out = new \stdClass;
+        if ($todo->id != null) $out->Id = $todo->id;
         $out->Date = $todo->date;
         $out->Description = $todo->description;
         $out->IsDone = $todo->$is_done;
@@ -25,6 +26,7 @@ class TodoSerializer extends ModelSerializer {
 
     function toServer($todo) {
         $out = new Todo;
+        if ($todo->Id != null) $out->id = $todo->Id;
         $out->date = $todo->Date;
         $out->description = $todo->Description;
         $out->is_done = $todo->IsDone;

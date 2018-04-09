@@ -4,6 +4,8 @@ namespace Model;
 
 class Todo extends \Illuminate\Database\Eloquent\Model{
 
+    protected $table = 'todo';
+    
     protected $fillable = [
         'date', 'title', 'description', 'is_done'
     ];

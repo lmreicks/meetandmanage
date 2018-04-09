@@ -63,7 +63,9 @@ $app->post('/api/event', function (Request $request, Response $response, array $
 
     $event = $es->toServer($body);
     $event->save();
-    $event->attach($user->id);
+    $event->users()->attach($user->id);
+    $ids = array();
+    foreach($members as $m) array_push();
     $event->users()->attach($body->Members);
 
     $event->save();
@@ -103,23 +105,25 @@ $app->put('/api/event', function (Request $request, Response $response, array $a
     $es = new EventSerializer;
     $body = json_decode($request->getBody());
     $event = $es->toServer($body);
+    echo $event;
     // $event_id = $es->id;
     // $event = Event::find($event_id);
-    
+    $existing = Event::find($event->id);
+    $existing->title = $event->title;
+    $existing->location = $event->location;
+    $existing->notes = $event->notes;
     $user = $request->getAttributes('user');
     // if ($user->id != $event->OwnerId){
     //     $response->getBody()->write("not your event to edit");
     //     return $response;
     // }
-    if($event != null){
     
-        $event->save();
+    
+    $existing->save();
 
-        $response->getBody()->write(json_encode($event));
+    $response->getBody()->write(json_encode($event));
 
-    }
-    else{
-    }
+    
     return $response;
 
 });

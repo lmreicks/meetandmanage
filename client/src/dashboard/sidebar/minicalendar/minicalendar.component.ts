@@ -26,9 +26,9 @@ export class MiniCalendarComponent {
                 private router: Router) {}
 
     ngOnInit(): void {
-        this.loading = true;
 
             this.dashboardService.current.subscribe(current => {
+                this.loading = true;
                 this.date = current;
                 this.parseMonth(this.date.clone());
                 this.loading = false;
@@ -60,9 +60,10 @@ export class MiniCalendarComponent {
             let dateValue: DateObject = {
               current: dayMoment.format(DATE_FORMAT) === currentFormat,
               display: dayMoment.format('D'),
+              active: dayMoment.format(DATE_FORMAT) === this.date.format(DATE_FORMAT),
               future: dayMoment.isAfter(endOfMonth),
               past: dayMoment.isBefore(startOfMonth),
-              utcDateValue: dayMoment.valueOf()
+              moment: dayMoment
             };
 
             let day = {
@@ -70,7 +71,7 @@ export class MiniCalendarComponent {
                 events: []
             };
 
-            week.current = true;
+            //week.current = true;
 
             week.days.push(day);
           }
@@ -83,12 +84,13 @@ export class MiniCalendarComponent {
         return date.format('hh:mm a');
     }
 
-    DoubleClickDay(click: MouseEvent, day: Day): void {
+    doubleClickDay(click: MouseEvent, day: Day): void {
         this.router.navigate(['event/create']);
     }
 
     clickDay(click: MouseEvent, day: Day): void {
-        console.log(moment().date(+day.day.display))
+        console.log(moment().date(+day.day.display));
+        this.dashboardService.changeDate(day.day.moment);
     }
 }
 

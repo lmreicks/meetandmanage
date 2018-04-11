@@ -57,7 +57,7 @@ export class WeekComponent {
                 display1: dayMoment.format('MMMM Y'),
                 future: dayMoment.isAfter(date.endOf('month')),
                 past: dayMoment.isBefore(date.startOf('month')),
-                utcDateValue: dayMoment.utc().valueOf()
+                moment: dayMoment.utc()
             };
 
             let day = {

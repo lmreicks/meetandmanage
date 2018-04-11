@@ -1,7 +1,7 @@
 <div class="month" *ngIf="!loading">
     <div class="weekdays">
         <div class="weekday" *ngFor="let weekday of month.weekdays">
-            {{weekday}}
+            {{weekday.substring(0, 1)}}
         </div>
     </div> 
     <div class="weeks" *ngFor="let week of month.weeks" [ngClass]="{'current': week.current}">
@@ -10,7 +10,8 @@
             [ngClass]="{
                 'current': day.day.current,
                 'future': day.day.future,
-                'past': day.day.past }"
+                'past': day.day.past,
+                'active': day.day.active }"
             (click)="clickDay($event, day)">
             <span class="day-number">{{day.day.display}}</span>
         </div>

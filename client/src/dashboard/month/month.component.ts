@@ -69,10 +69,11 @@ export class MonthComponent {
 
             let dateValue: DateObject = {
               current: dayMoment.format(DATE_FORMAT) === currentFormat,
+              active: dayMoment.format(DATE_FORMAT) === this.date.format(DATE_FORMAT),
               display: dayMoment.format('D'),
               future: dayMoment.isAfter(endOfMonth),
               past: dayMoment.isBefore(startOfMonth),
-              utcDateValue: dayMoment.valueOf()
+              moment: dayMoment
             };
 
             let day = {

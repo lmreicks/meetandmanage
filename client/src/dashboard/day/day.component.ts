@@ -51,7 +51,7 @@ export class DayComponent {
         let dateValue: DateObject = {
             current: curr.format(DATE_FORMAT) === today,
             display: curr.format('dddd, MMMM D'),
-            utcDateValue: curr.utc().valueOf()
+            moment: curr.utc()
         };
 
         this.day = {

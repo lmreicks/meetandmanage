@@ -1,59 +1,73 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 import { DateObject } from '../../dashboard/models/date.model';
 import { ApiEvent } from '../models/event';
-import * as moment from 'moment';
 import { API_ROOT } from '../../constants.module';
-import { ReplaySubject } from 'rxjs';
 import { PayloadModel } from '../models/payload';
 import { ApiUser } from '../models/user';
 import { MockPayload } from '../models/mock-payload';
+import { ApiGroup } from '../models/group';
 
 @Injectable()
 
 export class CoreCacheService {
     currentUser: ApiUser;
-    payload: ReplaySubject<PayloadModel> = new ReplaySubject();
+    payload: PayloadModel;
+    promiseForData: Promise<PayloadModel>;
     constructor(private http: Http) {}
-    eventMap: ReplaySubject<Map<string, ApiEvent[]>> = new ReplaySubject();
-    tempPayload: Observable<PayloadModel> = new Observable(observable => {
-        observable.next(MockPayload);
-    });
+    private events: ApiEvent[];
+    private dateMap: Map<string, ApiEvent[]>;
+    private eventMap: Map<number, ApiEvent>;
+    tempPayload: Promise<PayloadModel> = Promise.resolve(MockPayload);
 
-    OnAuth(): void {
-        this.tempPayload.subscribe(payload => {
-        //this.Payload().subscribe(events => {
-            this.currentUser = payload.User;
-            this.ParseEvents(payload.Events);
+    OnAuth(): Promise<PayloadModel> {
+        this.promiseForData = this.Payload()
+                .then(p => {
+                    this.payload = p;
+                    this.ParseEvents(this.payload);
+                    return this.payload;
+                });
+
+        return this.promiseForData;
+    }
+
+    Payload(): Promise<PayloadModel> {
+        return this.http.get(API_ROOT + '/payload')
+            .map(res => res.json(), err => new Observable(err))
+            .toPromise();
+    }
+
+    private ParseEvents(payload: PayloadModel): void {
+        this.events = payload.Events;
+
+        payload.Groups.forEach(group => {
+            group.ShowEvents = true;
+            this.events = this.events.concat(group.Events);
         });
-    }
 
-    Payload(): Observable<ApiEvent[]> {
-        return this.http.get(API_ROOT + '/event')
-            .map(res => res.json(), err => new Observable(err));
-    }
-
-    ParseEvents(events: ApiEvent[]): void {
-        console.log(events);
-        if (!events || events.length === 0) {
+        if (this.events.length === 0) {
             return;
         }
 
-        this._sortEvents(events);
+        this._sortEvents(this.events);
 
-        let map = new Map<string, ApiEvent[]>();
+        this.dateMap = new Map<string, ApiEvent[]>();
+        this.eventMap = new Map<number, ApiEvent>();
 
-        events.forEach(event => {
-            if (map.has(event.StartDate)) {
-                map.get(event.StartDate).push(event);
+        this.events.forEach(event => {
+            event.Hidden = false;
+            this.eventMap.set(event.Id, event);
+
+            if (this.dateMap.has(event.StartDate)) {
+                this.dateMap.get(event.StartDate).push(event);
             } else {
-                map.set(event.StartDate, [event]);
+                this.dateMap.set(event.StartDate, [event]);
             }
         });
-        this.eventMap.next(map);
     }
 
     private _sortEvents(events: ApiEvent[]) {
@@ -66,6 +80,58 @@ export class CoreCacheService {
                 return 1;
             }
         });
+    }
+
+    public AddEvent(event: ApiEvent): void {
+        if (this.dateMap.has(event.StartDate)) {
+            this.dateMap.get(event.StartDate).push(event);
+        }
+        this.eventMap.set(event.Id, event);
+    }
+
+    public GetDateMap(): Promise<Map<string, ApiEvent[]>> {
+        return this.promiseForData.then(payload => this.dateMap);
+    }
+
+    public GetEventMap(): Promise<Map<number, ApiEvent>> {
+        if (this.eventMap) {
+            return new Promise(resolve => resolve(this.eventMap));
+        } else {
+            return this.promiseForData.then(payload => this.eventMap);
+        }
+    }
+
+    public GetGroups(): Promise<ApiGroup[]> {
+        if (this.payload) {
+            return new Promise(resolve => resolve(this.payload.Groups));
+        } else {
+            return this.promiseForData.then(payload => this.payload.Groups);
+        }
+    }
+
+    public GetGroupById(groupId: number): Promise<ApiGroup> {
+        return this.GetGroups()
+            .then(groups => {
+                let index = groups.map(x => x.Id).indexOf(groupId);
+                if (index > -1) {
+                    return groups[index];
+                } else {
+                    return null;
+                }
+            });
+    }
+
+    public AddGroup(group: ApiGroup): ApiGroup {
+        this.GetGroups().then(groups => groups.push());
+        return group;
+    }
+
+    public FilterEventsByGroup(group: ApiGroup): void {
+        if (this.events) {
+            group.Events.forEach(event => {
+                event.Hidden = !group.ShowEvents;
+            });
+        }
     }
 }
 

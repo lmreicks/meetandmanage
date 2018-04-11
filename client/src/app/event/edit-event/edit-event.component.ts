@@ -1,9 +1,15 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, AbstractControl, FormArray, FormControl, FormBuilder } from '@angular/forms';
 import * as moment from 'moment';
 import { EventService } from '../event.service';
-import { ApiEvent, ApiCreateEvent } from '../../models/event';
+import { ApiEvent, ApiCreateEvent, NotificationGranularity } from '../../models/event';
 import { TIME_FORMAT, DATE_FORMAT } from '../../../constants.module';
+import { Colors } from '../../models/colors';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ApiUser } from '../../models/user';
+import { UserService } from '../../user/user.service';
+import { CoreCacheService } from '../../services';
+import { ApiGroup } from '../../models/group';
 
 @Component({
     selector: 'mnm-edit-event',
@@ -12,72 +18,118 @@ import { TIME_FORMAT, DATE_FORMAT } from '../../../constants.module';
 })
 
 export class EditEventComponent {
+    public edit: boolean = false;
     public event: ApiEvent | ApiCreateEvent;
     public eventForm: FormGroup;
-    public startTimes: any[] = [];
-    public endTimes: any[]= [];
+    public colors: string[] = Colors;
+    public notificationGranularity = NotificationGranularity;
+    public showNotification: boolean = true;
+    public users: ApiUser[];
+    public groups: ApiGroup[];
 
-    constructor(private fb: FormBuilder, private eventService: EventService) {
-        if (this.eventService.editEvent) {
-            this.eventService.editEvent.subscribe(event => {
-                this.event = event;
-                this._buildForm();
-            });
-        }
-    }
+    constructor(private route: ActivatedRoute,
+                private router: Router,
+                private eventService: EventService,
+                private userService: UserService,
+                private coreCache: CoreCacheService,
+                private fb: FormBuilder) {}
 
-    private _buildForm(): void {
-        this.eventForm = this.fb.group({
-            Title: [
-                this.event.Title, Validators.required
-            ],
-            StartDate: [
-                moment(this.event.StartDate, DATE_FORMAT).toDate(),
-                Validators.required
-            ],
-            EndDate: [
-                moment(this.event.EndDate, DATE_FORMAT).toDate(),
-                Validators.required
-            ],
-            StartTime: this._setStartTime(),
-            EndTime: this._setEndTime(),
-            Recurring: false
-        });
+    ngOnInit(): void {
+        this.userService.GetAll().then(users => this.users = users);
+        this.coreCache.GetGroups().then(groups => this.groups = groups);
 
-        this.eventForm.get('StartDate').valueChanges.subscribe(value => {
-            if (!this.eventForm.get('Recurring').value) {
-                this.eventForm.get('EndDate').setValue(value);
-            }
-        });
-    }
-
-    private _setStartTime(): FormControl {
-        let start = moment(this.event.StartTime, TIME_FORMAT);
-
-        for (let i = 0 ; i < 12; i++) {
-            let tempTime = moment(start).add(i, 'hours');
-            this.startTimes[i] = {
-                value: tempTime.format(TIME_FORMAT),
-                label: tempTime.format('hh:mma')
+        let id = this.route.snapshot.paramMap.get('id');
+        if (!!id && id !== 'create') {
+            this.edit = true;
+            this.eventService
+                .GetEventById(+id)
+                .then(event => {
+                    this.eventForm = this.eventService.BuildEventForm(event, this.eventForm);
+                });
+        } else {
+            let createEvent: ApiCreateEvent = {
+                Title: null,
+                OwnerId: 3, // change this!!
+                StartDate: moment().format(DATE_FORMAT),
+                EndDate: moment().format(DATE_FORMAT),
+                StartTime: moment().format(TIME_FORMAT),
+                EndTime: moment().add(1, 'hour').format(TIME_FORMAT),
+                Location: "", Color: "", Notes: "", Members: []
             };
+            this.eventForm = this.eventService.BuildEventForm(createEvent, this.eventForm);
         }
-        return new FormControl(start.format(TIME_FORMAT), Validators.required);
-    }
-
-    private _setEndTime(): FormControl {
-        let start = moment(this.event.EndTime, TIME_FORMAT);
-
-        for (let i = 0; i < 12; i++) {
-            let tempTime = moment(start).add(i, 'hours');
-            this.endTimes[i] = {
-                value: tempTime.format(TIME_FORMAT),
-                label: tempTime.format('hh:mma')
-            };
-        }
-        return new FormControl(start.format(TIME_FORMAT), Validators.required);
     }
 
     public formatDate(date: Date): string {
         return moment(date).format('dddd, MMMM Do YYYY');
+    }
+
+    public setColor(color: string): void {
+        this.eventForm.get('Color').setValue(color);
+    }
+
+    public setNotification(granularity: NotificationGranularity): void {
+        this.eventForm.get('NotificationGranularity').setValue(granularity);
+    }
+
+    public getNotificationGranularity(): string {
+        let value = +this.eventForm.get('NotificationGranularity').value;
+        return this.notificationGranularity[value];
+    }
+
+    public removeNotification(): void {
+        this.eventForm.get('NotificationGranularity').setValue(null);
+        this.eventForm.get('NotificationValue').setValue(null);
+        this.showNotification = false;
+    }
+
+    public getMembers(): AbstractControl[] {
+        let arr = <FormArray>this.eventForm.controls.Members;
+        return arr.controls;
+    }
+
+    public addMember(): void {
+        let arr: FormArray = <FormArray>this.eventForm.controls.Members;
+
+        // add new form control
+        arr.push(this.fb.group({
+            Id: null,
+            Name: '',
+            Email: ''
+        }));
+    }
+
+    public removeMember(index: number): void {
+        let arr: FormArray = <FormArray>this.eventForm.controls.Members;
+
+        arr.removeAt(index);
+    }
+
+    public createEvent(form: FormGroup): boolean {
+        if (!form.valid) {
+            return false;
+        }
+
+        form.controls.Members.value.pop();
+
+        let event = form.value;
+        if (event.Group.Id === null) {
+            event.Group = null;
+        }
+
+        // // hack until I add a wrapper componennt for the time picker
+        let startTime = form.get('StartTime').value;
+        let endTime = form.get('EndTime').value;
+        event.StartTime = moment(startTime).format(TIME_FORMAT);
+        event.EndTime = moment(endTime).format(TIME_FORMAT);
+
+        event.StartDate = moment(event.StartDate).format(DATE_FORMAT);
+        event.EndDate = moment(event.EndDate).format(DATE_FORMAT);
+
+        this.eventService.CreateEvent(event).then(e => {
+            this.router.navigate(['/dashboard']);
+        });
+
+        return true;
     }
 }

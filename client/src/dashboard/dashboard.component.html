@@ -1,18 +1,9 @@
-<div class="header">
-
-</div>
-    <div class="dropdown">
-        <div ngbDropdown class="d-inline-block">
-            <button class="btn btn-outline-primary" id="granularityDropdown" ngbDropdownToggle>{{Granularity[state]}}</button>
-            <div ngbDropdownMenu aria-labelledby="granularityDropdown">
-                <div class="dropdown-btns">
-                    <button class="dropdown-item btn" [ngClass]="{ 'active' : state === 0 }" (click)="state = 0">Day</button>
-                    <button class="dropdown-item btn" [ngClass]="{ 'active' : state === 1 }" (click)="state = 1">Week</button>
-                    <button class="dropdown-item btn" [ngClass]="{ 'active' : state === 2 }" (click)="state = 2">Month</button>
-                </div>
-            </div>
-        </div>
+<mnm-header></mnm-header>
+<div class="dashboard">
+    <div class="sidebar">
+        <mnm-sidebar></mnm-sidebar>
     </div>
-    <div *ngIf="state === 0">DAY</div>
-    <mnm-week *ngIf="state === 1"></mnm-week>
-    <mnm-month *ngIf="state === 2"></mnm-month>
+    <div class="type">
+        <router-outlet></router-outlet>
+    </div>
+</div>

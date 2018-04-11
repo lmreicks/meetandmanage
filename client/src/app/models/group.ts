@@ -1,7 +1,14 @@
+import { ApiUser } from './user';
+import { ApiEvent } from './event';
 
-export interface ApiGroup {
-    Id: number;
+export interface ApiCreateGroup {
     Name: string;
     Description?: string;
-    Members: number[];
+    Members: ApiUser[];
+}
+
+export interface ApiGroup extends ApiCreateGroup {
+    Id: number;
+    Events: ApiEvent[];
+    ShowEvents?: boolean;
 }

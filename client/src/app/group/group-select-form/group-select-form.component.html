@@ -1,0 +1,19 @@
+<div [formGroup]="groupForm" ngbDropdown>
+        <input  class="form-control"
+                id="group"
+                autocomplete="off"
+                formControlName="Name"
+                placeholder="Select Group"
+                (keyup)="groupSearch()"
+                ngbDropdownToggle>
+        <div    ngbDropdownMenu
+                aria-labelledby="group"
+                #groupDropdown>
+            <li *ngIf="groupNotFound" id="not-found" class="dropdown-item">
+                No Groups Found
+            </li>
+            <li *ngFor="let group of groups | filter: groupForm.get('Name').value" class="dropdown-item" (click)="addGroup(group)">
+                {{group.Name}}
+            </li>
+        </div>
+    </div>

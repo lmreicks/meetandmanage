@@ -1,0 +1,22 @@
+<div class="todo-list-container">
+    <div class="new-todo-container">
+        <input class="new-todo draw meet" placeholder="What do you need to do today?" autofocus="" [(ngModel)]="newTodo.Title" (keyup.enter)="addTodo()">
+    </div>
+
+    <div class="main" *ngIf="todos.length > 0">
+        <ul class="todo-list">
+            <li *ngFor="let todo of todos" [class.completed]="todo.Done">
+                <label class="view">
+                    <input class="toggle"
+                        type="checkbox"
+                        [(ngModel)]="todo.Done"
+                        [checked]="todo.Done">
+                    <span class="not-done" *ngIf="!todo.Done"><i class="far fa-circle"></i></span>
+                    <span class="done" *ngIf="todo.Done"><i class="far fa-check-circle"></i></span>
+                    <span class="mx-2 title">{{todo.Title}}</span>
+                    <a class="destroy" (click)="removeTodo(todo)"></a>
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>

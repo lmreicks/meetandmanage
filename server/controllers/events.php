@@ -8,10 +8,27 @@ use Models\EventLookup;
 use Logic\ModelSerializers\EventSerializer;
 
 
+<<<<<<< HEAD
 /**
 * returns a json formatted serialized list of all events corresponding to the given user
 * is given a request with the user as an attribute
 */
+=======
+
+/**
+ * @api {get} /user/:id
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *    [
+ *     {
+ *       "Id": "1",
+ *       "Title": "New Event",
+ *       "Description: "DFJK",
+ *       "StartDate": 10-19-2019
+ *     }
+ *    ]
+ */
+>>>>>>> 69726ff3f516488bf18bfb235b5918591ae02c76
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
 
     $es = new EventSerializer;

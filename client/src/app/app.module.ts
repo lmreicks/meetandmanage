@@ -5,12 +5,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DlDateTimePickerDateModule } from 'angular-bootstrap-datetimepicker';
 import { HttpModule, Http, XHRBackend, RequestOptions } from '@angular/http';
 import { appRoutes } from './app.routing';
+import { TimepickerModule, ModalModule, PopoverModule, CollapseModule } from 'ngx-bootstrap';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 import { httpFactory } from './services';
 
 import { AppComponent } from './app.component';
 import { CoreCacheService } from './services/core-cache.service';
-import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './services/auth-guard';
 import { AuthService } from './services/auth.service';
@@ -23,18 +24,39 @@ import { NgbDateNativeAdapter } from './shared/datepicker-adapter.component';
 import { DropdownModule } from './shared/dropdown/dropdown.module';
 import { ComboBoxComponent } from './shared/combo-box/combo-box.component';
 import { SearchFilterPipe } from './shared/combo-box/search.pipe';
+import { NotFoundComponent } from './shared/not-found/not-found.component';
+import { AgmCoreModule } from '@agm/core';
+import { UserService } from './user/user.service';
+import { LocationInput } from './shared/location-input/location-input.component';
+import { GroupService } from './group/group.service';
+import { CreateGroupComponent } from './group/create-group/create-group.component';
+import { MemberFormComponent } from './user/member/member.component';
+import { GroupSelectForm } from './group/group-select-form/group-select-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent,
     LoginComponent,
     EditEventComponent,
     ComboBoxComponent,
-    SearchFilterPipe
+    SearchFilterPipe,
+    NotFoundComponent,
+    LocationInput,
+    CreateGroupComponent,
+    MemberFormComponent,
+    GroupSelectForm
   ],
   imports: [
     NgbModule.forRoot(),
+    TimepickerModule.forRoot(),
+    ModalModule.forRoot(),
+    PopoverModule.forRoot(),
+    BsDatepickerModule.forRoot(),
+    CollapseModule.forRoot(),
+    AgmCoreModule.forRoot({
+      apiKey: "AIzaSyDUJitlzdDW3SpdwzBzDW5YnTS_I-HeMCs",
+      libraries: ["places"]
+    }),
     DropdownModule,
     RouterModule.forRoot(appRoutes),
     DashboardModule,
@@ -50,6 +72,8 @@ import { SearchFilterPipe } from './shared/combo-box/search.pipe';
     AuthService,
     EventService,
     SessionService,
+    UserService,
+    GroupService,
     {
       provide: NgbDateAdapter,
       useClass: NgbDateNativeAdapter

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CoreCacheService } from '../../app/services/core-cache.service';
-import { Week, DateObject, WeekDays, Day } from '../models';
+import { DateObject, Day } from '../models';
 import {DATE_FORMAT} from '../../constants.module';
 import * as moment from 'moment';
 import { ApiEvent } from '../../app/models/event';
 import { DashboardService } from '../dashboard.service';
+import { ApiTodo } from '../../app/models/todo';
 
 @Component({
     selector: 'mnm-day',
@@ -21,6 +22,7 @@ export class DayComponent {
     public loading: boolean = true;
     public Granularity = Granularity;
     public state: Granularity = Granularity.None;
+
     private diff = 0;
     private height = 0;
 

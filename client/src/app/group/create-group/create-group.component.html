@@ -22,7 +22,7 @@
         </div>
         <div class="form-group"
             formArrayName="Members"
-            *ngFor="let member of groupForm.get('Members').controls; let i = index">
+            *ngFor="let member of groupForm.controls.Members.controls; let i = index">
             <div class="col-sm-1">
                 <div class="font-awesome">
                     <i class="fas fa-user"></i>

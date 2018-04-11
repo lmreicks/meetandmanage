@@ -7,8 +7,21 @@ use Models\Todo;
 use Logic\ModelSerializers\TodoSerializer;
 
 /**
-* takes in a user object and returns all of the todo tasks associated with them
-*/
+ * @api {get} /todo
+ * @apiHeader: {string} authentication a users unique authentication token
+ * @apiSuccessExample {json} Success-Response:
+ *   [
+ *       {
+ *           "Title" : "task",
+ *           "Description" : "description",
+ *           "Date" : "2018-03-20",
+ *          "Done": fasle
+ *       },
+ *       {
+ *
+ *       }
+ *   ]
+ */
 $app->get('/api/todo', function (Request $request, Response $response, array $args) {
     $ts = new TodoSerializer;
     $body = json_decode($request->getBody());
@@ -20,8 +33,28 @@ $app->get('/api/todo', function (Request $request, Response $response, array $ar
 });
 
 /**
-* takes in a user and a task and adds the task to the user
-*/
+ * @api {post} /todo
+ * @apiHeader: {string} authentication a users unique authentication token
+ * @apiPeramExample {json} Request-Example: 
+ *  {
+ *      "Title" : "task",
+ *      "Description" : "description",
+ *      "Date" : "2018-03-20",
+ *      "Done": fasle
+ *  }
+ * @apiSuccessExample {json} Success-Response:
+ *   [
+ *       {
+ *           "Title" : "task",
+ *           "Description" : "description",
+ *           "Date" : "2018-03-20",
+ *          "Done": fasle
+ *       },
+ *       {
+ *
+ *       }
+ *   ]
+ */
 $app->post('/api/todo', function (Request $request, Response $response, array $args) {
     $ts = new TodoSerializer;
     $body = json_decode($request->getBody());
@@ -36,8 +69,28 @@ $app->post('/api/todo', function (Request $request, Response $response, array $a
 });
 
 /**
-* takes in a task and a user and updates the existing task associated with the user
-*/
+ * @api {put} /todo
+ * @apiHeader: {string} authentication a users unique authentication token
+ * @apiPeramExample {json} Request-Example: 
+ *  {
+ *      "Title" : "task",
+ *      "Description" : "description",
+ *      "Date" : "2018-03-20",
+ *      "Done": fasle
+ *  }
+ * @apiSuccessExample {json} Success-Response:
+ *   [
+ *       {
+ *           "Title" : "task",
+ *           "Description" : "description",
+ *           "Date" : "2018-03-20",
+ *          "Done": fasle
+ *       },
+ *       {
+ *
+ *       }
+ *   ]
+ */
 $app->put('/api/todo', function (Request $request, Response $response, array $args) {
     $ts = new TodoSerializer;
     $body = json_decode($request->getBody());
@@ -54,8 +107,28 @@ $app->put('/api/todo', function (Request $request, Response $response, array $ar
 });
 
 /**
-* takes in a task and a user and deletes the existing task associated with the user
-*/
+ * @api {delete} /todo
+ * @apiHeader: {string} authentication a users unique authentication token
+ * @apiPeramExample {json} Request-Example: 
+ *  {
+ *      "Title" : "task",
+ *      "Description" : "description",
+ *      "Date" : "2018-03-20",
+ *      "Done": fasle
+ *  }
+ * @apiSuccessExample {json} Success-Response:
+ *   [
+ *       {
+ *           "Title" : "task",
+ *           "Description" : "description",
+ *           "Date" : "2018-03-20",
+ *          "Done": fasle
+ *       },
+ *       {
+ *
+ *       }
+ *   ]
+ */
 $app->delete('/api/todo', function (Request $request, Response $response, array $args) {
     $ts = new TodoSerializer;
     $body = json_decode($request->getBody());

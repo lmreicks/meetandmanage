@@ -8,27 +8,50 @@ use Models\EventLookup;
 use Logic\ModelSerializers\EventSerializer;
 
 
-<<<<<<< HEAD
-/**
-* returns a json formatted serialized list of all events corresponding to the given user
-* is given a request with the user as an attribute
-*/
-=======
 
 /**
- * @api {get} /user/:id
+ * @api {get} /event
+ * @apiHeader: {string} authentication a users unique authentication token
  * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
  *    [
+ *   {
+ *       "Id": 29,
+ *       "Title": "309 Meetings",
+ *       "OwnerId": "2",
+ *       "StartTime": "05:05:00",
+ *       "EndTime": "06:05:05",
+ *       "StartDate": "2018-03-20",
+ *       "EndDate": "2018-03-20",
+ *       "Location": "TLA",
+ *       "Notes": null,
+ *       "Members": [
+ *           {
+ *               "Id": 1,
+ *               "Email": "lexi@gmail.com",
+ *               "Name": "lexi"
+ *           },
+ *           {
+ *               "Id": 3,
+ *               "Email": "tlnance@iastate.edu",
+ *               "Name": "Trevin"
+ *           },
+ *           {
+ *               "Id": 5,
+ *               "Email": "bmjensen@iastate.edu",
+ *               "Name": "Bailey"
+ *           },
+ *           {
+ *               "Id": 6,
+ *               "Email": "anngould@iastate.edu",
+ *               "Name": "Ann Gould"
+ *           }
+ *       ]
+ *    },
  *     {
- *       "Id": "1",
- *       "Title": "New Event",
- *       "Description: "DFJK",
- *       "StartDate": 10-19-2019
+ *         
  *     }
- *    ]
+ *]
  */
->>>>>>> 69726ff3f516488bf18bfb235b5918591ae02c76
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
 
     $es = new EventSerializer;
@@ -40,9 +63,77 @@ $app->get('/api/event', function (Request $request, Response $response, array $a
 });
 
 /**
-* adds the given api object to the given user in the attribute
-* returns the added event
-*/
+ * @api {post} /event
+ * @apiHeader: {string} authentication a users unique authentication token
+ * @apiParamExample {json} Request-Example:
+ *  {
+ *       "Id": 29,
+ *       "Title": "309 Meetings",
+ *       "OwnerId": "2",
+ *       "StartTime": "05:05:00",
+ *       "EndTime": "06:05:05",
+ *       "StartDate": "2018-03-20",
+ *       "EndDate": "2018-03-20",
+ *       "Location": "TLA",
+ *       "Notes": null,
+ *       "Members": [
+ *           {
+ *               "Id": 1,
+ *               "Email": "lexi@gmail.com",
+ *               "Name": "lexi"
+ *           },
+ *           {
+ *               "Id": 3,
+ *              "Email": "tlnance@iastate.edu",
+ *             "Name": "Trevin"
+ *           },
+ *           {
+ *               "Id": 5,
+ *              "Email": "bmjensen@iastate.edu",
+ *               "Name": "Bailey"
+ *           },
+ *           {
+ *               "Id": 6,
+ *               "Email": "anngould@iastate.edu",
+ *               "Name": "Ann Gould"
+ *           }
+ *       ]
+ *   }
+ * @apiSuccessExample {json} Success-Response:
+ *    {
+ *       "Id": 29,
+ *       "Title": "309 Meetings",
+ *       "OwnerId": "2",
+ *       "StartTime": "05:05:00",
+ *       "EndTime": "06:05:05",
+ *       "StartDate": "2018-03-20",
+ *       "EndDate": "2018-03-20",
+ *       "Location": "TLA",
+ *       "Notes": null,
+ *       "Members": [
+ *           {
+ *               "Id": 1,
+ *               "Email": "lexi@gmail.com",
+ *               "Name": "lexi"
+ *           },
+ *           {
+ *               "Id": 3,
+ *               "Email": "tlnance@iastate.edu",
+ *               "Name": "Trevin"
+ *           },
+ *           {
+ *               "Id": 5,
+ *               "Email": "bmjensen@iastate.edu",
+ *               "Name": "Bailey"
+ *           },
+ *           {
+ *               "Id": 6,
+ *               "Email": "anngould@iastate.edu",
+ *               "Name": "Ann Gould"
+ *           }
+ *       ]
+ *   }
+ */
 $app->post('/api/event', function (Request $request, Response $response, array $args) {
     
     # need to parse through list of members given in the $request body
@@ -91,9 +182,77 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     return $response;
 });
 
-/**
-* deletes the event with the given id, if the id exists and the given user owns the event
-*/
+/**@api {delete} /event
+ * @apiHeader: {string} authentication a users unique authentication token
+ * @apiParamExample {json} Request-Example:
+ *  {
+ *       "Id": 29,
+ *       "Title": "309 Meetings",
+ *       "OwnerId": "2",
+ *       "StartTime": "05:05:00",
+ *       "EndTime": "06:05:05",
+ *       "StartDate": "2018-03-20",
+ *       "EndDate": "2018-03-20",
+ *       "Location": "TLA",
+ *       "Notes": null,
+ *       "Members": [
+ *           {
+ *               "Id": 1,
+ *               "Email": "lexi@gmail.com",
+ *               "Name": "lexi"
+ *           },
+ *           {
+ *               "Id": 3,
+ *              "Email": "tlnance@iastate.edu",
+ *             "Name": "Trevin"
+ *           },
+ *           {
+ *               "Id": 5,
+ *              "Email": "bmjensen@iastate.edu",
+ *               "Name": "Bailey"
+ *           },
+ *           {
+ *               "Id": 6,
+ *               "Email": "anngould@iastate.edu",
+ *               "Name": "Ann Gould"
+ *           }
+ *       ]
+ *   }
+ * @apiSuccessExample {json} Success-Response:
+ *  {
+ *       "Id": 29,
+ *       "Title": "309 Meetings",
+ *       "OwnerId": "2",
+ *       "StartTime": "05:05:00",
+ *       "EndTime": "06:05:05",
+ *       "StartDate": "2018-03-20",
+ *       "EndDate": "2018-03-20",
+ *       "Location": "TLA",
+ *       "Notes": null,
+ *       "Members": [
+ *           {
+ *               "Id": 1,
+ *               "Email": "lexi@gmail.com",
+ *               "Name": "lexi"
+ *           },
+ *           {
+ *               "Id": 3,
+ *              "Email": "tlnance@iastate.edu",
+ *             "Name": "Trevin"
+ *           },
+ *           {
+ *               "Id": 5,
+ *              "Email": "bmjensen@iastate.edu",
+ *               "Name": "Bailey"
+ *           },
+ *           {
+ *               "Id": 6,
+ *               "Email": "anngould@iastate.edu",
+ *               "Name": "Ann Gould"
+ *           }
+ *       ]
+ *   }
+ */
 $app->delete('/api/event/{id}', function (Request $request, Response $response, array $args){
 
     $es = new EventSerializer;
@@ -115,9 +274,77 @@ $app->delete('/api/event/{id}', function (Request $request, Response $response, 
     return $response; //switch to error for not owner of event
 });
 
-/**
-* updates the given api event to the given user
-*/
+/**@api {put} /event
+ * @apiHeader: {string} authentication a users unique authentication token
+ * @apiParamExample {json} Request-Example:
+ *  {
+ *       "Id": 29,
+ *       "Title": "309 Meetings",
+ *       "OwnerId": "2",
+ *       "StartTime": "05:05:00",
+ *       "EndTime": "06:05:05",
+ *       "StartDate": "2018-03-20",
+ *       "EndDate": "2018-03-20",
+ *       "Location": "TLA",
+ *       "Notes": null,
+ *       "Members": [
+ *           {
+ *               "Id": 1,
+ *               "Email": "lexi@gmail.com",
+ *               "Name": "lexi"
+ *           },
+ *           {
+ *               "Id": 3,
+ *              "Email": "tlnance@iastate.edu",
+ *             "Name": "Trevin"
+ *           },
+ *           {
+ *               "Id": 5,
+ *              "Email": "bmjensen@iastate.edu",
+ *               "Name": "Bailey"
+ *           },
+ *           {
+ *               "Id": 6,
+ *               "Email": "anngould@iastate.edu",
+ *               "Name": "Ann Gould"
+ *           }
+ *       ]
+ *   }
+ * @apiSuccessExample {json} Success-Response:
+ *  {
+ *       "Id": 29,
+ *       "Title": "309 Meetings",
+ *       "OwnerId": "2",
+ *       "StartTime": "05:05:00",
+ *       "EndTime": "06:05:05",
+ *       "StartDate": "2018-03-20",
+ *       "EndDate": "2018-03-20",
+ *       "Location": "TLA",
+ *       "Notes": null,
+ *       "Members": [
+ *           {
+ *               "Id": 1,
+ *               "Email": "lexi@gmail.com",
+ *               "Name": "lexi"
+ *           },
+ *           {
+ *               "Id": 3,
+ *              "Email": "tlnance@iastate.edu",
+ *             "Name": "Trevin"
+ *           },
+ *           {
+ *               "Id": 5,
+ *              "Email": "bmjensen@iastate.edu",
+ *               "Name": "Bailey"
+ *           },
+ *           {
+ *               "Id": 6,
+ *               "Email": "anngould@iastate.edu",
+ *               "Name": "Ann Gould"
+ *           }
+ *       ]
+ *   }
+ */
 $app->put('/api/event', function (Request $request, Response $response, array $args) {
     $es = new EventSerializer;
     $body = json_decode($request->getBody());

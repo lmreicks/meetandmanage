@@ -1,0 +1,100 @@
+@import '../../config.less';
+
+.todo-list-container {
+    padding: 15px;
+}
+
+:focus {
+	outline: 0;
+}
+
+.new-todo {
+    border: none;
+	background: rgba(0, 0, 0, 0.003);
+    font-size: 18px;
+    width: 100%;
+}
+
+.new-todo-container::after {
+    content: '';
+    display: block;
+    margin: auto;
+    height: 3px;
+    width: 100%;
+    background-color: @border-grey;
+}
+
+.new-todo-container:hover::after {
+    width: 100%;
+    background-color: @light-blue;
+}
+
+.main {
+	position: relative;
+    z-index: 2;
+    margin-top: 10px;
+}
+
+
+.view {
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+.todo-list {
+	margin: 0;
+	padding: 0;
+    list-style: none;
+    
+    li {
+        position: relative;
+        font-size: 18px;
+
+        &:hover {
+            .destroy {
+                display: block;
+            }
+        }
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .toggle {
+            border: none; /* Mobile Safari */
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        span {
+            word-break: break-all;
+            transition: color 0.4s;
+        }
+
+        &.completed {
+            .title {
+                color: rgb(117, 117, 117);
+            }
+
+            .done {
+                color: #00C851;
+            }
+        }
+
+        .destroy {
+            display: none;
+            color: #cc9a9a;
+            font-size: 30px;
+            transition: color 0.2s ease-out;
+
+            &:hover {
+                color: #af5b5e;
+            }
+
+            &:after {
+                content: '×';
+            }
+        }
+    }
+}

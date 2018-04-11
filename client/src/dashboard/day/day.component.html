@@ -1,58 +1,50 @@
-<div class="day-view" *ngIf="!loading">
-    <div class='header-container'>
-        <div class='header'>
-            <h1> &nbsp; {{day.day.display}} &nbsp; </h1>
-        </div>
-    </div>
-    <div class='list-grid-container'>
-        <div class='list-grid'>
-            <div class='list-grid-item first-item'>
-                <div class='header-container'>
-                    <div class='header'>Events</div>
-                </div>
-                <div class="day-container">
-                    <div class='time'>
-                        <div class='hour' *ngFor="let hour of hours">
-                            {{hour}}
-                            <hr class='line'/>
-                        </div>
-                    </div>
-                    
-                    <div class='day' *ngIf="!loading">
-                        <div class='event' *ngFor="let eventEl of eventElements" [ngStyle]="{'margin-top': eventEl.top + 'px', 'height': eventEl.height + 'px'}">
-                            {{eventEl.event.Title}}
-                        </div>
-                    </div>
-                </div>
+<div class="day-header" *ngIf="!loading">
+   {{day.day.display}}
+</div>
+
+<div class="day-view mr-4" *ngIf="!loading">
+    <div class="day-container">
+        <div class="section">
+            <div class="section-header">
+                Events
             </div>
-            <div class='list-grid-item'>
-                <div class='header-container'>
-                    <div class='header'>To-Dos</div>
+            <div class="section-body">
+                <div class="time">
+                    <div class="hour" *ngFor="let hour of hours">
+                        {{hour}}
+                        <!-- <hr class="line"/> -->
+                    </div>
                 </div>
-                <div class="day-container">
-                    <div class='day' *ngIf="!loading">
-                        <div class='todoitem'>
-                            Do Homework
-                        </div>
+                
+                <div class="day" *ngIf="!loading">
+                    <div class="event" *ngFor="let eventEl of eventElements" [ngStyle]="{'margin-top': eventEl.top + 'px', 'height': eventEl.height + 'px'}">
+                        {{eventEl.event.Title}}
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <hr/>
-    <div class='activity-grid-container'>
-        <div class='activity-grid'>
-            <div class='activity-grid-item first-item'>
-                <div class='header-container'>
-                    <div class='header'>
-                        <button class="btn" [ngClass]="{ 'active' : state === 1 }" (click)="state = 1">Workouts</button></div>
-                </div>
+        <div class="section">
+            <div class="section-header">
+                Todo List
             </div>
-            <div class='activity-grid-item'>
-                <div class='header-container'>
-                    <div class='header'>
-                        <button class="btn" [ngClass]="{ 'active' : state === 2 }" (click)="state = 2">Groups</button></div>
-                </div>
+            <div class="section-body">
+                <todo-list style="width: 100%"></todo-list>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-header">
+                Workout
+            </div>
+            <div class="section-body">
+                <todo-list style="width: 100%"></todo-list>
+            </div>
+        </div>
+        <div class="section">
+            <div class="section-header">
+                Nutrition
+            </div>
+            <div class="section-body">
+                <todo-list style="width: 100%"></todo-list>
             </div>
         </div>
     </div>

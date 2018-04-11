@@ -10,6 +10,19 @@ use Logic\ModelSerialization\EventSerializer;
 
 $es = new EventSerializer;
 
+/**
+ * @api {get} /user/:id
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *    [
+ *     {
+ *       "Id": "1",
+ *       "Title": "New Event",
+ *       "Description: "DFJK",
+ *       "StartDate": 10-19-2019
+ *     }
+ *    ]
+ */
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
 
     $es = new EventSerializer;

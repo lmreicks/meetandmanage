@@ -5,4 +5,5 @@ export interface DateObject {
     display1?: string;
     future?: boolean;
     past?: boolean;
+    active?: boolean;
 }

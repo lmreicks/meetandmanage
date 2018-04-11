@@ -16,6 +16,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { DashboardService } from './dashboard.service';
 import { DayComponent } from './day/day.component';
 import { CollapseModule } from 'ngx-bootstrap';
+import { TodoListComponent } from './todo-list/todo-list.component';
+import { TodoListService } from './todo-list/todo-list.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import { CollapseModule } from 'ngx-bootstrap';
     MonthComponent,
     DayComponent,
     WeekComponent,
-    EventPopoverComponent
+    EventPopoverComponent,
+    TodoListComponent
   ],
   imports: [
     RouterModule.forChild(dashboardRoutes),
@@ -41,6 +44,7 @@ import { CollapseModule } from 'ngx-bootstrap';
   ],
   providers: [
     DashboardService,
+    TodoListService,
     {
       provide: Http,
       useFactory: httpFactory,

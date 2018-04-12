@@ -9,6 +9,13 @@ use Logic\ModelSerializers\GroupSerializer;
 use Logic\ModelSerializers\UserSerializer;
 use Logic\ModelSerializers\EventSerializer;
 
+/**
+* returns the serialized payload which includes all of a users events and groups
+* array(
+*    'Events' => array(user->events),
+*    'Groups' => array(user->groups)
+* )
+*/
 $app->get('/api/payload', function (Request $request, Response $response, array $args) {
     $es = new EventSerializer;
     $gs = new GroupSerializer;

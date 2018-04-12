@@ -21,7 +21,6 @@ import { EditEventComponent } from './event/edit-event/edit-event.component';
 import { EventService } from './event/event.service';
 import { SessionService } from './services/session.service';
 import { NgbDateNativeAdapter } from './shared/datepicker-adapter.component';
-import { DropdownModule } from './shared/dropdown/dropdown.module';
 import { ComboBoxComponent } from './shared/combo-box/combo-box.component';
 import { SearchFilterPipe } from './shared/combo-box/search.pipe';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
@@ -57,7 +56,6 @@ import { GroupSelectForm } from './group/group-select-form/group-select-form.com
       apiKey: "AIzaSyDUJitlzdDW3SpdwzBzDW5YnTS_I-HeMCs",
       libraries: ["places"]
     }),
-    DropdownModule,
     RouterModule.forRoot(APP_ROUTES),
     DashboardModule,
     BrowserModule,

@@ -1,4 +1,4 @@
-import { Routes, RouterModule } from "@angular/router";
+import { Routes } from "@angular/router";
 import { WeekComponent } from "./week/week.component";
 import { MonthComponent } from "./month/month.component";
 import { DashboardComponent } from "./dashboard.component";
@@ -17,5 +17,3 @@ export const DASHBOARD_ROUTES: Routes = [
         ]
     }
 ];
-
-RouterModule.forChild(DASHBOARD_ROUTES);

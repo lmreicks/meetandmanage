@@ -11,10 +11,25 @@ import { DashboardService } from '../dashboard.service';
     styleUrls: ['header.component.less']
 })
 
+/**
+ * Header component for changing/displaying date
+ */
 export class HeaderComponent {
-    public current: moment.Moment = moment();
+    /**
+     * Active date 
+     */
+    public active: moment.Moment = moment();
+    /**
+     * Depending on view, displays month, year or just year
+     */
     public monthYearDisplay: string;
+    /**
+     * View
+     */
     public granularity: string;
+    /**
+     * year, month, and day are used for routing
+     */
     public year: number;
     public month: number;
     public day: number;
@@ -24,6 +39,9 @@ export class HeaderComponent {
                 private dashboardService: DashboardService,
                 private router: Router) {}
 
+    /**
+     * Oninit we subscribe to the url, so when the url changes the header is updated
+     */
     ngOnInit(): void {
         this.route.children[0].url.subscribe((url: UrlSegment[]) => {
             this.granularity = url[0].path;
@@ -33,13 +51,17 @@ export class HeaderComponent {
                 this.month = +url[2].path;
                 this.day = +url[3].path;
 
-                this.current = moment(this.year + '-' + this.month + '-' + this.day, DATE_FORMAT);
+                this.active = moment(this.year + '-' + this.month + '-' + this.day, DATE_FORMAT);
             }
 
-            this.monthYearDisplay = this.current.format('MMMM YYYY');
+            this.monthYearDisplay = this.active.format('MMMM YYYY');
         });
     }
 
+    /**
+     * Changes the view
+     * @param g 
+     */
     public changeGranularity(g: moment.unitOfTime.DurationConstructor): void {
         this.granularity = g;
 
@@ -50,31 +72,45 @@ export class HeaderComponent {
         }
     }
 
+    /**
+     * Moves back or forward 1 granularity
+     * @param index 
+     */
     public move(index: number): void {
         switch (this.granularity) {
             case 'week':
-                this.current.add(index * 7, 'days');
+                this.active.add(index * 7, 'days');
                 break;
             case 'day':
-                this.current.add(index, 'days');
+                this.active.add(index, 'days');
                 break;
             case 'month':
-                this.current.add(index, 'months');
+                this.active.add(index, 'months');
                 break;
         }
-        this.changeDate(this.current);
+        this.changeDate(this.active);
     }
 
+    /**
+     * Updates the date in the dashboard service and the active date
+     * @param {Moment} moment 
+     */
     public changeDate(moment: moment.Moment): void {
-        this.monthYearDisplay = this.current.format('MMMM YYYY');
-        this.dashboardService.current.next(this.current);
+        this.monthYearDisplay = this.active.format('MMMM YYYY');
+        this.dashboardService.current.next(this.active);
     }
 
+    /**
+     * When the today button is clicked, set the active date to today
+     */
     public today(): void {
-        this.current = moment();
-        this.changeDate(this.current);
+        this.active = moment();
+        this.changeDate(this.active);
     }
 
+    /**
+     * When logout button is clicked, log the user out
+     */
     Logout(): void {
         this.auth.logout();
     }

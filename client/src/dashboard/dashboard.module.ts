@@ -31,7 +31,7 @@ import { TodoListService } from './todo-list/todo-list.service';
     TodoListComponent
   ],
   imports: [
-    RouterModule,
+    RouterModule.forChild(DASHBOARD_ROUTES),
     NgbModule.forRoot(),
     CollapseModule.forRoot(),
     BrowserModule,

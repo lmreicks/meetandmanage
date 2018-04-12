@@ -14,6 +14,9 @@ import { ApiGroup } from '../models/group';
 
 @Injectable()
 
+/**
+ * Main service for parsing, holding, and maintaining our information
+ */
 export class CoreCacheService {
     currentUser: ApiUser;
     payload: PayloadModel;
@@ -24,6 +27,9 @@ export class CoreCacheService {
     private eventMap: Map<number, ApiEvent>;
     tempPayload: Promise<PayloadModel> = Promise.resolve(MockPayload);
 
+    /**
+     * When the user is authorized, this methods should be called to make a request to the payload
+     */
     OnAuth(): Promise<PayloadModel> {
         this.promiseForData = this.Payload()
                 .then(p => {
@@ -35,12 +41,22 @@ export class CoreCacheService {
         return this.promiseForData;
     }
 
+    /**
+     * Request for the payload
+     */
     Payload(): Promise<PayloadModel> {
         return this.http.get(API_ROOT + '/payload')
             .map(res => res.json(), err => new Observable(err))
             .toPromise();
     }
 
+    /**
+     * Parses the events and group events
+     * 1. Sorts them by date
+     * 2. Adds them to the date map
+     * 3. Adds them to the event map
+     * @param {PayloadModel} payload 
+     */
     private ParseEvents(payload: PayloadModel): void {
         this.events = payload.Events;
 
@@ -70,6 +86,10 @@ export class CoreCacheService {
         });
     }
 
+    /**
+     * Sorts events by Start date
+     * @param {ApiEvent[]} events 
+     */
     private _sortEvents(events: ApiEvent[]) {
         events.sort((a, b) => {
             if (a.StartDate < b.StartDate) {
@@ -82,6 +102,10 @@ export class CoreCacheService {
         });
     }
 
+    /**
+     * Adds a new event to the maps
+     * @param {ApiEvent} event 
+     */
     public AddEvent(event: ApiEvent): void {
         if (this.dateMap.has(event.StartDate)) {
             this.dateMap.get(event.StartDate).push(event);
@@ -89,10 +113,16 @@ export class CoreCacheService {
         this.eventMap.set(event.Id, event);
     }
 
+    /**
+     * Returns the date map
+     */
     public GetDateMap(): Promise<Map<string, ApiEvent[]>> {
         return this.promiseForData.then(payload => this.dateMap);
     }
 
+    /**
+     * Returns the event map
+     */
     public GetEventMap(): Promise<Map<number, ApiEvent>> {
         if (this.eventMap) {
             return new Promise(resolve => resolve(this.eventMap));
@@ -101,6 +131,9 @@ export class CoreCacheService {
         }
     }
 
+    /**
+     * Gets all groups from the payload
+     */
     public GetGroups(): Promise<ApiGroup[]> {
         if (this.payload) {
             return new Promise(resolve => resolve(this.payload.Groups));
@@ -109,6 +142,10 @@ export class CoreCacheService {
         }
     }
 
+    /**
+     * Gets a specific group from the payload
+     * @param {number} groupId 
+     */
     public GetGroupById(groupId: number): Promise<ApiGroup> {
         return this.GetGroups()
             .then(groups => {
@@ -121,11 +158,19 @@ export class CoreCacheService {
             });
     }
 
+    /**
+     * Adds a group to the list of groups in the payload
+     * @param {ApiGroup} group 
+     */
     public AddGroup(group: ApiGroup): ApiGroup {
         this.GetGroups().then(groups => groups.push());
         return group;
     }
 
+    /**
+     * Filters events by group (should or should not show on calendar)
+     * @param {ApiGroup} group 
+     */
     public FilterEventsByGroup(group: ApiGroup): void {
         if (this.events) {
             group.Events.forEach(event => {
@@ -135,7 +180,3 @@ export class CoreCacheService {
     }
 }
 
-interface Day {
-    day: DateObject;
-    events: ApiEvent[];
-}

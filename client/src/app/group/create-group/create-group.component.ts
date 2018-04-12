@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl, AbstractControl } from '@angular/forms';
 import { ApiUser } from '../../models/user';
 import { GroupService } from '../group.service';
@@ -11,17 +11,24 @@ import { Router } from '@angular/router';
     styleUrls: ['create-group.component.less']
 })
 
+/**
+ * Creating a group
+ */
 export class CreateGroupComponent {
-    @ViewChild('memberDropdown')
-    public memberDropdown: ElementRef;
+    /**
+     * Form for creating a new group
+     */
     public groupForm: FormGroup;
-    public memberNotFound: boolean = false;
+    /**
+     * List of users to populate member dropdown
+     */
     public users: ApiUser[];
 
     constructor(private fb: FormBuilder,
                 private groupService: GroupService,
                 private userService: UserService,
                 private router: Router) {
+
         this.groupForm = this.fb.group({
             Name: ['', Validators.required ],
             Description: '',
@@ -29,12 +36,12 @@ export class CreateGroupComponent {
         });
 
         this.addMember();
-    }
-
-    ngOnInit(): void {
         this.userService.GetAll().then(users => this.users = users);
     }
 
+    /**
+     * Add a member to the group's members
+     */
     public addMember(): void {
         let arr: FormArray = <FormArray>this.groupForm.controls.Members;
 
@@ -46,16 +53,28 @@ export class CreateGroupComponent {
         }));
     }
 
+    /**
+     * Remove member control from group's members
+     * @param {number} index
+     */
     public removeMember(index: number): void {
         let arr: FormArray = <FormArray>this.groupForm.controls.Members;
 
         arr.removeAt(index);
     }
 
+    /**
+     * Gets form array of group member controls
+     */
     public getGroupMembers(): FormArray {
         return <FormArray>this.groupForm.controls.Members;
     }
 
+    /**
+     * Attempts to validate and create a group
+     * Routes to dashboard on success
+     * @param {FormGroup} form 
+     */
     public createGroup(form: FormGroup): boolean {
         if (!form.valid) return false;
 

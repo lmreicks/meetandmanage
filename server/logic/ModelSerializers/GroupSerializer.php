@@ -5,7 +5,6 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\Event;
 use Models\User;
-use Models\Group;
 use Models\EventLookup;
 use Logic\ModelSerializers\ModelSerializer;
 use Logic\ModelSerializers\UserSerializer;
@@ -32,7 +31,7 @@ class GroupSerializer extends ModelSerializer{
 
     function toServer($model){
         $out = new Group;
-        $out->name = $model->Name;
+        $out->group_name = $model->Name;
         $out->description = $model->Description;
         return $out;
     }

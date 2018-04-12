@@ -1,10 +1,10 @@
-import { Routes } from "@angular/router";
+import { Routes, RouterModule } from "@angular/router";
 import { WeekComponent } from "./week/week.component";
 import { MonthComponent } from "./month/month.component";
 import { DashboardComponent } from "./dashboard.component";
 import { DayComponent } from "./day/day.component";
 
-export const dashboardRoutes: Routes = [
+export const DASHBOARD_ROUTES: Routes = [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent,
         children: [
@@ -17,3 +17,5 @@ export const dashboardRoutes: Routes = [
         ]
     }
 ];
+
+RouterModule.forChild(DASHBOARD_ROUTES);

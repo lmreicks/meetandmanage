@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Http } from '@angular/http';
 import { API_ROOT } from '../../constants.module';
 import { Observable } from 'rxjs';
-import { CoreCacheService } from '.';
+import { CoreCacheService } from './core-cache.service';
 import { google } from 'googleapis';
 
 @Injectable()

@@ -6,7 +6,7 @@ import { API_ROOT } from '../../constants.module';
 import * as moment from 'moment';
 import { TIME_FORMAT, DATE_FORMAT } from '../../constants.module';
 import { SessionService } from '../services/session.service';
-import { CoreCacheService } from '../services';
+import { CoreCacheService } from '../services/core-cache.service';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Colors } from '../models/colors';

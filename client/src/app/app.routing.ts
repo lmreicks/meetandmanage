@@ -6,7 +6,7 @@ import { NotFoundComponent } from './shared/not-found/not-found.component';
 import { CreateGroupComponent } from './group/create-group/create-group.component';
 
 
-export const appRoutes: Routes = [
+export const APP_ROUTES: Routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'event', children: [

@@ -4,11 +4,11 @@ import { NgbModule, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DlDateTimePickerDateModule } from 'angular-bootstrap-datetimepicker';
 import { HttpModule, Http, XHRBackend, RequestOptions } from '@angular/http';
-import { appRoutes } from './app.routing';
+import { APP_ROUTES } from './app.routing';
 import { TimepickerModule, ModalModule, PopoverModule, CollapseModule } from 'ngx-bootstrap';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
-import { httpFactory } from './services';
+import { httpFactory } from './services/interceptor';
 
 import { AppComponent } from './app.component';
 import { CoreCacheService } from './services/core-cache.service';
@@ -58,7 +58,7 @@ import { GroupSelectForm } from './group/group-select-form/group-select-form.com
       libraries: ["places"]
     }),
     DropdownModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(APP_ROUTES),
     DashboardModule,
     BrowserModule,
     FormsModule,

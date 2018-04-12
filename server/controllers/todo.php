@@ -7,7 +7,8 @@ use Models\Todo;
 use Logic\ModelSerializers\TodoSerializer;
 
 /**
- * @api {get} /todo
+ * @api {get} /todo Gets all todos in the database
+ * @apiGroup Todo
  * @apiHeader: {string} authentication a users unique authentication token
  * @apiSuccessExample {json} Success-Response:
  *   [
@@ -16,9 +17,6 @@ use Logic\ModelSerializers\TodoSerializer;
  *           "Description" : "description",
  *           "Date" : "2018-03-20",
  *          "Done": fasle
- *       },
- *       {
- *
  *       }
  *   ]
  */
@@ -33,7 +31,8 @@ $app->get('/api/todo', function (Request $request, Response $response, array $ar
 });
 
 /**
- * @api {post} /todo
+ * @api {post} /todo Creates a new Todo
+ * @apiGroup Todo
  * @apiHeader: {string} authentication a users unique authentication token
  * @apiPeramExample {json} Request-Example: 
  *  {
@@ -69,7 +68,8 @@ $app->post('/api/todo', function (Request $request, Response $response, array $a
 });
 
 /**
- * @api {put} /todo
+ * @api {put} /todo Updates a 
+ * @apiGroup Todo
  * @apiHeader: {string} authentication a users unique authentication token
  * @apiPeramExample {json} Request-Example: 
  *  {
@@ -85,9 +85,6 @@ $app->post('/api/todo', function (Request $request, Response $response, array $a
  *           "Description" : "description",
  *           "Date" : "2018-03-20",
  *          "Done": fasle
- *       },
- *       {
- *
  *       }
  *   ]
  */
@@ -107,27 +104,9 @@ $app->put('/api/todo', function (Request $request, Response $response, array $ar
 });
 
 /**
- * @api {delete} /todo
+ * @api {delete} /todo/:id Deletes a todo in the database
+ * @apiGroup Todo
  * @apiHeader: {string} authentication a users unique authentication token
- * @apiPeramExample {json} Request-Example: 
- *  {
- *      "Title" : "task",
- *      "Description" : "description",
- *      "Date" : "2018-03-20",
- *      "Done": fasle
- *  }
- * @apiSuccessExample {json} Success-Response:
- *   [
- *       {
- *           "Title" : "task",
- *           "Description" : "description",
- *           "Date" : "2018-03-20",
- *          "Done": fasle
- *       },
- *       {
- *
- *       }
- *   ]
  */
 $app->delete('/api/todo', function (Request $request, Response $response, array $args) {
     $ts = new TodoSerializer;

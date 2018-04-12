@@ -9,7 +9,6 @@ use Models\EventLookup;
 use Models\Group;
 use Logic\ModelSerializers\GroupSerializer;
 
-
 $app->get('/api/group', function (Request $request, Response $response, array $args) {
     $gs = new GroupSerializer;
     $user = $request->getAttribute('user');

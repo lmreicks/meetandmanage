@@ -23,6 +23,11 @@ export class EventService {
                 private router: Router,
                 private fb: FormBuilder) {}
 
+    /**
+     * Attempts to create an event in the server
+     * If successful, adds to event maps
+     * @returns { Promise<ApiEvent> } Newly created event
+     */
     CreateEvent(event: ApiCreateEvent): Promise<ApiEvent> {
         return this.http.post(this.url, event)
             .map(res => {
@@ -34,6 +39,11 @@ export class EventService {
             .toPromise();
     }
 
+    /**
+     * Builds a new event form from either a new or updatable event
+     * @param {ApiCreateEvent | ApiEvent} event 
+     * @param {FormGroup} form 
+     */
     BuildEventForm(event: ApiCreateEvent | ApiEvent, form: FormGroup): FormGroup {
         form = this.fb.group({
             Title: [
@@ -83,8 +93,8 @@ export class EventService {
         });
 
         form.controls.AllDay.valueChanges.subscribe(value => {
-            let startOfDay = this._setTime(moment().startOf('day').format(TIME_FORMAT));
-            let endOfDay = this._setTime(moment().endOf('day').format(TIME_FORMAT));
+            let startOfDay = moment(form.controls.StartTime.value, TIME_FORMAT).startOf('day');
+            let endOfDay = moment(form.controls.EndTime.value, TIME_FORMAT).endOf('day');
 
             form.controls.StartDate.setValue(startOfDay);
             form.controls.EndDate.setValue(endOfDay);
@@ -96,14 +106,10 @@ export class EventService {
         return form;
     }
 
-    private _setTime(time: string): { hour: number, minute: number } {
-        let tempTime = moment(time, TIME_FORMAT);
-        return {
-            hour: tempTime.hours(),
-            minute: tempTime.minutes()
-        };
-    }
-
+    /**
+     * Sets the group form control on the event
+     * @param {number} groupId 
+     */
     private _setGroup(groupId?: number): FormGroup {
         let g = this.fb.group({
             Id: null,
@@ -119,6 +125,10 @@ export class EventService {
         return g;
     }
 
+    /**
+     * Validates Start and End date
+     * @param {FormGroup} form 
+     */
     private _validateDate(form: FormGroup): ValidatorFn {
         let startDate = form.controls.StartDate;
         let endDate = form.controls.EndDate;
@@ -136,6 +146,10 @@ export class EventService {
         };
     }
 
+    /**
+     * Gets an event either from the server or core cache by id
+     * @param {number} id 
+     */
     GetEventById(id: number): Promise<ApiEvent> {
         if (this.events) {
             let event = this.events.get(id);

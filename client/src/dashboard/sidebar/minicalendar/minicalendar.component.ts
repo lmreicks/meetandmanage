@@ -1,58 +1,48 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import * as moment from 'moment';
-import { ApiEvent } from '../../app/models/event';
-import { CoreCacheService } from '../../app/services/core-cache.service';
-import { DateObject } from '../models/date.model';
-import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
-import { Month, Months } from '../models/month.model';
-import { Week, WeekDays } from '../models/week.model';
-import { Day } from '../models';
-import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { SessionService } from '../../app/services/session.service';
-import { EventService } from '../../app/event/event.service';
+import { DateObject } from '../../models/date.model';
+import { DATE_FORMAT, TIME_FORMAT } from '../../../constants.module';
+import { Month, Months } from '../../models/month.model';
+import { Week, WeekDays } from '../../models/week.model';
+import { Day } from '../../models';
+import { SessionService } from '../../../app/services/session.service';
+import { EventService } from '../../../app/event/event.service';
 import { Router, ActivatedRoute, UrlSegment } from '@angular/router';
-import { DashboardService } from '../dashboard.service';
+import { DashboardService } from '../../dashboard.service';
 
 @Component({
-    selector: 'mnm-month',
-    templateUrl: 'month.component.html',
-    styleUrls: ['month.component.less']
+    selector: 'mnm-minicalendar',
+    templateUrl: 'minicalendar.component.html',
+    styleUrls: ['minicalendar.component.less']
 })
 
 /**
- * monthly view that contains information about events and groups.
+ * mini monthly view that helps the user navigate their calendar 
  */
-export class MonthComponent {
+export class MiniCalendarComponent {
     public date: moment.Moment;
     public month: Month;
-    private eventMap: Map<string, ApiEvent[]>;
     public loading: boolean = true;
-    public event: ApiEvent;
 
-    constructor(private coreCache: CoreCacheService,
-                private eventService: EventService,
-                private sessionService: SessionService,
+    constructor(private sessionService: SessionService,
                 private dashboardService: DashboardService,
                 private router: Router) {}
-    
+
     /**
      * On init of this component, we want to get the date map and subscribe to the current date
      */
     ngOnInit(): void {
-        this.loading = true;
 
-        this.coreCache.GetDateMap().then(map => {
-            this.eventMap = map;
             this.dashboardService.current.subscribe(current => {
+                this.loading = true;
                 this.date = current;
                 this.parseMonth(this.date.clone());
                 this.loading = false;
             });
-        });
     }
 
     /**
-     * parses all the events and dates for a given month and puts them in the proper format to be displayed
+     * parses all the dates for a given month and puts them in the proper format to be displayed
      * @param month the given month moment
      */
     parseMonth(month: moment.Moment): void {
@@ -79,8 +69,8 @@ export class MonthComponent {
 
             let dateValue: DateObject = {
               current: dayMoment.format(DATE_FORMAT) === currentFormat,
-              active: dayMoment.format(DATE_FORMAT) === this.date.format(DATE_FORMAT),
               display: dayMoment.format('D'),
+              active: dayMoment.format(DATE_FORMAT) === this.date.format(DATE_FORMAT),
               future: dayMoment.isAfter(endOfMonth),
               past: dayMoment.isBefore(startOfMonth),
               moment: dayMoment
@@ -91,10 +81,7 @@ export class MonthComponent {
                 events: []
             };
 
-            if (this.eventMap.has(dayMoment.format(DATE_FORMAT))) {
-                day.events = this.eventMap.get(dayMoment.format(DATE_FORMAT));
-                week.current = true;
-            }
+            //week.current = true;
 
             week.days.push(day);
           }
@@ -121,26 +108,13 @@ export class MonthComponent {
     }
 
     /**
-     * displays the event pop-over for the user to view more details about a given event
+     * changes the active day to the given day to allow the user to view its details
      * @param click records where the user clicks
-     * @param event the given event that was clicked
+     * @param day the given day that was clicked
      */
-    doubleClickEvent(click: MouseEvent, event: ApiEvent): void {
-        this.router.navigate(['event', event.Id]);
-    }
-
-    /**
-     * displays or hides a detailed pop-over for a given event
-     * @param popover the selected pop-over for an event
-     * @param event the given event
-     */
-    togglePopover(popover: NgbPopover, event: ApiEvent): void {
-        if (popover.isOpen()) {
-            popover.close();
-        } else {
-            this.event = event;
-            popover.open(event);
-        }
+    clickDay(click: MouseEvent, day: Day): void {
+        console.log(moment().date(+day.day.display));
+        this.dashboardService.changeDate(day.day.moment);
     }
 }
 

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { CoreCacheService } from '../../app/services';
+import { CoreCacheService } from '../../app/services/core-cache.service';
 import { ApiGroup } from '../../app/models/group';
 
 @Component({

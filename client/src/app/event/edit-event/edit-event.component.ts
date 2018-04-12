@@ -8,7 +8,7 @@ import { Colors } from '../../models/colors';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiUser } from '../../models/user';
 import { UserService } from '../../user/user.service';
-import { CoreCacheService } from '../../services';
+import { CoreCacheService } from '../../services/core-cache.service';
 import { ApiGroup } from '../../models/group';
 
 @Component({
@@ -126,8 +126,9 @@ export class EditEventComponent {
         event.StartDate = moment(event.StartDate).format(DATE_FORMAT);
         event.EndDate = moment(event.EndDate).format(DATE_FORMAT);
 
-        this.eventService.CreateEvent(event).then(e => {
+        this.eventService.CreateEvent(event).then(() => {
             this.router.navigate(['/dashboard']);
+            return;
         });
 
         return true;

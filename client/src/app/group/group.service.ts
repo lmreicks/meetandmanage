@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { ApiGroup, ApiCreateGroup } from '../models/group';
 import { API_ROOT } from '../../constants.module';
-import { CoreCacheService } from '../services';
+import { CoreCacheService } from '../services/core-cache.service';
 
 @Injectable()
 

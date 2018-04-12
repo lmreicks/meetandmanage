@@ -1,7 +1,7 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import * as moment from 'moment';
 import { ApiEvent } from '../../app/models/event';
-import { CoreCacheService } from '../../app/services';
+import { CoreCacheService } from '../../app/services/core-cache.service';
 import { DateObject } from '../models/date.model';
 import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import { Month, Months } from '../models/month.model';

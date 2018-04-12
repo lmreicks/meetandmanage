@@ -1,11 +1,14 @@
 {
-  "name": "meet-and-manage",
+  "name": "meet-and-manage-front-end",
   "version": "1.0.0",
   "private": true,
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
     "ng": "ng",
     "build": "ng build --prod",
-    "start": "ng serve --aot"
+    "start": "ng serve --aot",
+    "compodoc": "./node_modules/.bin/compodoc -p src/tsconfig.app.json"
   },
   "author": "",
   "license": "MIT",
@@ -31,7 +34,6 @@
     "googleapis": "^27.0.0",
     "moment": "^2.20.1",
     "ngx-bootstrap": "^2.0.3",
-    "open-iconic": "^1.1.1",
     "rxjs": "^5.5.0",
     "zone.js": "^0.8.4"
   },
@@ -39,9 +41,12 @@
     "@angular-devkit/core": "^0.2.0",
     "@angular-devkit/schematics": "^0.2.0",
     "@angular/cli": "^1.7.3",
+    "@compodoc/compodoc": "^1.1.2",
     "@types/googlemaps": "^3.30.8",
-    "@types/node": "^6.0.45",
+    "@types/node": "9.4.0",
+    "gh-pages": "1.1.0",
     "lodash": "^4.16.2",
+    "ts-node": "5.0.0",
     "tslint": "^3.15.1",
     "typescript": "2.4.2"
   },

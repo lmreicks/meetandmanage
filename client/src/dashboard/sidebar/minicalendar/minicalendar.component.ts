@@ -16,6 +16,9 @@ import { DashboardService } from '../../dashboard.service';
     styleUrls: ['minicalendar.component.less']
 })
 
+/**
+ * mini monthly view that helps the user navigate their calendar 
+ */
 export class MiniCalendarComponent {
     public date: moment.Moment;
     public month: Month;
@@ -25,6 +28,9 @@ export class MiniCalendarComponent {
                 private dashboardService: DashboardService,
                 private router: Router) {}
 
+    /**
+     * On init of this component, we want to get the date map and subscribe to the current date
+     */
     ngOnInit(): void {
 
             this.dashboardService.current.subscribe(current => {
@@ -35,6 +41,10 @@ export class MiniCalendarComponent {
             });
     }
 
+    /**
+     * parses all the dates for a given month and puts them in the proper format to be displayed
+     * @param month the given month moment
+     */
     parseMonth(month: moment.Moment): void {
         let startOfMonth = moment.utc(month).startOf('month');
         let endOfMonth = moment.utc(month).endOf('month');
@@ -79,15 +89,29 @@ export class MiniCalendarComponent {
         }
     }
 
+    /**
+     * Displays the time in a user friendly format based on a given military time
+     * @param time the given military time
+     */
     friendlyTime(time: string): string {
         let date = moment(time, TIME_FORMAT);
         return date.format('hh:mm a');
     }
 
+    /**
+     * routes the user to the create/edit event page based on a given day the user clicked
+     * @param click records where the user clicks
+     * @param day the given day that was clicked
+     */
     doubleClickDay(click: MouseEvent, day: Day): void {
         this.router.navigate(['event/create']);
     }
 
+    /**
+     * changes the active day to the given day to allow the user to view its details
+     * @param click records where the user clicks
+     * @param day the given day that was clicked
+     */
     clickDay(click: MouseEvent, day: Day): void {
         console.log(moment().date(+day.day.display));
         this.dashboardService.changeDate(day.day.moment);

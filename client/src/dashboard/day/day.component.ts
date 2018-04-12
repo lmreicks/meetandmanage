@@ -14,7 +14,7 @@ import { ApiTodo } from '../../app/models/todo';
 })
 
 /**
- * @desc DayComponent
+ * daily view that contains information about events, todos, workouts, and groups.
  */
 export class DayComponent {
     public current: moment.Moment;
@@ -23,8 +23,6 @@ export class DayComponent {
     public hours: string[] = [];
     public eventElements: EventElement[] = [];
     public loading: boolean = true;
-    public Granularity = Granularity;
-    public state: Granularity = Granularity.None;
 
     private diff = 0;
     private height = 0;
@@ -33,7 +31,7 @@ export class DayComponent {
                 private dashboardService: DashboardService) {}
 
     /**
-     * @desc on init of this component, we want to get the date map and subscribe to the current date
+     * On init of this component, we want to get the date map and subscribe to the current date
      */
     ngOnInit(): void {
         this.loading = true;
@@ -49,6 +47,10 @@ export class DayComponent {
         });
     }
 
+    /**
+     * parses all the events for a given day and puts them in the proper format to be displayed
+     * @param curr a given day moment
+     */
     public parseDay(curr: moment.Moment): void {
         this.eventElements = [];
         this.diff = 0;
@@ -76,6 +78,10 @@ export class DayComponent {
         });
     }
 
+    /**
+     * calculates the duration of a given event and puts it in terms of pixels in order to display it.
+     * @param v the given event
+     */
     public getDuration(v) {
         let end = moment(v.EndDate + " " + v.EndTime);
 
@@ -87,11 +93,18 @@ export class DayComponent {
         return this.height = moment.duration(end.clone().diff(start)).asHours() * 100;
     }
 
+    /**
+     * calculates the amount of time between the start of the day and the start of a given event and puts it in terms of pixels in order to display it.
+     * @param v the given event
+     */
     public getStart(v) {
         let start = moment(v.StartDate + " " + v.StartTime);
         return this.diff = ((start.hours() + (start.minutes() / 60)) * 100) - this.diff - this.height;
     }
 
+    /**
+     * creates an array containing the ours in a day in order to display them.
+     */
     private setHours(): void {
         this.hours.push(12 + 'am');
         for (let i = 1; i < 24; i++) {
@@ -112,10 +125,4 @@ export interface EventElement {
     top: number;
     height: number;
     event: ApiEvent;
-}
-
-export enum Granularity {
-    None,
-    Workout,
-    Budget
 }

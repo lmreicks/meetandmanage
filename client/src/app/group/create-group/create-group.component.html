@@ -22,7 +22,7 @@
         </div>
         <div class="form-group"
             formArrayName="Members"
-            *ngFor="let member of groupForm.controls.Members.controls; let i = index">
+            *ngFor="let member of getGroupMembers(); let i = index">
             <div class="col-sm-1">
                 <div class="font-awesome">
                     <i class="fas fa-user"></i>
@@ -31,12 +31,12 @@
             <div [formGroupName]="i" class="col-sm-4">
                 <member-form
                     [users]="users"
-                    [member]="groupForm.get('Members').controls[i]"
+                    [member]="getGroupMembers()[i]"
                     (added)="addMember()">
                 </member-form>
             </div>
             <div class="font-awesome col-sm-1 clickable"
-                *ngIf="i < groupForm.controls.Members.controls.length - 1"
+                *ngIf="i < getGroupMembers().length - 1"
                 (click)="removeMember(i)">
                 <i class="fa fa-times"></i>
             </div>

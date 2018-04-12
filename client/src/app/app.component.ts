@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from './services/auth.service';
-import { CoreCacheService } from './services';
+import { CoreCacheService } from './services/core-cache.service';
 
 @Component({
   moduleId: 'app',

@@ -13,6 +13,9 @@ import { ApiTodo } from '../../app/models/todo';
     styleUrls: ['day.component.less']
 })
 
+/**
+ * @desc DayComponent
+ */
 export class DayComponent {
     public current: moment.Moment;
     public map: Map<string, ApiEvent[]>;
@@ -29,6 +32,9 @@ export class DayComponent {
     constructor(private coreCache: CoreCacheService,
                 private dashboardService: DashboardService) {}
 
+    /**
+     * @desc on init of this component, we want to get the date map and subscribe to the current date
+     */
     ngOnInit(): void {
         this.loading = true;
         this.setHours();

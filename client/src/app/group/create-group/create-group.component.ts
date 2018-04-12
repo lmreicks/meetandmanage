@@ -52,6 +52,10 @@ export class CreateGroupComponent {
         arr.removeAt(index);
     }
 
+    public getGroupMembers(): FormArray {
+        return <FormArray>this.groupForm.controls.Members;
+    }
+
     public createGroup(form: FormGroup): boolean {
         if (!form.valid) return false;
 

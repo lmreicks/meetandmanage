@@ -2,11 +2,11 @@
 
 namespace Models;
 
-class Group extends \Illuminate\Database\Eloquent\Model {
-    protected $table = 'group';
+class Group_User extends \Illuminate\Database\Eloquent\Model {
+    protected $table = 'group_user';
 
     protected $fillable = [
-        'group_name', 'description'
+        'permission'
     ];
 
     public function users() {

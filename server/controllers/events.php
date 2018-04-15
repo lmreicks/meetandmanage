@@ -252,7 +252,7 @@ $app->delete('/api/event/{id}', function (Request $request, Response $response, 
     $userId = $user->id;
     if ($ownerId == $userId){
         $event = Event::where('id','=',$eventID)->delete();
-        $response->write(json_encode($es->toApi($event)));
+        $response->write(json_encode(true));
         return $response;
     }
     $response = $re($response, StatusCodes::HTTP_BAD_REQUEST, "Not your event to delete");

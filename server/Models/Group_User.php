@@ -9,12 +9,4 @@ class Group_User extends \Illuminate\Database\Eloquent\Model {
         'permission'
     ];
 
-    public function users() {
-        return $this->belongsToMany('Models\User');
-    }
-
-    public function events(){
-        return $this->belongsToMany('Models\Event');
-    }
-
 }

@@ -33,9 +33,9 @@ $app->get('/api/group/{id}/member', function (Request $request, Response $respon
     //$user = $request->getAttribute('user');
     $group_id = $args['id'];
     $group = Group::find($group_id);
-    $group_user = $group->users;
-    $pivot = $group_user->pivot;
-    $response->write(json_encode($pivot));
+    //cycle through to get specific pivots and append
+    $group_user = $group->users->pivot->permission;
+    $response->write(json_encode($group_user));
     return $response;
 });
 
@@ -70,7 +70,7 @@ $app->get('/api/group/{id}/member/{member_id}', function (Request $request, Resp
     $group = Group::find($group_id);
     $group_users = $group->users();
     //returns specific user... returns w pivot
-    $pivot = $group_users->pivot;
+    $pivot = $group_users->permission;
     $response->write(json_encode($pivot));
     return $response;
 });

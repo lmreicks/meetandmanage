@@ -46,6 +46,7 @@ $capsule->bootEloquent();
 
 // error list
 require __DIR__ . '/Logic/Errors/ErrorList.php';
+require __DIR__ . '/Logic/Errors/StatusCodes.php';
 
 // set up depencencies
 require __DIR__ . '/dependencies.php';

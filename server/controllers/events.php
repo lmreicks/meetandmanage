@@ -248,7 +248,7 @@ $app->delete('/api/event/{id}', function (Request $request, Response $response, 
         return $response;
     }
     
-    $ownerId = $event->ownerId;
+    $ownerId = $event->owner_id;
     $userId = $user->id;
     if ($ownerId == $userId){
         $event = Event::where('id','=',$eventID)->delete();

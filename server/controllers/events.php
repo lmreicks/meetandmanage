@@ -7,11 +7,10 @@ use Models\User;
 use Models\EventLookup;
 use Logic\ModelSerializers\EventSerializer;
 
-
-
 /**
- * @api {get} /event
- * @apiHeader: {string} authentication a users unique authentication token
+ * @api {get} /event Get all events for current user
+ * @apiGroup Event
+ * @apiHeader {string} authentication a users unique authentication token
  * @apiSuccessExample {json} Success-Response:
  *    [
  *   {
@@ -63,7 +62,8 @@ $app->get('/api/event', function (Request $request, Response $response, array $a
 });
 
 /**
- * @api {post} /event
+ * @api {post} /event Creates an event
+ * @apiGroup Event
  * @apiHeader: {string} authentication a users unique authentication token
  * @apiParamExample {json} Request-Example:
  *  {
@@ -182,76 +182,10 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     return $response;
 });
 
-/**@api {delete} /event
+/**
+ * @api {delete} /event/:id Deletes an event
+ * @apiGroup Event
  * @apiHeader: {string} authentication a users unique authentication token
- * @apiParamExample {json} Request-Example:
- *  {
- *       "Id": 29,
- *       "Title": "309 Meetings",
- *       "OwnerId": "2",
- *       "StartTime": "05:05:00",
- *       "EndTime": "06:05:05",
- *       "StartDate": "2018-03-20",
- *       "EndDate": "2018-03-20",
- *       "Location": "TLA",
- *       "Notes": null,
- *       "Members": [
- *           {
- *               "Id": 1,
- *               "Email": "lexi@gmail.com",
- *               "Name": "lexi"
- *           },
- *           {
- *               "Id": 3,
- *              "Email": "tlnance@iastate.edu",
- *             "Name": "Trevin"
- *           },
- *           {
- *               "Id": 5,
- *              "Email": "bmjensen@iastate.edu",
- *               "Name": "Bailey"
- *           },
- *           {
- *               "Id": 6,
- *               "Email": "anngould@iastate.edu",
- *               "Name": "Ann Gould"
- *           }
- *       ]
- *   }
- * @apiSuccessExample {json} Success-Response:
- *  {
- *       "Id": 29,
- *       "Title": "309 Meetings",
- *       "OwnerId": "2",
- *       "StartTime": "05:05:00",
- *       "EndTime": "06:05:05",
- *       "StartDate": "2018-03-20",
- *       "EndDate": "2018-03-20",
- *       "Location": "TLA",
- *       "Notes": null,
- *       "Members": [
- *           {
- *               "Id": 1,
- *               "Email": "lexi@gmail.com",
- *               "Name": "lexi"
- *           },
- *           {
- *               "Id": 3,
- *              "Email": "tlnance@iastate.edu",
- *             "Name": "Trevin"
- *           },
- *           {
- *               "Id": 5,
- *              "Email": "bmjensen@iastate.edu",
- *               "Name": "Bailey"
- *           },
- *           {
- *               "Id": 6,
- *               "Email": "anngould@iastate.edu",
- *               "Name": "Ann Gould"
- *           }
- *       ]
- *   }
  */
 $app->delete('/api/event/{id}', function (Request $request, Response $response, array $args){
 
@@ -274,7 +208,9 @@ $app->delete('/api/event/{id}', function (Request $request, Response $response, 
     return $response; //switch to error for not owner of event
 });
 
-/**@api {put} /event
+/**
+ * @api {put} /event/:id Update an event
+ * @apiGroup Event
  * @apiHeader: {string} authentication a users unique authentication token
  * @apiParamExample {json} Request-Example:
  *  {

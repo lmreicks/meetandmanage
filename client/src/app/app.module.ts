@@ -21,9 +21,7 @@ import { EditEventComponent } from './event/edit-event/edit-event.component';
 import { EventService } from './event/event.service';
 import { SessionService } from './services/session.service';
 import { NgbDateNativeAdapter } from './shared/datepicker-adapter.component';
-import { DropdownModule } from './shared/dropdown/dropdown.module';
-import { ComboBoxComponent } from './shared/combo-box/combo-box.component';
-import { SearchFilterPipe } from './shared/combo-box/search.pipe';
+import { SearchFilterPipe } from './shared/search.pipe';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
 import { AgmCoreModule } from '@agm/core';
 import { UserService } from './user/user.service';
@@ -40,7 +38,6 @@ import { RegisterComponent } from './register/register.component';
     LoginComponent,
     RegisterComponent,
     EditEventComponent,
-    ComboBoxComponent,
     SearchFilterPipe,
     NotFoundComponent,
     LocationInput,
@@ -59,7 +56,6 @@ import { RegisterComponent } from './register/register.component';
       apiKey: "AIzaSyDUJitlzdDW3SpdwzBzDW5YnTS_I-HeMCs",
       libraries: ["places"]
     }),
-    DropdownModule,
     RouterModule.forRoot(APP_ROUTES),
     DashboardModule,
     BrowserModule,

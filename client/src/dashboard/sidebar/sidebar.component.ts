@@ -10,7 +10,7 @@ import { ApiGroup } from '../../app/models/group';
 })
 
 /**
- * side menu that contains the minicalendar, displays current groups, and lets the user create new groups
+ * Side menu that contains the minicalendar, displays current groups, and lets the user create new groups
  */
 export class SidebarComponent {
     public groups: ApiGroup[];

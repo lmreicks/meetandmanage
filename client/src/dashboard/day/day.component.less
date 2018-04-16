@@ -6,7 +6,11 @@
 
 .day-header {
   font-size: 2rem;
-  color: @pastel-purple;
+  border: 1px solid @border-grey;
+  border-radius: 3px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
 }
 
 .day-view {
@@ -18,18 +22,25 @@
     width: 100%;
     margin-right: -15px;
     margin-left: -15px;
+    display: flex;
+  }
+
+  .col {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 90vh;
   }
   
   .section {
     padding-left: 15px;
     padding-right: 15px;
-    width: 50%;
     margin-bottom: 15px;
-    float: left;
 
     .section-header {
       display: flex;
       font-size: 18pt;
+      background-color: #e9ebec;
       justify-content: center;
       align-items: center;
       border: 1px solid @border-grey;
@@ -38,82 +49,77 @@
     }
     
     .section-body {
-        display: flex;
         width: 100%;
-        flex-direction: row;
-        max-height: 75vh;
-        overflow-x: hidden;
-        overflow-y: auto;
+        background-color: #f3f3f3;
         border: 1px solid @border-grey;
         border-top: none;
         border-bottom-left-radius: 3px;
         border-bottom-right-radius: 3px;
+        height: 100%;
+        overflow: auto;
     }
+  }
+}
+
+.week-container {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  z-index: 0;
+}
+
+.events-section {
+  height: 80%;
+}
+
+.event-container {
+  position: absolute;
+  width: 100%;
+
+  .event {
+      border: 1px solid #f3f3f3;
+      border-radius: 3px;
+      margin-right: 0.25rem;
+      margin-left: 0.25rem;
+      padding-left: 5px;
+      padding-right: 5px;
+      height: 100%;
   }
 }
 
 .time {
-    justify-content: space-between;
-    border-right: 1px solid @border-grey;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid @border-grey;
+  width: 2.5rem;
+  position: relative;
 
-    .hour {
-      text-align: center;
-      border-bottom: 1px solid @border-grey;
-      height: 3rem;
-    }
+  .current {
+    height: 20px;
+    width: 2.5rem;
+    background-color: #6f9ceb7a;
+    border: 1px solid #ced4da;
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+    border-left: none;
+    position: absolute;
+  }
+}
+
+.hour {
+  text-align: center;
+  border-top: 1px solid @border-grey;
+  height: 50px;
+
+  &:first-child {
+    border-top: none;
+  }
 }
 
 .day {
   width: 100%;
-  border-right: 1px solid @border-grey;
   display: flex;
   flex-direction: column;
-  align-items: center;
-
-  &:last-child {
-      border-right: none;
-  }
-
-  .day-number {
-      font-size: 16px;
-      font-weight: 300;
-      width: 100%;
-  }
-
-  .events {
-      justify-content: center;
-      align-content: space-between;
-  }
-
-  .event {
-      background-color: burlywood;
-      border-radius: 4px;
-      padding-left: 5px;
-  }
-
-  .todoitem {
-    background-color: burlywood;
-    border-radius: 4px;
-    padding-left: 5px;
-  }
+  position: relative;
 }
-
-  .list-grid-container {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .list-grid {
-    display: flex;
-    justify-content: center;
-  }
-
-  .btn{
-    display: flex;
-    font-size: 18pt;
-    justify-content: center;
-    flex-direction: row;
-  }

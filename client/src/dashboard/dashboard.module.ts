@@ -16,9 +16,11 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { MiniCalendarComponent } from './sidebar/minicalendar/minicalendar.component';
 import { DashboardService } from './dashboard.service';
 import { DayComponent } from './day/day.component';
-import { CollapseModule } from 'ngx-bootstrap';
+import { CollapseModule, BsDatepickerModule } from 'ngx-bootstrap';
 import { TodoListComponent } from './todo-list/todo-list.component';
 import { TodoListService } from './todo-list/todo-list.service';
+import { ScrollToDirective } from './shared/scroll-to.directive';
+import { EventListComponent } from './event-list/event-list.component';
 
 @NgModule({
   declarations: [
@@ -30,12 +32,15 @@ import { TodoListService } from './todo-list/todo-list.service';
     DayComponent,
     WeekComponent,
     EventPopoverComponent,
-    TodoListComponent
+    TodoListComponent,
+    ScrollToDirective,
+    EventListComponent
   ],
   imports: [
     RouterModule.forChild(DASHBOARD_ROUTES),
     NgbModule.forRoot(),
     CollapseModule.forRoot(),
+    BsDatepickerModule.forRoot(),
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,

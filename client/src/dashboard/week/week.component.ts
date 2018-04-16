@@ -1,29 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CoreCacheService } from '../../app/services/core-cache.service';
 import { Week, DateObject, WeekDays } from '../models';
 import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import * as moment from 'moment';
 import { ApiEvent } from '../../app/models/event';
 import { DashboardService } from '../dashboard.service';
+import { Colors } from '../../app/models/colors';
 
 @Component({
     selector: 'mnm-week',
     templateUrl: 'week.component.html',
-    styleUrls: ['week.component.less']
+    styleUrls: ['week.component.less', '../shared/shared.less']
 })
 
 /**
  * weekly view that contains information about events and groups.
  */
 export class WeekComponent {
+    @ViewChild('weekEl') weekContainerEl: ElementRef;
     public current: moment.Moment;
     public map: Map<string, ApiEvent[]>;
     public week: Week;
     public weekdays: string[] = WeekDays;
     public hours: string[] = [];
     public loading: boolean = true;
-    private diff = 0;
-    private height = 0;
 
     constructor(private coreCache: CoreCacheService,
                 private dashboardService: DashboardService) {}
@@ -62,7 +62,8 @@ export class WeekComponent {
             let dayMoment = startDate.clone().add(i, 'days');
 
             let dateValue: DateObject = {
-                current: dayMoment.format(DATE_FORMAT) === current,
+                current: dayMoment.format(DATE_FORMAT) === moment().format(DATE_FORMAT),
+                active: dayMoment.format(DATE_FORMAT) === current,
                 display: dayMoment.format('dddd D'),
                 display1: dayMoment.format('MMMM Y'),
                 future: dayMoment.isAfter(date.endOf('month')),
@@ -82,38 +83,6 @@ export class WeekComponent {
 
             this.week.days.push(day);
         }
-    }
-
-    /**
-     * calculates the duration of a given event and puts it in terms of pixels in order to display it.
-     * @param v the given event
-     */
-    public getDuration(v) {
-        let end = moment(v.EndDate + " " + v.EndTime);
-
-        let start = moment(v.StartDate + " " + v.StartTime);
-        if (moment.duration(end.diff(start)).asDays() >= 1) {
-            end = moment(v.StartDate + " " + "24:00:00");
-        }
-
-        return this.height = moment.duration(end.diff(start)).asHours() * 100;
-    }
-
-    /**
-     * calculates the amount of time between the start of the day and the start of a given event and puts it in terms of pixels in order to display it.
-     * @param v the given event
-     */
-    public getStart(v) {
-        let start = moment(v.StartDate + " " + v.StartTime);
-        return this.diff = ((start.hours() + (start.minutes() / 60)) * 100) - this.diff - this.height;
-    }
-
-    /**
-     * resets global variables diff and height.
-     */
-    public resetVars() {
-        this.diff = 0;
-        this.height = 0;
     }
 
     /**

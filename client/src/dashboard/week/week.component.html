@@ -1,26 +1,27 @@
-<div class="week-view" *ngIf="!loading">
-    <div class='banner-container'>
-        <div class='banner'>
+<div class="week-view">
+    <div class="banner-container">
+        <div class="banner" *ngIf="week">
             <div class="weekday" *ngFor="let weekday of week.days">
-                {{weekday.day.display}}
+                <div class="title">
+                    {{weekday.day.display.substring(0, 3)}}
+                </div>
+                <div class="number">
+                    {{weekday.day.display.slice(-2)}}
+                </div>
             </div>
         </div>
     </div>
-    <div class="week-container">
-        <div class="time">
+    <div class="events-container">
+        <div class="time" scrollToNow>
             <div class="hour" *ngFor="let hour of hours">
                 {{hour}}
-                <hr class='line'/>
             </div>
         </div>
-        <div class="week" *ngIf="!loading">
-            <div class="day" *ngFor="let day of week.days" [ngClass]="{'current': day.day.current }">
-                <div class="event" *ngFor="let event of day.events" [ngStyle]="{'margin-top': getStart(event) + 'px', 'height': getDuration(event) + 'px'}">
-                    {{event.Title}}
-                </div>
-                {{resetVars()}}
+        <div class="week" #weekEl *ngIf="week?.days">
+            <div class="day" *ngFor="let day of week.days" [ngClass]="{'current': day.day.current, 'active': day.day.active }">
+                <div class="hour" *ngFor="let hour of hours"></div>
+                <event-list [events]="day.events"></event-list>
             </div>
-            <div class="time-markers"><div *ngFor="let hour of hours"></div></div>
         </div>
-    </div>            
+    </div>           
 </div>

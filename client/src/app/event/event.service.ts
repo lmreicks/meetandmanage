@@ -35,6 +35,8 @@ export class EventService {
 
                 this.coreCache.AddEvent(apiEvent);
                 return apiEvent;
+            }, err => {
+                return {};
             })
             .toPromise();
     }
@@ -50,20 +52,12 @@ export class EventService {
                 event.Title, Validators.required
             ],
             OwnerId: this.sessionService.currentUserId,
-            StartDate: [
-                moment(event.StartDate, DATE_FORMAT).toDate(),
+            Start: [
+                moment(event.Start, DATE_FORMAT).toDate(),
                 Validators.required
             ],
-            EndDate: [
-                moment(event.EndDate, DATE_FORMAT).toDate(),
-                Validators.required
-            ],
-            StartTime: [
-                moment(event.StartTime, TIME_FORMAT).toDate(),
-                Validators.required
-            ],
-            EndTime: [
-                moment(event.EndTime, TIME_FORMAT).toDate(),
+            End: [
+                moment(event.End, DATE_FORMAT).toDate(),
                 Validators.required
             ],
             AllDay: false,

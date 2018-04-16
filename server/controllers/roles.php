@@ -10,7 +10,10 @@ use Logic\ModelSerializers\GroupSerializer;
 //need to learn how to use multiple arguements in the url :)
 //outputs all users and their permissions based off of group_id
 /**
- * @api {get} /roles/{id}
+ * @api {get} /roles/{id} Get All Group Members
+ * 
+ * @apiGroup Group Members
+ * 
  * @apiParam {id} group_id id of group to modify
  * @apiParam {User} User that's logged in
  * @apiDescription Outputs all users in a group and their permissions
@@ -46,7 +49,10 @@ $app->get('/api/roles/{id}', function (Request $request, Response $response, arr
 });
 
 /**
- * @api {get} /roles/{id}/member/{member_id}
+ * @api {get} /roles/{id}/member/{member_id} Get Group Member
+ * 
+ * @apiGroup Group Members
+ * 
  * @apiParam {id} group_id id of group to modify
  * @apiParam {User} User that's logged in
  * @apiDescription Outputs all users in a group and their permissions
@@ -79,7 +85,10 @@ $app->get('/api/roles/{id}/member/{member_id}', function (Request $request, Resp
 });
 
 /**
- * @api {put} /roles/{id}/member/{member_id}
+ * @api {put} /roles/{id}/member/{member_id} Update Group Member
+ * 
+ * @apiGroup Group Members
+ * 
  * @apiParam {int} permission permission id to change of user
  * @apiParam {int} id id of group to modify
  * @apiParam {int} member_id id of member to change 
@@ -108,7 +117,10 @@ $app->put('/api/roles/{id}/member/{member_id}', function (Request $request, Resp
 });
 
 /**
- * @api {post} /roles/{id}/member/{member_id}
+ * @api {post} /roles/{id}/member/{member_id} Create Group Member
+ * 
+ * @apiGroup Group Members
+ * 
  * @apiParam {int} permission permission id to add to user
  * @apiParam {int} id id of group to modify
  * @apiParam {int} member_id id of member to change 

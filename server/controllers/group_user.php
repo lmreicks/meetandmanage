@@ -33,7 +33,7 @@ use Logic\ModelSerializers\GroupMemberSerializer;
 $app->get('/api/group/{id}/member', function (Request $request, Response $response, array $args) {
     $group_id = $args['id'];
     $group = Group::find($group_id);
-    $group_users = $group->users();
+    $group_users = $group->users;
     $gm_serial = new GroupMemberSerializer;
     $response->write(json_encode($gm_serial->toApiList($group_users)));
     return $response;
@@ -66,7 +66,7 @@ $app->get('/api/group/{id}/member/{member_id}', function (Request $request, Resp
     $group_id = $args['id'];
     $user_id = $args['member_id'];
     $group = Group::find($group_id);
-    $group_users = $group->users();
+    $group_users = $group->users;
     //returns specific user... returns w pivot
     $gm_serial = new GroupMemberSerializer;
     $response->write(json_encode($gm_serial->toApiList($group)));
@@ -104,7 +104,7 @@ $app->put('/api/group/{id}/member/{member_id}', function (Request $request, Resp
     $permission = $body->Permission;
     $group = Group::find($group_id);
     $group->users()->updateExistingPivot($user_id, [permission => $permission]);
-    $group_users = $group->users();
+    $group_users = $group->users;
     $gm_serial = new GroupMemberSerializer;
     $response->write(json_encode($gm_serial->toApiList($group_users))); 
     return $repsonse;
@@ -141,7 +141,7 @@ $app->post('/api/group/{id}/member', function (Request $request, Response $respo
     $id = $args['id'];
     $group = Group::find($id);
     $group->users()->attach($user_id, [permission => $permission]);
-    $group_users = $group->users();
+    $group_users = $group->users;
     $gm_serial = new GroupMemberSerializer;
     $response->write(json_encode($gm_serial->toApiList($group_users)));
     return $response;
@@ -178,7 +178,7 @@ $app->delete('/api/group/{id}/member/{member_id}', function (Request $request, R
     $body = json_decode($request->getBody());
     $group = Group::find($group_id);
     $group->users()->detach($user_id);
-    $group_users = $group->users();
+    $group_users = $group->users;
     $gm_serial = new GroupMemberSerializer;
     $response->write(json_encode($gm_serial->toApiList($group_users)));
     return $repsonse;

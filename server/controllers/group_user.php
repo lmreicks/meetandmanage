@@ -4,6 +4,7 @@ use Slim\Http\Response;
 use Models\Event;
 use Models\User;
 use Models\Group;
+use Logic\ModelSerializers\GroupMemberSerializer;
 
 //outputs all users and their permissions based off of group_id
 /**
@@ -30,12 +31,11 @@ use Models\Group;
  *    ]
  */
 $app->get('/api/group/{id}/member', function (Request $request, Response $response, array $args) {
-    //$user = $request->getAttribute('user');
     $group_id = $args['id'];
     $group = Group::find($group_id);
-    //cycle through to get specific pivots and append
-    $group_user = $group->users->pivot->permission;
-    $response->write(json_encode($group_user));
+    $group_users = $group->users();
+    $gm_serial = new GroupMemberSerializer;
+    $response->write(json_encode($gm_serial->toApiList($group_users)));
     return $response;
 });
 
@@ -63,15 +63,13 @@ $app->get('/api/group/{id}/member', function (Request $request, Response $respon
  *    ]
  */
 $app->get('/api/group/{id}/member/{member_id}', function (Request $request, Response $response,array $args) {
-
-    //$user = $request->getAttribute('user');
     $group_id = $args['id'];
     $user_id = $args['member_id'];
     $group = Group::find($group_id);
     $group_users = $group->users();
     //returns specific user... returns w pivot
-    $pivot = $group_users->permission;
-    $response->write(json_encode($pivot));
+    $gm_serial = new GroupMemberSerializer;
+    $response->write(json_encode($gm_serial->toApiList($group)));
     return $response;
 });
 
@@ -105,8 +103,10 @@ $app->put('/api/group/{id}/member/{member_id}', function (Request $request, Resp
     $body = json_decode($request->getBody());
     $permission = $body->Permission;
     $group = Group::find($group_id);
-    $group->users()->updateExistingPivot($user_id, [permission => $permission]); 
-    $response->write(json_encode($group));
+    $group->users()->updateExistingPivot($user_id, [permission => $permission]);
+    $group_users = $group->users();
+    $gm_serial = new GroupMemberSerializer;
+    $response->write(json_encode($gm_serial->toApiList($group_users))); 
     return $repsonse;
 });
 
@@ -141,6 +141,9 @@ $app->post('/api/group/{id}/member', function (Request $request, Response $respo
     $id = $args['id'];
     $group = Group::find($id);
     $group->users()->attach($user_id, [permission => $permission]);
+    $group_users = $group->users();
+    $gm_serial = new GroupMemberSerializer;
+    $response->write(json_encode($gm_serial->toApiList($group_users)));
     return $response;
 });
 
@@ -174,7 +177,9 @@ $app->delete('/api/group/{id}/member/{member_id}', function (Request $request, R
     $user_id = $args['member_id'];
     $body = json_decode($request->getBody());
     $group = Group::find($group_id);
-    $group->users()->detach($user_id); 
-    $response->write(json_encode($group));
+    $group->users()->detach($user_id);
+    $group_users = $group->users();
+    $gm_serial = new GroupMemberSerializer;
+    $response->write(json_encode($gm_serial->toApiList($group_users)));
     return $repsonse;
 });

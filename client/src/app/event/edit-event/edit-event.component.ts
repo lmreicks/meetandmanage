@@ -57,10 +57,8 @@ export class EditEventComponent {
             let createEvent: ApiCreateEvent = {
                 Title: null,
                 OwnerId: 3, // change this!!
-                StartDate: moment().format(DATE_FORMAT),
-                EndDate: moment().format(DATE_FORMAT),
-                StartTime: moment().format(TIME_FORMAT),
-                EndTime: moment().add(1, 'hour').format(TIME_FORMAT),
+                Start: moment().toLocaleString(),
+                End: moment().toLocaleString(),
                 Location: "", Color: "", Notes: "", Members: []
             };
             this.eventForm = this.eventService.BuildEventForm(createEvent, this.eventForm);
@@ -158,7 +156,6 @@ export class EditEventComponent {
             event.Group = null;
         }
 
-        // // hack until I add a wrapper componennt for the time picker
         let startTime = form.get('StartTime').value;
         let endTime = form.get('EndTime').value;
         event.StartTime = moment(startTime).format(TIME_FORMAT);
@@ -169,7 +166,7 @@ export class EditEventComponent {
 
         this.eventService.CreateEvent(event).then(() => {
             this.router.navigate(['/dashboard']);
-        });
+        }, err => this.router.navigate['/dashboard']);
 
         return true;
     }

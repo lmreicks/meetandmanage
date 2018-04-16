@@ -107,7 +107,7 @@ export class MonthComponent {
      * @param time the given military time
      */
     friendlyTime(time: string): string {
-        let date = moment(time, TIME_FORMAT);
+        let date = moment(time);
         return date.format('hh:mm a');
     }
 

@@ -1,6 +1,8 @@
 import { ApiUser } from "./user";
-import { ApiGroup } from "./group";
 
+/**
+ * Notification's can be every *value* minutes, hours, days, or weeks
+ */
 export enum NotificationGranularity {
     Minutes,
     Hours,
@@ -8,6 +10,9 @@ export enum NotificationGranularity {
     Weeks
 }
 
+/**
+ * Api Create to use as a form and send to the server
+ */
 export interface ApiCreateEvent {
     /**
      * Title ex) Doctors Appointment
@@ -18,21 +23,13 @@ export interface ApiCreateEvent {
      */
     OwnerId: number;
     /**
-     * Time of day that the event should start
+     * Start
      */
-    StartTime: string;
+    Start: string;
     /**
-     * Time of day that the event should end
+     * End date/time
      */
-    EndTime: string;
-    /**
-     * Date of the event (start date)
-     */
-    StartDate: string;
-    /**
-     * End date
-     */
-    EndDate?: string;
+    End: string;
     /** 
      * Either basic location or address
      */
@@ -62,11 +59,6 @@ export interface ApiCreateEvent {
      */
     Color?: string;
 
-    /**
-     * If it should be hidden on the calendar
-     */
-    Hidden?: boolean;
-
     Recurring?: Recurring;
 }
 
@@ -75,6 +67,16 @@ export interface ApiEvent extends ApiCreateEvent {
      * Id of the event
      */
     Id: number;
+    /**
+     * If it should be hidden on the calendar
+     */
+    Hidden?: boolean;
+    /**
+     * For display purposes
+     */
+    height?: number;
+    start?: number;
+    overlap?: boolean;
 }
 
 export interface Recurring {

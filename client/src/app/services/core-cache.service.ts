@@ -6,11 +6,12 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { DateObject } from '../../dashboard/models/date.model';
 import { ApiEvent } from '../models/event';
-import { API_ROOT } from '../../constants.module';
+import { API_ROOT, DATE_FORMAT } from '../../constants.module';
 import { PayloadModel } from '../models/payload';
 import { ApiUser } from '../models/user';
-import { MockPayload } from '../models/mock-payload';
+import { MockPayload, generateEvents } from '../models/mock-payload';
 import { ApiGroup } from '../models/group';
+import * as moment from 'moment';
 
 @Injectable()
 
@@ -31,8 +32,10 @@ export class CoreCacheService {
      * When the user is authorized, this methods should be called to make a request to the payload
      */
     OnAuth(): Promise<PayloadModel> {
-        this.promiseForData = this.Payload()
+        this.promiseForData = this.tempPayload
+        //this.promiseForData = this.Payload()
                 .then(p => {
+                    p.Events = generateEvents();
                     this.payload = p;
                     this.ParseEvents(this.payload);
                     return this.payload;
@@ -77,11 +80,12 @@ export class CoreCacheService {
         this.events.forEach(event => {
             event.Hidden = false;
             this.eventMap.set(event.Id, event);
+            let key = moment(event.Start).format(DATE_FORMAT);
 
-            if (this.dateMap.has(event.StartDate)) {
-                this.dateMap.get(event.StartDate).push(event);
+            if (this.dateMap.has(key)) {
+                this.dateMap.get(key).push(event);
             } else {
-                this.dateMap.set(event.StartDate, [event]);
+                this.dateMap.set(key, [event]);
             }
         });
     }
@@ -92,9 +96,9 @@ export class CoreCacheService {
      */
     private _sortEvents(events: ApiEvent[]) {
         events.sort((a, b) => {
-            if (a.StartDate < b.StartDate) {
+            if (a.Start < b.Start) {
                 return -1;
-            } else if (a.StartDate === b.StartDate) {
+            } else if (a.End === b.End) {
                 return 0;
             } else {
                 return 1;
@@ -107,8 +111,8 @@ export class CoreCacheService {
      * @param {ApiEvent} event 
      */
     public AddEvent(event: ApiEvent): void {
-        if (this.dateMap.has(event.StartDate)) {
-            this.dateMap.get(event.StartDate).push(event);
+        if (this.dateMap.has(event.Start)) {
+            this.dateMap.get(event.Start).push(event);
         }
         this.eventMap.set(event.Id, event);
     }

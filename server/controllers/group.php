@@ -7,7 +7,7 @@ use Logic\ModelSerializers\GroupSerializer;
 use Logic\ModelSerializers\UserSerializer;
 
 /**
- * @api {post} /group
+ * @api {post} /group Create
  * @apiGroup Group
  *
  *@apiParam {String} name 
@@ -53,11 +53,11 @@ $app->post('/api/group', function (Request $request, Response $response, array $
 });
 
 /**
- * @api {get} /group
+ * @api {get} /group Get All
  * 
  * @apiGroup Group
  *
- * @apiParam {User} user user thats logged in
+ * @apiParam {User} user thats logged in
  * @apiDescription Returns all groups a user is associated with
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -101,7 +101,7 @@ $app->get('/api/group', function (Request $request, Response $response, array $a
 });
 
 /**
- * @api {put} /group
+ * @api {put} /group Update
  * @apiGroup Group
  *
  * @apiDescription Modifies fields of group... No params as no fields are required. Returns modified group
@@ -139,7 +139,7 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
 
 
 /**
- * @api {delete} /group
+ * @api {delete} /group Delete
  * @apiGroup Group
  * 
  * @apiParam {User} user Current user logged in

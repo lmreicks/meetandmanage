@@ -8,6 +8,9 @@ import { CoreCacheService } from './core-cache.service';
 import { google } from 'googleapis';
 
 @Injectable()
+/**
+ * Service for authentication, login, logout, and saving session token
+ */
 export class AuthService {
 
   constructor(public router: Router, private http: Http, private coreCache: CoreCacheService) {
@@ -16,6 +19,10 @@ export class AuthService {
     }
   }
 
+  /**
+   * Logs a user in on the server
+   * @param { email: string, password: string } userInfo 
+   */
   public login(userInfo: { email: string, password: string }): Observable<any> {
     return this.http.post(API_ROOT + '/login', userInfo).map(res => {
       res = res.json();
@@ -27,6 +34,10 @@ export class AuthService {
     });
   }
 
+  /**
+   * Sets session variable
+   * @param authResult 
+   */
   private setSession(authResult): void {
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('user_id', authResult.user.id);
@@ -34,6 +45,9 @@ export class AuthService {
     this.coreCache.OnAuth();
   }
 
+  /**
+   * Logs user out on the server
+   */
   public logout(): void {
     // Remove tokens and expiry time from localStorage
     localStorage.removeItem('access_token');
@@ -42,6 +56,9 @@ export class AuthService {
     this.router.navigate(['login']);
   }
 
+  /**
+   * Checks if a current user is authenticated
+   */
   public isAuthenticated(): boolean {
     // Check whether the current time is past the
     // access token's expiry time

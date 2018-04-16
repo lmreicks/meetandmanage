@@ -81,8 +81,6 @@ export class MiniCalendarComponent {
                 events: []
             };
 
-            //week.current = true;
-
             week.days.push(day);
           }
           this.month.weeks.push(week);
@@ -98,13 +96,18 @@ export class MiniCalendarComponent {
         return date.format('hh:mm a');
     }
 
+    clickWeekDay(click: MouseEvent, weekday: string) {
+        this.router.navigate(['/dashboard/week']);
+    }
+
     /**
      * routes the user to the create/edit event page based on a given day the user clicked
      * @param click records where the user clicks
      * @param day the given day that was clicked
      */
     doubleClickDay(click: MouseEvent, day: Day): void {
-        this.router.navigate(['event/create']);
+        this.dashboardService.changeDate(day.day.moment);
+        this.router.navigate(['/dashboard/day']);
     }
 
     /**
@@ -113,7 +116,6 @@ export class MiniCalendarComponent {
      * @param day the given day that was clicked
      */
     clickDay(click: MouseEvent, day: Day): void {
-        console.log(moment().date(+day.day.display));
         this.dashboardService.changeDate(day.day.moment);
     }
 }

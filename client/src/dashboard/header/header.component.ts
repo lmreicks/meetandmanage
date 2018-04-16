@@ -56,6 +56,11 @@ export class HeaderComponent {
 
             this.monthYearDisplay = this.active.format('MMMM YYYY');
         });
+
+        this.dashboardService.current.subscribe(date => {
+            this.active = date;
+            this.monthYearDisplay = date.format('MMMM YYYY');
+        });
     }
 
     /**

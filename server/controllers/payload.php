@@ -8,6 +8,7 @@ use Models\EventLookup;
 use Logic\ModelSerializers\GroupSerializer;
 use Logic\ModelSerializers\UserSerializer;
 use Logic\ModelSerializers\EventSerializer;
+use Logic\ModelSerializers\TodoSerializer;
 
 /**
 * returns the serialized payload which includes all of a users events and groups
@@ -19,11 +20,14 @@ use Logic\ModelSerializers\EventSerializer;
 $app->get('/api/payload', function (Request $request, Response $response, array $args) {
     $es = new EventSerializer;
     $gs = new GroupSerializer;
+    $ts = new TodoSerializer;
+
     $user = $request->getAttribute('user');
     $events = $user->events;
     //echo $events;
     $outGroups = $user->group;
     $g = $outGroups;
+    $todos = $user->todos;
     if ($outGroups != NULL && count($outGroups) != 0 && $outGroups != []){
         
         $outGroups = $gs->toApiList($g);
@@ -33,24 +37,17 @@ $app->get('/api/payload', function (Request $request, Response $response, array 
                 //$group->Events = $group->events;
             }
         } 
-        //else $outGroups->Events = $g->events;
         
+        $payload = new payload($es->toApiList($events), $outGroups, $ts->toApiList($todos));//need to be serialized
 
-        // foreach($events as $event) echo $event;
-        
-        $payload = new payload($es->toApiList($events), $outGroups);//need to be serialized
-
-        $payload = array(
-            'Events' => $es->toApiList($events),
-            'Groups' => $gs->toApiList($g)
-        );
         $response->getBody()->write(json_encode($payload));
         return $response;
     }
     
     $out = array(
         'Events' => $es->toApiList($events),
-        'Groups' => array()
+        'Groups' => array(),
+        'Todos' => $ts->toApiList($todos)
     );
     $response->getBody()->write(json_encode($out));
     return $response;
@@ -63,12 +60,15 @@ class payload{
     private $userEvents;
     private $userGroups; 
     private $userGroupEvents;
-    public function __construct($events, $groups){
+    private $todo;
+    public function __construct($events, $groups, $todos){
         $this->userEvents = $events;
         $this->userGroups = $groups;
+        $this->todo = $todos;
         return array(
             'Events' => $this->userEvents,
-            'Groups' => $this->userGroups
+            'Groups' => $this->userGroups,
+            'Todos' => $this->todo
         );
     }
 }

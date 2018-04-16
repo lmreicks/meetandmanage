@@ -5,14 +5,16 @@ use Slim\Http\Response;
 use Models\User;
 use Logic\ErrorList;
 use Logic\ModelSerializers\UserSerializer;
+use Logic\Errors\ErrorResponse;
+use Logic\Errors\StatusCodes;
 
-/**
-* will return the user associated with the given id
-*/
-$app->get('/api/user/{id}', function (Request $request, Response $response, array $args) {
-    $response->getBody()->write("get user");
-    return $response;
-});
+// /**
+// * will return the user associated with the given id
+// */
+// $app->get('/api/user/{id}', function (Request $request, Response $response, array $args) {
+//     $response->getBody()->write("get user");
+//     return $response;
+// });
 
 /**
 * will return all users
@@ -34,21 +36,21 @@ $app->get('/api/user', function (Request $request, Response $response, array $ar
 * return auth token if user is successfully made
 */
 $app->post('/api/user', function (Request $request, Response $response, array $args){
-    
+    $er = new ErrorResponse;
     #user must have timezone ID made in table
     $body = $request->getParsedBody();
     $email = $body['email'];
     $name = $body['name'];
 
     if ($email == NULL || $name == NULL || $body['password'] == NULL){
-        $response->withStatus(400)->write('Invalid Name, Email or Password'); 
+        $response = $er($response, StatusCodes::HTTP_BAD_REQUEST, "Invalid username, email or password"); 
         return $response;  
     } // return error if any fields are null
 
     $testUser = User::where('email','=',$email)->first(); // find any user with new email
 
     if ($testUser != NULL) {
-        $response->withStatus(400)->write('Email already exists');
+        $response = $er($response, StatusCodes::HTTP_BAD_REQUEST, "Email already exists");
         return $response;
     } // if email is in database return error saying so
 

@@ -14,7 +14,7 @@ class User extends \Illuminate\Database\Eloquent\Model {
     }
 
     public function todos(){
-        return $this->belongsToMany('Models\todoTask');
+        return $this->hasMany('Models\Todo');
     }
 
     public function group(){

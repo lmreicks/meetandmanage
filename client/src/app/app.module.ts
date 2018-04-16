@@ -32,11 +32,13 @@ import { GroupService } from './group/group.service';
 import { CreateGroupComponent } from './group/create-group/create-group.component';
 import { MemberFormComponent } from './user/member/member.component';
 import { GroupSelectForm } from './group/group-select-form/group-select-form.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
+    RegisterComponent,
     EditEventComponent,
     ComboBoxComponent,
     SearchFilterPipe,

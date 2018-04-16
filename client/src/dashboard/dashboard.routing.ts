@@ -18,4 +18,3 @@ export const DASHBOARD_ROUTES: Routes = [
     }
 ];
 
-RouterModule.forChild(DASHBOARD_ROUTES);

@@ -8,7 +8,8 @@ use Logic\ModelSerializers\UserSerializer;
 use Logic\ModelSerializers\GroupMemberSerializer;
 
 /**
- * @api {post} /group
+ * @api {post} /group Create
+ * @apiGroup Group
  *
  *@apiParam {String} name 
  *@apiParam {User} members
@@ -36,15 +37,15 @@ $app->post('/api/group', function (Request $request, Response $response, array $
     $user = $request->getAttribute('user');
 
     $members = $body->Members;
-    $gms = new GroupMemberSerializer;
 
     $group_serial = new GroupSerializer;
     $group = $group_serial->toServer($body);
     $group->save();
-    $mems = $gms->toServerList($members);
+
     $ids = array();
-    foreach($mems as $member) array_push($ids, $member->id);
-    $group->users()->attach($ids);
+    foreach($members as $member) {
+        $group->users()->attach($member->User->Id, [permission => $member->Permission]);
+    }
     $group->save();
 
     $response->write(json_encode($group_serial->toApi($group)));
@@ -52,9 +53,11 @@ $app->post('/api/group', function (Request $request, Response $response, array $
 });
 
 /**
- * @api {get} /group
+ * @api {get} /group Get All
+ * 
+ * @apiGroup Group
  *
- * @apiParam {User} user user thats logged in
+ * @apiParam {User} user thats logged in
  * @apiDescription Returns all groups a user is associated with
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -98,7 +101,8 @@ $app->get('/api/group', function (Request $request, Response $response, array $a
 });
 
 /**
- * @api {put} /group
+ * @api {put} /group Update
+ * @apiGroup Group
  *
  * @apiDescription Modifies fields of group... No params as no fields are required. Returns modified group
  * @apiSuccessExample {json} Success-Response:
@@ -135,7 +139,9 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
 
 
 /**
- * @api {delete} /group
+ * @api {delete} /group Delete
+ * @apiGroup Group
+ * 
  * @apiParam {User} user Current user logged in
  * @apiParam {int} group-id group id of group to remove
  * @apiDescription Deletes a group based off of user and group id. Returns removed group.

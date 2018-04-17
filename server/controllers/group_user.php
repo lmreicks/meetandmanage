@@ -6,7 +6,6 @@ use Models\User;
 use Models\Group;
 use Logic\ModelSerializers\GroupMemberSerializer;
 
-//outputs all users and their permissions based off of group_id
 /**
  * @api {get} /roles/{id}
  * @apiParam {id} group_id id of group to modify
@@ -99,7 +98,7 @@ $app->put('/api/group/{id}/member/{member_id}', function (Request $request, Resp
 $app->post('/api/group/{id}/member', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());
     $permission = $body->Permission;
-    $user_id = $body->User_Id;
+    $user_id = $body->User->Id;
     $id = $args['id'];
     $group = Group::find($id);
     $group->users()->attach($user_id, [permission => $permission]);

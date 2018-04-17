@@ -1,30 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CoreCacheService } from '../../app/services/core-cache.service';
 import { Week, DateObject, WeekDays } from '../models';
 import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import * as moment from 'moment';
 import { ApiEvent } from '../../app/models/event';
 import { DashboardService } from '../dashboard.service';
+import { Colors } from '../../app/models/colors';
 
 @Component({
     selector: 'mnm-week',
     templateUrl: 'week.component.html',
-    styleUrls: ['week.component.less']
+    styleUrls: ['week.component.less', '../shared/shared.less']
 })
 
+/**
+ * weekly view that contains information about events and groups.
+ */
 export class WeekComponent {
+    @ViewChild('weekEl') weekContainerEl: ElementRef;
     public current: moment.Moment;
     public map: Map<string, ApiEvent[]>;
     public week: Week;
     public weekdays: string[] = WeekDays;
     public hours: string[] = [];
     public loading: boolean = true;
-    private diff = 0;
-    private height = 0;
 
     constructor(private coreCache: CoreCacheService,
                 private dashboardService: DashboardService) {}
 
+    /**
+     * On init of this component, we want to get the date map and subscribe to the current date
+     */
     ngOnInit(): void {
         this.loading = true;
         this.setHours();
@@ -38,6 +44,10 @@ export class WeekComponent {
         });
     }
 
+    /**
+     * parses all the events and dates for a week based off a given day and puts them in the proper format to be displayed
+     * @param date the given day moment
+     */
     private parseWeek(date: moment.Moment): void {
         this.week = {
             current: false,
@@ -52,12 +62,13 @@ export class WeekComponent {
             let dayMoment = startDate.clone().add(i, 'days');
 
             let dateValue: DateObject = {
-                current: dayMoment.format(DATE_FORMAT) === current,
+                current: dayMoment.format(DATE_FORMAT) === moment().format(DATE_FORMAT),
+                active: dayMoment.format(DATE_FORMAT) === current,
                 display: dayMoment.format('dddd D'),
                 display1: dayMoment.format('MMMM Y'),
                 future: dayMoment.isAfter(date.endOf('month')),
                 past: dayMoment.isBefore(date.startOf('month')),
-                utcDateValue: dayMoment.utc().valueOf()
+                moment: dayMoment.utc()
             };
 
             let day = {
@@ -74,27 +85,9 @@ export class WeekComponent {
         }
     }
 
-    public getDuration(v) {
-        let end = moment(v.EndDate + " " + v.EndTime);
-
-        let start = moment(v.StartDate + " " + v.StartTime);
-        if (moment.duration(end.diff(start)).asDays() >= 1) {
-            end = moment(v.StartDate + " " + "24:00:00");
-        }
-
-        return this.height = moment.duration(end.diff(start)).asHours() * 100;
-    }
-
-    public getStart(v) {
-        let start = moment(v.StartDate + " " + v.StartTime);
-        return this.diff = ((start.hours() + (start.minutes() / 60)) * 100) - this.diff - this.height;
-    }
-
-    public resetVars() {
-        this.diff = 0;
-        this.height = 0;
-    }
-
+    /**
+     * creates an array containing the ours in a day in order to display them.
+     */
     private setHours(): void {
         this.hours.push(12 + 'am');
         for (let i = 1; i < 24; i++) {

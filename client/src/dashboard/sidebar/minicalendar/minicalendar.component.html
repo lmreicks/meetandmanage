@@ -1,0 +1,20 @@
+<div class="month mb-2" *ngIf="!loading">
+    <div class="weekdays">
+        <div class="weekday clickable" *ngFor="let weekday of month.weekdays" (click)="clickWeekDay($event, weekday)">
+            {{weekday.substring(0, 1)}}
+        </div>
+    </div> 
+    <div class="weeks" *ngFor="let week of month.weeks" [ngClass]="{'current': week.current}">
+        <div class="day clickable"
+             *ngFor="let day of week.days"
+            [ngClass]="{
+                'current': day.day.current,
+                'future': day.day.future,
+                'past': day.day.past,
+                'active': day.day.active }"
+            (click)="clickDay($event, day)"
+            (dblclick)="doubleClickDay($event, day)">
+            <span class="day-number">{{day.day.display}}</span>
+        </div>
+    </div>
+</div>

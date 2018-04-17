@@ -1,0 +1,8 @@
+<div class="event-container"
+    *ngFor="let event of events"
+    [ngStyle]="{ 'top': event.start + 'px', 'height': event.height + 'px'}"
+    [ngClass]="{ 'overlap' : event.overlap }">
+    <div class="event" [style.background-color]="event.Color">
+        {{event.Title}}
+    </div>
+</div>

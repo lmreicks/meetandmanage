@@ -10,6 +10,9 @@ import * as moment from 'moment';
     styleUrls: ['todo-list.component.less']
 })
 
+/**
+ * todo view that allows the user to record daily tasks they'd like to complete
+ */
 export class TodoListComponent {
     public newTodo: ApiTodo;
     public date: moment.Moment;
@@ -24,12 +27,19 @@ export class TodoListComponent {
                     });
                 }
 
+    /**
+     * allows the user to add a todo item to their list
+     */
     addTodo(): void {
         this.todos.push(this.newTodo);
         this.todoService.addTodo(this.newTodo);
         this.newTodo = Todo(this.date.toDate());
     }
 
+    /**
+     * allows the user to remove a given todo item from their list
+     * @param todo the given todo item
+     */
     removeTodo(todo: ApiTodo): void {
         let index = this.todos.indexOf(todo);
         if (index > -1) {

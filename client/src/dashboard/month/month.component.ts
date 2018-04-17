@@ -1,7 +1,7 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import * as moment from 'moment';
 import { ApiEvent } from '../../app/models/event';
-import { CoreCacheService } from '../../app/services';
+import { CoreCacheService } from '../../app/services/core-cache.service';
 import { DateObject } from '../models/date.model';
 import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import { Month, Months } from '../models/month.model';
@@ -19,6 +19,9 @@ import { DashboardService } from '../dashboard.service';
     styleUrls: ['month.component.less']
 })
 
+/**
+ * monthly view that contains information about events and groups.
+ */
 export class MonthComponent {
     public date: moment.Moment;
     public month: Month;
@@ -31,7 +34,10 @@ export class MonthComponent {
                 private sessionService: SessionService,
                 private dashboardService: DashboardService,
                 private router: Router) {}
-
+    
+    /**
+     * On init of this component, we want to get the date map and subscribe to the current date
+     */
     ngOnInit(): void {
         this.loading = true;
 
@@ -45,6 +51,10 @@ export class MonthComponent {
         });
     }
 
+    /**
+     * parses all the events and dates for a given month and puts them in the proper format to be displayed
+     * @param month the given month moment
+     */
     parseMonth(month: moment.Moment): void {
         let startOfMonth = moment.utc(month).startOf('month');
         let endOfMonth = moment.utc(month).endOf('month');
@@ -73,7 +83,7 @@ export class MonthComponent {
               display: dayMoment.format('D'),
               future: dayMoment.isAfter(endOfMonth),
               past: dayMoment.isBefore(startOfMonth),
-              utcDateValue: dayMoment.valueOf()
+              moment: dayMoment
             };
 
             let day = {
@@ -92,19 +102,38 @@ export class MonthComponent {
         }
     }
 
+    /**
+     * Displays the time in a user friendly format based on a given military time
+     * @param time the given military time
+     */
     friendlyTime(time: string): string {
-        let date = moment(time, TIME_FORMAT);
+        let date = moment(time);
         return date.format('hh:mm a');
     }
 
+    /**
+     * routes the user to the create/edit event page based on a given day the user clicked
+     * @param click records where the user clicks
+     * @param day the given day that was clicked
+     */
     doubleClickDay(click: MouseEvent, day: Day): void {
         this.router.navigate(['event/create']);
     }
 
+    /**
+     * displays the event pop-over for the user to view more details about a given event
+     * @param click records where the user clicks
+     * @param event the given event that was clicked
+     */
     doubleClickEvent(click: MouseEvent, event: ApiEvent): void {
         this.router.navigate(['event', event.Id]);
     }
 
+    /**
+     * displays or hides a detailed pop-over for a given event
+     * @param popover the selected pop-over for an event
+     * @param event the given event
+     */
     togglePopover(popover: NgbPopover, event: ApiEvent): void {
         if (popover.isOpen()) {
             popover.close();

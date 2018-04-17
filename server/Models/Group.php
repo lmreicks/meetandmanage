@@ -2,11 +2,14 @@
 
 namespace Models;
 
+/**
+* server side group model
+*/
 class Group extends \Illuminate\Database\Eloquent\Model {
     protected $table = 'group';
 
     protected $fillable = [
-        'group_name', 'description'
+        'name', 'description'
     ];
 
     public function users() {

@@ -67,9 +67,20 @@ $app->get('/api/group/{id}/member/{member_id}', function (Request $request, Resp
     $user_id = $args['member_id'];
     $group = Group::find($group_id);
     $group_users = $group->users;
+    $apiGroupMember = NULL;
+
     //returns specific user... returns w pivot
     $gm_serial = new GroupMemberSerializer;
-    $response->write(json_encode($gm_serial->toApiList($group)));
+    foreach ($group_users as $member) {
+        if ($member->Id == $user_id) {
+            $apiGroupMember = $gm_serial->toApiList($group_users);
+        }
+    }
+
+    if ($apiGroupMember == NULL) {
+        // return error
+    }
+    $response->write(json_encode($apiGroupMember));
     return $response;
 });
 
@@ -106,6 +117,8 @@ $app->put('/api/group/{id}/member/{member_id}', function (Request $request, Resp
     $group->users()->updateExistingPivot($user_id, [permission => $permission]);
     $group_users = $group->users;
     $gm_serial = new GroupMemberSerializer;
+
+    // get and return user being updated
     $response->write(json_encode($gm_serial->toApiList($group_users))); 
     return $repsonse;
 });
@@ -143,6 +156,8 @@ $app->post('/api/group/{id}/member', function (Request $request, Response $respo
     $group->users()->attach($user_id, [permission => $permission]);
     $group_users = $group->users;
     $gm_serial = new GroupMemberSerializer;
+
+    // get and return new user
     $response->write(json_encode($gm_serial->toApiList($group_users)));
     return $response;
 });
@@ -178,8 +193,10 @@ $app->delete('/api/group/{id}/member/{member_id}', function (Request $request, R
     $body = json_decode($request->getBody());
     $group = Group::find($group_id);
     $group->users()->detach($user_id);
-    $group_users = $group->users;
+    $group_users = $group->users();
     $gm_serial = new GroupMemberSerializer;
+
+    // return true or false based on if it was deleted or not
     $response->write(json_encode($gm_serial->toApiList($group_users)));
     return $repsonse;
 });

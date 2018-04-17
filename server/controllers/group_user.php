@@ -14,21 +14,8 @@ use Logic\ModelSerializers\GroupMemberSerializer;
  * @apiDescription Outputs all users in a group and their permissions
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
- *    [
- *    {
- *       "Id": 7,
- *       "Name": "Another cool group",
- *       "Members": [
- *           {
- *           "id": "6",
- *           "email": "anngould@iastate.edu",
- *           "name": "Ann Gould",
- *           "permission": 2
- *           }
- *       ]
- *       "Description": ""
- *     }
- *    ]
+ *     [{"User":{"Id":2,"Email":"lmreicks@iastate.edu","Name":"lmreicks"},"Permission":"1"},{"User":{"Id":3,"Email":"tlnance@iastate.edu","Name":"Trevin"},"Permission":"0"},{"User":{"Id":5,"Email":"bmjensen@iastate.edu","Name":"Bailey"},"Permission":"0"},{"User":{"Id":6,"Email":"anngould@iastate.edu","Name":"Ann Gould"},"Permission":"2"}]
+ *
  */
 $app->get('/api/group/{id}/member', function (Request $request, Response $response, array $args) {
     $group_id = $args['id'];
@@ -37,6 +24,7 @@ $app->get('/api/group/{id}/member', function (Request $request, Response $respon
     $gm_serial = new GroupMemberSerializer;
     $response->write(json_encode($gm_serial->toApiList($group_users)));
     return $response;
+    //DONE
 });
 
 /**
@@ -47,19 +35,7 @@ $app->get('/api/group/{id}/member', function (Request $request, Response $respon
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *    [
- *    {
- *       "Id": 7,
- *       "Name": "Another cool group",
- *       "Members": [
- *           {
- *           "id": "6",
- *           "email": "anngould@iastate.edu",
- *           "name": "Ann Gould",
- *           "permission": 2
- *           }
- *       ]
- *       "Description": ""
- *     }
+ *    {"User":{"Id":6,"Email":"anngould@iastate.edu","Name":"Ann Gould"},"Permission":"2"}
  *    ]
  */
 $app->get('/api/group/{id}/member/{member_id}', function (Request $request, Response $response,array $args) {
@@ -69,11 +45,11 @@ $app->get('/api/group/{id}/member/{member_id}', function (Request $request, Resp
     $group_users = $group->users;
     $apiGroupMember = NULL;
 
-    //returns specific user... returns w pivot
+    //returns specific user... returns w pivot. doesn't work atm
     $gm_serial = new GroupMemberSerializer;
     foreach ($group_users as $member) {
-        if ($member->Id == $user_id) {
-            $apiGroupMember = $gm_serial->toApiList($group_users);
+        if ($member->id == $user_id) {
+            $apiGroupMember = $gm_serial->toApi($member);
         }
     }
 
@@ -93,19 +69,7 @@ $app->get('/api/group/{id}/member/{member_id}', function (Request $request, Resp
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *    [
- *    {
- *       "Id": 7,
- *       "Name": "Another cool group",
- *       "Members": [
- *           {
- *           "id": "6",
- *           "email": "anngould@iastate.edu",
- *           "name": "Ann Gould",
- *           "permission": 1
- *           }
- *       ]
- *       "Description": ""
- *     }
+ *    {"User":{"Id":2,"Email":"lmreicks@iastate.edu","Name":"lmreicks"},"Permission":"1"}
  *    ]
  */
 $app->put('/api/group/{id}/member/{member_id}', function (Request $request, Response $response, array $args) {
@@ -131,21 +95,7 @@ $app->put('/api/group/{id}/member/{member_id}', function (Request $request, Resp
  * @apiDescription Adds user to group by adding an entry in the lookup table
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
- *    [
- *    {
- *       "Id": 7,
- *       "Name": "Another cool group",
- *       "Members": [
- *           {
- *           "id": "6",
- *           "email": "anngould@iastate.edu",
- *           "name": "Ann Gould",
- *           "permission": 1
- *           }
- *       ]
- *       "Description": ""
- *     }
- *    ]
+ *    [{"User":{"Id":2,"Email":"lmreicks@iastate.edu","Name":"lmreicks"},"Permission":"0"},{"User":{"Id":3,"Email":"tlnance@iastate.edu","Name":"Trevin"},"Permission":"0"},{"User":{"Id":5,"Email":"bmjensen@iastate.edu","Name":"Bailey"},"Permission":"0"},{"User":{"Id":6,"Email":"anngould@iastate.edu","Name":"Ann Gould"},"Permission":"2"}]
  */
 $app->post('/api/group/{id}/member', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());
@@ -171,32 +121,21 @@ $app->post('/api/group/{id}/member', function (Request $request, Response $respo
  * from group
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
- *    [
- *    {
- *       "Id": 7,
- *       "Name": "Another cool group",
- *       "Members": [
- *           {
- *           "id": "6",
- *           "email": "anngould@iastate.edu",
- *           "name": "Ann Gould",
- *           "permission": 1
- *           }
- *       ]
- *       "Description": ""
- *     }
- *    ]
+ *    "true"
  */
 $app->delete('/api/group/{id}/member/{member_id}', function (Request $request, Response $response, array $args) {
     $group_id = $args['id'];
     $user_id = $args['member_id'];
-    $body = json_decode($request->getBody());
     $group = Group::find($group_id);
-    $group->users()->detach($user_id);
-    $group_users = $group->users();
-    $gm_serial = new GroupMemberSerializer;
-
-    // return true or false based on if it was deleted or not
-    $response->write(json_encode($gm_serial->toApiList($group_users)));
+    $val = "false";
+    $group_users = $group->users;
+    foreach ($group_users as $member) {
+        if ($member->id == $user_id) {
+            $val = "true";
+            $group->users()->detach($user_id);
+        }
+    }
+    // return true or false based on if it was deleted or not. doesn't work atm
+    $response->write(json_encode($val));
     return $repsonse;
 });

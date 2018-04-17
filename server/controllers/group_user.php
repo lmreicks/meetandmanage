@@ -24,7 +24,6 @@ $app->get('/api/group/{id}/member', function (Request $request, Response $respon
     $gm_serial = new GroupMemberSerializer;
     $response->write(json_encode($gm_serial->toApiList($group_users)));
     return $response;
-    //DONE
 });
 
 /**

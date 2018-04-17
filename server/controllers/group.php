@@ -5,6 +5,7 @@ use Models\User;
 use Models\Group;
 use Logic\ModelSerializers\GroupSerializer;
 use Logic\ModelSerializers\UserSerializer;
+use Logic\ModelSerializers\GroupMemberSerializer;
 
 /**
  * @api {post} /group
@@ -32,16 +33,15 @@ use Logic\ModelSerializers\UserSerializer;
  */
 $app->post('/api/group', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());    
-    $user = $request->getAttribute('user'); 
+    $user = $request->getAttribute('user');
 
-   
     $members = $body->Members;
- 
-    $us = new UserSerializer;
+    $gms = new GroupMemberSerializer;
+
     $group_serial = new GroupSerializer;
     $group = $group_serial->toServer($body);
     $group->save();
-    $mems = $us->toServerList($members);
+    $mems = $gms->toServerList($members);
     $ids = array();
     foreach($mems as $member) array_push($ids, $member->id);
     $group->users()->attach($ids);

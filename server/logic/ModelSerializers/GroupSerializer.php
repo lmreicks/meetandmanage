@@ -8,16 +8,17 @@ use Models\User;
 use Models\EventLookup;
 use Logic\ModelSerializers\ModelSerializer;
 use Logic\ModelSerializers\UserSerializer;
+use Logic\ModelSerializers\GroupMemberSerializer;
 
 class GroupSerializer extends ModelSerializer{
     
     function toApi($model){
-        $us = new UserSerializer;
+        $gms = new GroupMemberSerializer;
         $apiGroup = new \stdClass;
         $apiGroup->Id = $model->id;
         $apiGroup->Name = $model->Title;
         $apiGroup->Description = $model->description;
-        $apiGroup->Members = $us->toApiList($model->users);
+        $apiGroup->Members = $gms->toApiList($model->users);
         return $apiGroup;
     } 
 

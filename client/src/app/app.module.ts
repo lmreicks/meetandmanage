@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DlDateTimePickerDateModule } from 'angular-bootstrap-datetimepicker';
 import { HttpModule, Http, XHRBackend, RequestOptions } from '@angular/http';
 import { APP_ROUTES } from './app.routing';
 import { TimepickerModule, ModalModule, PopoverModule, CollapseModule } from 'ngx-bootstrap';
@@ -61,7 +60,6 @@ import { RegisterComponent } from './register/register.component';
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    DlDateTimePickerDateModule,
     HttpModule
   ],
   providers: [

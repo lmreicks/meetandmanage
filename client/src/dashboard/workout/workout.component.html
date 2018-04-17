@@ -1,0 +1,22 @@
+<div class="workout-list-container">
+    <div class="new-workout-container">
+        <input class="new-workout draw meet" placeholder="Add an Exercise" autofocus="" [(ngModel)]="newWorkout.Title" (keyup.enter)="addWorkout()">
+    </div>
+
+    <div class="main" *ngIf="workouts.length > 0">
+        <ul class="workout-list">
+            <li *ngFor="let workout of workouts" [class.completed]="workout.Done">
+                <label class="view">
+                    <input class="toggle"
+                        type="checkbox"
+                        [(ngModel)]="workout.Done"
+                        [checked]="workout.Done">
+                    <span class="not-done" *ngIf="!workout.Done"><i class="far fa-circle"></i></span>
+                    <span class="done" *ngIf="workout.Done"><i class="far fa-check-circle"></i></span>
+                    <span class="mx-2 title">{{workout.Title}}</span>
+                    <a class="destroy" (click)="removeWorkout(workout)"></a>
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { ApiEvent } from '../../app/models/event';
 import { DashboardService } from '../dashboard.service';
 import { ApiTodo } from '../../app/models/todo';
+import { ApiWorkout } from '../../app/models/workout';
 
 @Component({
     selector: 'mnm-day',

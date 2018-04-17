@@ -2,6 +2,7 @@ import { ApiUser } from './user';
 import { ApiEvent } from './event';
 import { ApiGroup } from './group';
 import { ApiTodo } from './todo';
+import { ApiWorkout } from './workout';
 
 export interface PayloadModel {
     /**
@@ -20,4 +21,8 @@ export interface PayloadModel {
      * List of todos for current user
      */
     Todo: ApiTodo[];
+    /**
+     * List of workoutss for current user
+     */
+    Workout: ApiWorkout[];
 }

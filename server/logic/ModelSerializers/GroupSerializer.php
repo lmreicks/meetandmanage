@@ -15,10 +15,10 @@ class GroupSerializer extends ModelSerializer {
     function toApi($model){
         $gms = new GroupMemberSerializer;
         $apiGroup = new \stdClass;
-        $apiGroup->Id = $model->id; //not working from here
+        $apiGroup->Id = $model->id;
         $apiGroup->Name = $model->name;
         $apiGroup->Description = $model->description;
-        $apiGroup->Members = $gms->toApiList($model->users); //to here
+        $apiGroup->Members = $gms->toApiList($model->users);
         return $apiGroup;
     } 
 
@@ -31,7 +31,11 @@ class GroupSerializer extends ModelSerializer {
     }
 
     function toServer($model) {
-        $out = new Group;
+        if ($model->Id) {
+            $out = Group::find($model->Id);
+        } else {
+            $out = new Group;
+        }
         $out->name = $model->Name;
         $out->description = $model->Description;
         return $out;

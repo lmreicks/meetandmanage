@@ -124,14 +124,17 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
     $group = $group_serial->toServer($body);
 
     $modify_group = Group::find($group->id);
+    //echo ($group->id);
     $response->write($modify_group);
-
+    //echo $modify_group . "group here";
     $modify_group->name = $group->name;
     $modify_group->description = $group->description;
 
     $modify_group->save();
     $response->write($modify_group);
     return $response;
+
+    //$response->write($output);
 });
 
 

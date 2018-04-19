@@ -4,11 +4,10 @@ use Slim\Http\Response;
 use Models\User;
 use Models\Group;
 use Logic\ModelSerializers\GroupSerializer;
-use Logic\ModelSerializers\UserSerializer;
 use Logic\ModelSerializers\GroupMemberSerializer;
 
 /**
- * @api {post} /group Create
+ * @api {post} api/group Create
  * @apiGroup Group
  *
  *@apiParam {String} name 
@@ -35,25 +34,19 @@ use Logic\ModelSerializers\GroupMemberSerializer;
 $app->post('/api/group', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());    
     $user = $request->getAttribute('user');
-
-    $members = $body->Members;
+    //add members in group member handler instead
 
     $group_serial = new GroupSerializer;
     $group = $group_serial->toServer($body);
     $group->save();
 
-    $ids = array();
-    foreach($members as $member) {
-        $group->users()->attach($member->User->Id, [permission => $member->Permission]);
-    }
-    $group->save();
-
     $response->write(json_encode($group_serial->toApi($group)));
     return $response;
+    //DONE
 });
 
 /**
- * @api {get} /group Get All
+ * @api {get} api/group Get All
  * 
  * @apiGroup Group
  *
@@ -94,14 +87,16 @@ $app->post('/api/group', function (Request $request, Response $response, array $
  *    ]
  */
 $app->get('/api/group', function (Request $request, Response $response, array $args) {
+    $user = new User;
     $user = $request->getAttribute('user');
-    $groups = $user->groups();
+    $groups = $user->groups;
     $group_serial = new GroupSerializer;
     return json_encode($group_serial->toApiList($groups));
+    //DONE
 });
 
 /**
- * @api {put} /group Update
+ * @api {put} api/group Update
  * @apiGroup Group
  *
  * @apiDescription Modifies fields of group... No params as no fields are required. Returns modified group
@@ -125,21 +120,23 @@ $app->get('/api/group', function (Request $request, Response $response, array $a
 $app->put('/api/group', function (Request $request, Response $response, array $args) {    
     $body = json_decode($request->getBody());
     $user = $request->getAttribute('user');
-
     $group_serial = new GroupSerializer;
     $group = $group_serial->toServer($body);
-    $members = $body->members;
-    $group->attach($group_serial->toServerList($members));
-    $group->save();
 
-    $output = $group_serial->toApi($group);
-    $response->write($output);
+    $modify_group = Group::find($group->id);
+    $response->write($modify_group);
+
+    $modify_group->name = $group->name;
+    $modify_group->description = $group->description;
+
+    $modify_group->save();
+    $response->write($modify_group);
     return $response;
 });
 
 
 /**
- * @api {delete} /group Delete
+ * @api {delete} api/group Delete
  * @apiGroup Group
  * 
  * @apiParam {User} user Current user logged in

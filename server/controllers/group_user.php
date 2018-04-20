@@ -43,7 +43,6 @@ $app->get('/api/group/{id}/member/{member_id}', function (Request $request, Resp
     $group_users = $group->users;
     $apiGroupMember = NULL;
 
-    //returns specific user... returns w pivot. doesn't work atm
     $gm_serial = new GroupMemberSerializer;
     foreach ($group_users as $member) {
         if ($member->id == $user_id) {

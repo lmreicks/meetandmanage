@@ -5,7 +5,7 @@ use Models\User;
 use Models\Group;
 use Logic\ModelSerializers\GroupSerializer;
 use Logic\ModelSerializers\GroupMemberSerializer;
-
+use Logic\PermissionValidator;
 /**
  * @api {post} api/group Create
  * @apiGroup Group
@@ -122,17 +122,20 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
     $group = $group_serial->toServer($body);
 
     $modify_group = Group::find($group->id);
-    //echo ($group->id);
-    $response->write($modify_group);
-    //echo $modify_group . "group here";
-    $modify_group->name = $group->name;
-    $modify_group->description = $group->description;
-
-    $modify_group->save();
+    //only returns something if user is owner
+    $permission_validate = new PermissionValidator;
+    $valid = $permission_validate->is_owner($user->id,$group->id);
+    if($valid){
+        $response->write($modify_group);
+        $modify_group->name = $group->name;
+        $modify_group->description = $group->description;
+        $modify_group->save();
+    }
+    else{
+        $response->write(json_encode("Invalid permission"));
+    }
     //$response->getBody()->write($output);
     return $response;
-
-    //$response->write($output);
 });
 
 
@@ -149,16 +152,27 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
  */
 $app->delete('/api/group', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());
+    $user = $request->getAttribute('user');
     $val = "false";
     $group_serial = new GroupSerializer;
+    $permission_validate = new PermissionValidator;
 
     $group = $group_serial->toServer($body);
-    $group_del = Group::find($group->id);
-    if($group_del != NULL){
-        $group_del->delete();
-        $val = "true";
+    $valid = $permission_validate->is_owner($user->id,$group->id);
+    if($valid){
+        $group_del = Group::find($group->id);
+        if($group_del != NULL){
+            $group_del->delete();
+            $val = "true";
+        }
+        $output = json_encode($val);
     }
-    $output = json_encode($val);
+    else{
+        //invalid permission...
+        $output = json_encode("Invalid permission");
+    }
+    
+    
     $response->write($output);
     return $response;
 }); 

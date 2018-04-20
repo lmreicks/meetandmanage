@@ -54,6 +54,7 @@ use Logic\ModelSerializers\EventSerializer;
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
 
     $es = new EventSerializer;
+    $user = new User;
     $user = $request->getAttribute('user');
     $events = $user->events;
     $return = json_encode($es->toApiList($events));

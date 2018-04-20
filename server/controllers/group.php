@@ -42,7 +42,6 @@ $app->post('/api/group', function (Request $request, Response $response, array $
 
     $response->write(json_encode($group_serial->toApi($group)));
     return $response;
-    //DONE
 });
 
 /**
@@ -92,7 +91,6 @@ $app->get('/api/group', function (Request $request, Response $response, array $a
     $groups = $user->groups;
     $group_serial = new GroupSerializer;
     return json_encode($group_serial->toApiList($groups));
-    //DONE
 });
 
 /**
@@ -142,6 +140,7 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
  * @api {delete} api/group Delete
  * @apiGroup Group
  * 
+ * @apiParam {User} user Current user logged in
  * @apiParam {int} group-id group id of group to remove
  * @apiDescription Deletes a group based off of user and group id. Returns removed group.
  * @apiSuccessExample {json} Success-Response:
@@ -159,8 +158,6 @@ $app->delete('/api/group', function (Request $request, Response $response, array
         $group_del->delete();
         $val = "true";
     }
-    
-
     $output = json_encode($val);
     $response->write($output);
     return $response;

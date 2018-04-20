@@ -37,4 +37,18 @@ class PermissionValidator{
         }
         return 0;
     }
+
+    function is_member($user_id, $group_id){
+        $group = Group::find($group_id);
+        $group_users = $group->users;
+        foreach ($group_users as $member) {
+            if ($member->id == $user_id) {
+                //if member or manager or owner
+                if($member->pivot->permission == 3 || $member->pivot->permission == 2 || $member->pivot->permission == 1){
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
 }

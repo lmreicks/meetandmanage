@@ -4,8 +4,10 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\Event;
 use Models\User;
+use Models\Group;
 use Models\EventLookup;
 use Logic\ModelSerializers\EventSerializer;
+use Logic\PermissionValidator;
 
 /**
  * @api {get} /event Get all events for current user
@@ -136,40 +138,10 @@ $app->get('/api/event', function (Request $request, Response $response, array $a
  *   }
  */
 $app->post('/api/event', function (Request $request, Response $response, array $args) {
-    
-    # need to parse through list of members given in the $request body
-    # if the email is in the database, add it to the table mapping events with all of it's members
-    # at some point down the road we will add an email api to this to include non members into all of the "fun"
 
     $es = new EventSerializer;
     $body = json_decode($request->getBody());
     $user = $request->getAttribute('user');
-    // $event = new Event; 
-    // $validate = new EventValidator($body);
-    // if ($validate != true) return $validate;
-
-    // if ($body->OwnerId == NULL) {
-    //     $response->write('no ownerId');
-    //     return $response;// change to use ann's error handling
-    // }
-    // if ($user->id != $body->OwnerId){
-    //     $resonse->write('user id does not match ownerId');
-    //     return $response;// diddo
-    // }
-    // if ($body->Title == NULL || $body->Title == '') {
-    //     $response->write('no Title');
-    //     return $response; //diddo
-    // }   
-
-    // $event->Title = $body->Title;
-    // $event->OwnerId = $body->OwnerId;
-    // $event->StartTime = date("H:i", strtotime(substr($body->StartTime, 0, 8)));
-    // $event->EndTime = substr($body->EndTime, 0, 8);
-    // $event->StartDate = substr($body->StartDate, 0, 10);
-    // $event->EndDate = substr($body->EndDate, 0, 10);
-    // $event->Notes = $body->Notes;
-    // $event->Location = $body->Location;
-
     $event = $es->toServer($body);
     $event->save();
     $event->users()->attach($user->id);
@@ -182,6 +154,61 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     $response->getBody()->write(json_encode($es->toApi($event)));
     return $response;
 });
+
+//creates an event associated with a specifc group (and validates user permission)
+//user needs to be an owner or a manager to add an event for the group
+//TODO: add event relations
+$app->post('/api/event/group/{group_id}', function (Request $request, Response $response, array $args) {
+    $pv = new PermissionValidator;
+    $es = new EventSerializer;
+    $body = json_decode($request->getBody());
+    $user = $request->getAttribute('user');
+    $valid = $pv->is_admin($user->id, $group_id);
+    if($valid){
+        $event = $es->toServer($body);
+        $event->save();
+        $event->users()->attach($user->id);
+        $ids = array();
+        foreach($members as $m) array_push();
+        $event->users()->attach($body->Members);
+
+        $event->save();
+        $membersArray = $body->members;
+        $response->getBody()->write(json_encode($es->toApi($event)));
+    }
+    else{
+        $response->getBody()->write("User not part of group");
+    }
+    
+    return $response;
+}
+//modifies event with group (and validates)
+//user needs to be a manager or an owner to add an event for the group
+//TODO: add event relations
+$app->put('/api/event/group/{group_id}', function (Request $request, Response $response, array $args) {
+    $es = new EventSerializer;
+    $pv = new PermissionValidator;
+    $body = json_decode($request->getBody());
+    $user = $request->getAttributes('user');
+    $event = $es->toServer($body);
+    $valid = $pv->is_admin($user->id, $group_id);
+    if($valid){
+        $existing = Event::find($event->id);
+        $existing->title = $event->title;
+        $existing->location = $event->location;
+        $existing->notes = $event->notes;
+        
+        $existing->save();
+
+        $response->getBody()->write(json_encode($event));
+    }
+    else{
+        $response->getBody()->write("User not part of group");
+    }
+
+    
+    return $response;
+}
 
 /**
  * @api {delete} /event/:id Deletes an event

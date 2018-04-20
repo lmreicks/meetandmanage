@@ -131,7 +131,7 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
     $modify_group->description = $group->description;
 
     $modify_group->save();
-    $response->write($modify_group);
+    //$response->getBody()->write($output);
     return $response;
 
     //$response->write($output);
@@ -142,36 +142,26 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
  * @api {delete} api/group Delete
  * @apiGroup Group
  * 
- * @apiParam {User} user Current user logged in
  * @apiParam {int} group-id group id of group to remove
  * @apiDescription Deletes a group based off of user and group id. Returns removed group.
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
- *    [
- *    {
- *       "Id": 7,
- *       "Name": "Another cool group",
- *       "Members": [
- *           {
- *           "id": "6",
- *           "email": "anngould@iastate.edu",
- *           "name": "Ann Gould"
- *           }
- *       ]
- *       "Description": "only one person"
- *     }
- *    ]
+ *     "true"
  */
 $app->delete('/api/group', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());
-    $user = $request->getAttribute('user');
-    $group = $body->group;
+    $val = "false";
+    $group_serial = new GroupSerializer;
 
-    $group_serial = new GroupSerializer; 
-    $group = $group_serial->toApi($group);
-    $group->delete();
+    $group = $group_serial->toServer($body);
+    $group_del = Group::find($group->id);
+    if($group_del != NULL){
+        $group_del->delete();
+        $val = "true";
+    }
+    
 
-    $output = json_encode($global_serial->toApi($group));
+    $output = json_encode($val);
     $response->write($output);
     return $response;
 }); 

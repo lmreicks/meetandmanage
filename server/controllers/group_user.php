@@ -4,6 +4,7 @@ use Slim\Http\Response;
 use Models\Event;
 use Models\User;
 use Models\Group;
+use Logic\PermissionValidator;
 use Logic\ModelSerializers\GroupMemberSerializer;
 
 /**
@@ -70,6 +71,9 @@ $app->get('/api/group/{id}/member/{member_id}', function (Request $request, Resp
  *    ]
  */
 $app->put('/api/group/{id}/member/{member_id}', function (Request $request, Response $response, array $args) {
+    //only for owner and manager
+    //owner cannot downgrade themselves
+    //"maybe" owner could downgrade themselves to regular member if they made someone else an owner 
     $group_id = $args['id'];
     $user_id = $args['member_id'];
     $body = json_decode($request->getBody());
@@ -79,7 +83,6 @@ $app->put('/api/group/{id}/member/{member_id}', function (Request $request, Resp
     $group_users = $group->users;
     $gm_serial = new GroupMemberSerializer;
 
-    // get and return user being updated
     $response->write(json_encode($gm_serial->toApiList($group_users))); 
     return $repsonse;
 });
@@ -121,8 +124,16 @@ $app->post('/api/group/{id}/member', function (Request $request, Response $respo
  *    "true"
  */
 $app->delete('/api/group/{id}/member/{member_id}', function (Request $request, Response $response, array $args) {
+    //check if user is deleting themselves
+    //check to make sure owner cannot delete themselves
+    //check to make sure that an owner or manager is deleting someone
     $group_id = $args['id'];
     $user_id = $args['member_id'];
+    $user = $request->getAttribute('user');
+    $pv = new PermissionValidator;
+    if(($user->id == $user_id) || ){
+        //allow to delete
+    }
     $group = Group::find($group_id);
     $val = "false";
     $group_users = $group->users;

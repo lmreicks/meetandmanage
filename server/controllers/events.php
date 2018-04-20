@@ -138,77 +138,33 @@ $app->get('/api/event', function (Request $request, Response $response, array $a
  *   }
  */
 $app->post('/api/event', function (Request $request, Response $response, array $args) {
-
+    $pv = new PermissionValidator;
     $es = new EventSerializer;
     $body = json_decode($request->getBody());
     $user = $request->getAttribute('user');
     $event = $es->toServer($body);
-    $event->save();
-    $event->users()->attach($user->id);
-    $ids = array();
-    foreach($members as $m) array_push();
-    $event->users()->attach($body->Members);
+    $group_id = $event->group_id;
+    if ($group_id != NULL){
+        $valid = $pv->is_admin($user->id, $group_id);
+        if($valid){
+            $event->save();
+            $event->users()->attach($user->id);
+            $ids = array();
+            foreach($members as $m) array_push();
+            $event->users()->attach($body->Members);
 
-    $event->save();
-    $membersArray = $body->members;
-    $response->getBody()->write(json_encode($es->toApi($event)));
+            $event->save();
+            $membersArray = $body->members;
+            $response->getBody()->write(json_encode($es->toApi($event)));
+        }
+        else{
+            $response->getBody()->write(json_encode("User permission denied"));
+        }
+    }
+
+    
     return $response;
 });
-
-//creates an event associated with a specifc group (and validates user permission)
-//user needs to be an owner or a manager to add an event for the group
-//TODO: add event relations
-$app->post('/api/event/group/{group_id}', function (Request $request, Response $response, array $args) {
-    $pv = new PermissionValidator;
-    $es = new EventSerializer;
-    $body = json_decode($request->getBody());
-    $user = $request->getAttribute('user');
-    $valid = $pv->is_admin($user->id, $group_id);
-    if($valid){
-        $event = $es->toServer($body);
-        $event->save();
-        $event->users()->attach($user->id);
-        $ids = array();
-        foreach($members as $m) array_push();
-        $event->users()->attach($body->Members);
-
-        $event->save();
-        $membersArray = $body->members;
-        $response->getBody()->write(json_encode($es->toApi($event)));
-    }
-    else{
-        $response->getBody()->write("User not part of group");
-    }
-    
-    return $response;
-}
-//modifies event with group (and validates)
-//user needs to be a manager or an owner to add an event for the group
-//TODO: add event relations
-$app->put('/api/event/group/{group_id}', function (Request $request, Response $response, array $args) {
-    $es = new EventSerializer;
-    $pv = new PermissionValidator;
-    $body = json_decode($request->getBody());
-    $user = $request->getAttributes('user');
-    $event = $es->toServer($body);
-    $valid = $pv->is_admin($user->id, $group_id);
-    if($valid){
-        $existing = Event::find($event->id);
-        $existing->title = $event->title;
-        $existing->location = $event->location;
-        $existing->notes = $event->notes;
-        
-        $existing->save();
-
-        $response->getBody()->write(json_encode($event));
-    }
-    else{
-        $response->getBody()->write("User not part of group");
-    }
-
-    
-    return $response;
-}
 
 /**
  * @api {delete} /event/:id Deletes an event
@@ -313,23 +269,33 @@ $app->put('/api/event', function (Request $request, Response $response, array $a
     $es = new EventSerializer;
     $body = json_decode($request->getBody());
     $event = $es->toServer($body);
-    echo $event;
+    $user = $request->getAttributes('user');
+    $group_id = $event->group_id;
+    if ($group_id != NULL){
+        $valid = $pv->is_admin($user->id, $group_id);
+        if($valid){
+            $existing = Event::find($event->id);
+            $existing->title = $event->title;
+            $existing->location = $event->location;
+            $existing->notes = $event->notes;
+            $existing->save();
+            $response->getBody()->write(json_encode($event));
+        }
+        else{
+            $response->getBody()->write(json_encode("User permission denied"));
+        }
+    }
     // $event_id = $es->id;
     // $event = Event::find($event_id);
-    $existing = Event::find($event->id);
-    $existing->title = $event->title;
-    $existing->location = $event->location;
-    $existing->notes = $event->notes;
-    $user = $request->getAttributes('user');
+    
+
     // if ($user->id != $event->OwnerId){
     //     $response->getBody()->write("not your event to edit");
     //     return $response;
     // }
     
     
-    $existing->save();
-
-    $response->getBody()->write(json_encode($event));
+   
 
     
     return $response;

@@ -7,24 +7,42 @@ use Slim\Http\Response;
 $app->get('/api/recomended', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());
     $user = $request->getAttribute('user');
-
+    
     $Q = new Queue();
+
+    $Q->NQ(10);
+    echo $Q->DQ();
+    if ($Q->isEmpty()){
+        $response->write(json_encode("Q works ish"));
+        return $response;
+    } 
     $Q->NQ($user);
     $visitedGroups = array();
     $visitedUsers = array();
-
+    $count = 0;
     while (!$Q->isEmpty()){
         $currUser = $Q->DQ();
+        echo $currUser;
         $currGroups = $currUser->group;
         foreach($currGroups as $group){
             $groupUsers = $group->users;
-            if (in_array($group, $visitedGroups)) continue;
+            echo $group;
+            if (in_array($group, $visitedGroups)){
+                array_push($visitedGroups, $group);// add group again to cound the total times each group is found in the search
+                continue; 
+            }  // do not revisit group if already seen
+            array_push($visitedGroups, $group); // add group to visited
             foreach($groupUsers as $gu){
-                if (in_array($gu, $visitedUsers)) continue;
+                if (in_array($gu, $visitedUsers)) continue; // add all users to Q
+                array_push($visitedUsers, $gu);
                 $Q->NQ($gu);
             }
         }
     }
+    $counts = array_count_values($visitedGroups);
+    print_r($counts);
+    $response->write(json_encode($counts));
+    return $response;
 });
 
 
@@ -34,40 +52,64 @@ Class Queue {
     private $head;
 
     function __construct(){
-        $tail = new ListItem(null);
-        $head = new ListItem(null);
-        $tail->prev = $head;
-        $head->next = $tail;
+        $this->tail = new ListItem(null);
+        $this->head = new ListItem(null);
+        $this->tail->setNext(null);
+        $this->head->setPrev(null);
+        $this->head->setnext($this->tail);
+        $this->tail->setPrev($this->head);
     }
 
     function NQ($value){
-        $last = $tail->prev;
-        $new = new ListItem($value);
-        $last->next = $new;
-        $new->next = $tail;
-        $tail->prev = $new;
+        $last = $this->tail->getPrev();
+        $add = new ListItem($value);
+        $last->setNext($add);
+        $this->tail->setPrev($add);
+        $add->setPrev($last);
+        $add->setNext($this->tail);
     }
 
     function DQ(){
-        $toRemove = $head->next;
-        $newFirst = $toRemove->next;
-        $head->next = $newFirst;
-        $newFirst->prev = $head;
-        return $toRemove->val;
+        if ($this->isEmpty())
+            return;
+        $first = $this->head->getNext();
+        $newFirst = $first->getNext();
+        $this->head->setNext($newFirst);
+        $newFirst->setPrev($this->head);
     }
 
     function isEmpty(){
-        if ($head->next == $tail) return true;
+        if ($this->head->getNext() === $this->tail) return true;
         return false;
     }
 }
 
 Class ListItem {
-    public $prev;
-    public $next;
-    public $val;
+    private $prev;
+    private $next;
+    private $val;
 
     function __construct($input){
-        $val = $input;
+        $this->val = $input;
+    }
+
+    function getVal(){
+        return $this->val;
+    }
+
+    function getPrev(){
+        return $this->prev;
+    }
+
+    function setPrev($val){
+        $this->prev = $val;
+    }
+
+    function getNext(){
+        return $this->next;
+    }
+
+    function setNext($val){
+        $this->next = $val;
     }
 }

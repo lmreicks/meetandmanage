@@ -1,3 +1,6 @@
+/**
+ * Colors for events
+ */
 export const Colors: string[] = [
     '#2196F3',
     '#FFBE0B',

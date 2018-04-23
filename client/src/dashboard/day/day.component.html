@@ -1,50 +1,59 @@
-<div class="day-header" *ngIf="!loading">
-   {{day.day.display}}
-</div>
-
 <div class="day-view mr-4" *ngIf="!loading">
     <div class="day-container">
-        <div class="section">
-            <div class="section-header">
-                Events
-            </div>
-            <div class="section-body">
-                <div class="time">
-                    <div class="hour" *ngFor="let hour of hours">
-                        {{hour}}
-                        <!-- <hr class="line"/> -->
-                    </div>
-                </div>
-                
-                <div class="day" *ngIf="!loading">
-                    <div class="event" *ngFor="let eventEl of eventElements" [ngStyle]="{'margin-top': eventEl.top + 'px', 'height': eventEl.height + 'px'}">
-                        {{eventEl.event.Title}}
-                    </div>
+        <div class="col">
+            <div class="section pull-left" (click)="dp.toggle()">
+                <div class="day-header section-header"
+                    [bsConfig]="{ containerClass: 'theme-blue' }"
+                    bsDatepicker #dp="bsDatepicker"
+                    (bsValueChange)="changeDate($event)"
+                    (click)="dp.toggle()">
+                    {{day.day.display}}
                 </div>
             </div>
+            <div class="section pull-left events-section">
+                <div class="section-header">
+                    Events
+                </div>
+                <div class="section-body">
+                    <div class="events-container">
+                        <div class="time" scrollToNow>
+                            <div class="current" #timeIndicator></div>
+                            <div class="hour" *ngFor="let hour of hours">
+                                {{hour}}
+                            </div>
+                        </div>
+                        <div class="day">
+                            <div class="hour" *ngFor="let hour of hours"></div>
+                            <event-list [events]="day.events"></event-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="section">
-            <div class="section-header">
-                Todo List
+        <div class="col">
+            <div class="section">
+                <div class="section-header">
+                    Todo List
+                </div>
+                <div class="section-body">
+                    <todo-list style="width: 100%"></todo-list>
+                </div>
             </div>
-            <div class="section-body">
-                <todo-list style="width: 100%"></todo-list>
+            <div class="section">
+                <div class="section-header">
+                    Workout
+                </div>
+                <div class="section-body">
+                    <todo-list style="width: 100%"></todo-list>
+                </div>
             </div>
-        </div>
-        <div class="section">
-            <div class="section-header">
-                Workout
-            </div>
-            <div class="section-body">
-                <todo-list style="width: 100%"></todo-list>
-            </div>
-        </div>
-        <div class="section">
-            <div class="section-header">
-                Nutrition
-            </div>
-            <div class="section-body">
-                <todo-list style="width: 100%"></todo-list>
+            <div class="section">
+                <div class="section-header">
+                    Nutrition
+                </div>
+                <div class="section-body">
+                    <todo-list style="width: 100%"></todo-list>
+                </div>
             </div>
         </div>
     </div>

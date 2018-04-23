@@ -1,11 +1,18 @@
 
 export interface ApiCreateUser {
+    /**
+     * Email
+     */
     Email: string;
+    /**
+     * Name
+     */
     Name: string;
 }
 
-export interface ApiUser {
+export interface ApiUser extends ApiCreateUser {
+    /**
+     * Id of the user
+     */
     Id: number;
-    Email: string;
-    Name: string;
 }

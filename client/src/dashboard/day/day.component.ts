@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CoreCacheService } from '../../app/services/core-cache.service';
 import { DateObject, Day } from '../models';
 import {DATE_FORMAT} from '../../constants.module';
@@ -10,18 +10,19 @@ import { ApiTodo } from '../../app/models/todo';
 @Component({
     selector: 'mnm-day',
     templateUrl: 'day.component.html',
-    styleUrls: ['day.component.less']
+    styleUrls: ['day.component.less', '../shared/shared.less']
 })
 
+/**
+ * daily view that contains information about events, todos, workouts, and groups.
+ */
 export class DayComponent {
+    @ViewChild('timeIndicator') timeInticator: ElementRef;
     public current: moment.Moment;
     public map: Map<string, ApiEvent[]>;
     public day: Day;
     public hours: string[] = [];
-    public eventElements: EventElement[] = [];
     public loading: boolean = true;
-    public Granularity = Granularity;
-    public state: Granularity = Granularity.None;
 
     private diff = 0;
     private height = 0;
@@ -29,6 +30,9 @@ export class DayComponent {
     constructor(private coreCache: CoreCacheService,
                 private dashboardService: DashboardService) {}
 
+    /**
+     * On init of this component, we want to get the date map and subscribe to the current date
+     */
     ngOnInit(): void {
         this.loading = true;
         this.setHours();
@@ -43,8 +47,18 @@ export class DayComponent {
         });
     }
 
+    ngAfterViewChecked(): void {
+        if (this.timeInticator) {
+            let offset = moment.duration(moment().diff(moment().startOf('day'))).as('hours');
+            this.timeInticator.nativeElement.style.top = offset * 50 - 10 + "px";
+        }
+    }
+
+    /**
+     * parses all the events for a given day and puts them in the proper format to be displayed
+     * @param curr a given day moment
+     */
     public parseDay(curr: moment.Moment): void {
-        this.eventElements = [];
         this.diff = 0;
         this.height = 0;
         let today = moment().format(DATE_FORMAT);
@@ -53,39 +67,22 @@ export class DayComponent {
         let dateValue: DateObject = {
             current: curr.format(DATE_FORMAT) === today,
             display: curr.format('dddd, MMMM D'),
-            utcDateValue: curr.utc().valueOf()
+            moment: curr.utc()
         };
 
         this.day = {
             day: dateValue,
             events: this.map.has(date) ? this.map.get(date) : []
         };
-
-        this.day.events.forEach(event => {
-            this.eventElements.push({
-                top: this.getStart(event),
-                height: this.getDuration(event),
-                event: event
-            });
-        });
     }
 
-    public getDuration(v) {
-        let end = moment(v.EndDate + " " + v.EndTime);
-
-        let start = moment(v.StartDate + " " + v.StartTime);
-        if (moment.duration(end.diff(start)).asDays() >= 1) {
-            end = moment(v.StartDate + " " + "24:00:00");
-        }
-
-        return this.height = moment.duration(end.clone().diff(start)).asHours() * 100;
+    public changeDate(date: Date): void {
+        this.dashboardService.changeDate(moment(date));
     }
 
-    public getStart(v) {
-        let start = moment(v.StartDate + " " + v.StartTime);
-        return this.diff = ((start.hours() + (start.minutes() / 60)) * 100) - this.diff - this.height;
-    }
-
+    /**
+     * creates an array containing the ours in a day in order to display them.
+     */
     private setHours(): void {
         this.hours.push(12 + 'am');
         for (let i = 1; i < 24; i++) {
@@ -97,19 +94,5 @@ export class DayComponent {
                 this.hours.push(i - 12 + 'pm');
             }
         }
-
-        console.log(this.hours);
     }
-}
-
-export interface EventElement {
-    top: number;
-    height: number;
-    event: ApiEvent;
-}
-
-export enum Granularity {
-    None,
-    Workout,
-    Budget
 }

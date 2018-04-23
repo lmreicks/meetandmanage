@@ -1,4 +1,4 @@
-<div class="month mt-4" *ngIf="!loading">
+<div class="month" *ngIf="!loading">
     <ng-template #popContent>
        <mnm-event-popover [event]="event"></mnm-event-popover>
     </ng-template>
@@ -25,7 +25,7 @@
                     #p="ngbPopover" triggers="manual"
                 (click)="togglePopover(p, event)">
                     <span class="event-title">{{event.Title}}</span>
-                    <span class="time">{{ friendlyTime(event.StartTime) }}</span>
+                    <span class="time">{{ friendlyTime(event.Start) }}</span>
                 </a>
             </span>
         </div>

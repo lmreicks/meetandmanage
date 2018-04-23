@@ -6,6 +6,8 @@ use Models\Group;
 use Logic\ModelSerializers\GroupSerializer;
 use Logic\ModelSerializers\GroupMemberSerializer;
 use Logic\PermissionValidator;
+use Logic\Errors\ErrorResponse;
+use Logic\Errors\StatusCodes;
 /**
  * @api {post} api/group Create
  * @apiGroup Group
@@ -120,6 +122,7 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
     $user = $request->getAttribute('user');
     $group_serial = new GroupSerializer;
     $group = $group_serial->toServer($body);
+    $er = new ErrorResponse;
 
     $modify_group = Group::find($group->id);
     //only returns something if user is owner
@@ -132,7 +135,7 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
         $modify_group->save();
     }
     else{
-        $response->write(json_encode("Invalid permission"));
+        $response = $er($response, StatusCodes::HTTP_BAD_REQUEST, "Insufficient permissions");
     }
     //$response->getBody()->write($output);
     return $response;
@@ -169,7 +172,7 @@ $app->delete('/api/group', function (Request $request, Response $response, array
     }
     else{
         //invalid permission...
-        $output = json_encode("Invalid permission");
+        $response = $er($response, StatusCodes::HTTP_BAD_REQUEST, "Insufficient permissions");
     }
     
     

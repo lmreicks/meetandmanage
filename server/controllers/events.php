@@ -370,8 +370,8 @@ class EventValidator {
     public function __invoke($body, $response) {
 
         $er = new ErrorResponse;
-        if ($body->start_date == NULL) return $er($response, HTTP_BAD_REQUEST, EVENT_START_DATE_NULL);
-        if ($body->end_date == NULL) return $er($response, HTTP_BAD_REQUEST, EVENT_END_DATE_NULL);
+        if ($body->start_date == NULL) return $er($response, StatusCodes::HTTP_BAD_REQUEST, "Event start date null");
+        if ($body->end_date == NULL) return $er($response, StatusCodes::HTTP_BAD_REQUEST, "Event end date null");
 
         $title = $body->Title;
         

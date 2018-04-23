@@ -6,7 +6,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Logic\ModelSerializers\GroupSerializer;
 
-$app->get('/api/recomended', function (Request $request, Response $response, array $args) {
+$app->get('/api/recommended', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());
     $user = $request->getAttribute('user');
     

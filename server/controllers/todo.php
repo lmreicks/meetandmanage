@@ -74,7 +74,6 @@ $app->post('/api/todo', function (Request $request, Response $response, array $a
     }
     $task->user_id = $id;
     $task->save();
-    $task->save();
     $response->write(json_encode($task));  
     return $response; 
 });
@@ -155,6 +154,8 @@ $app->delete('/api/todo', function (Request $request, Response $response, array 
     $user = $request->getAttribute('user');
     $todo = $ts->toServer($body);
     $toDelete = Todo::find($todo->id);
+    if ($toDelete == null)
+        return;
     $toDelete->delete();
     
 }); 

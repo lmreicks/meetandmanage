@@ -17,8 +17,12 @@ class User extends \Illuminate\Database\Eloquent\Model {
         return $this->hasMany('Models\Todo');
     }
 
-    public function group(){
+    public function groups() {
         return $this->belongsToMany('Models\Group');
+    }
+
+    public function workouts(){
+        return $this->hasMany('Models\Workout');
     }
 }
 

@@ -9,6 +9,7 @@ use Logic\ModelSerializers\GroupSerializer;
 use Logic\ModelSerializers\UserSerializer;
 use Logic\ModelSerializers\EventSerializer;
 use Logic\ModelSerializers\TodoSerializer;
+use Logic\ModelSerializers\WorkoutSerializer;
 
 /**
 * returns the serialized payload which includes all of a users events and groups
@@ -21,33 +22,18 @@ $app->get('/api/payload', function (Request $request, Response $response, array 
     $es = new EventSerializer;
     $gs = new GroupSerializer;
     $ts = new TodoSerializer;
+    $ws = new WorkoutSerializer;
 
     $user = $request->getAttribute('user');
     $events = $user->events;
-    //echo $events;
-    $outGroups = $user->group;
-    $g = $outGroups;
     $todos = $user->todos;
-    if ($outGroups != NULL && count($outGroups) != 0 && $outGroups != []){
-        
-        $outGroups = $gs->toApiList($g);
-        // echo $outGroups;
-        if (count($outGroups) > 1){
-            foreach ($outGroups as $group) {
-                //$group->Events = $group->events;
-            }
-        } 
-        
-        $payload = new payload($es->toApiList($events), $outGroups, $ts->toApiList($todos));//need to be serialized
+    $workouts = $user->workouts;
 
-        $response->getBody()->write(json_encode($payload));
-        return $response;
-    }
-    
     $out = array(
         'Events' => $es->toApiList($events),
-        'Groups' => array(),
-        'Todos' => $ts->toApiList($todos)
+        'Groups' => $gs->toApiList($user->groups),
+        'Todos' => $ts->toApiList($todos),
+        'Workouts' => $ws->toApiList($workouts)
     );
     $response->getBody()->write(json_encode($out));
     return $response;
@@ -55,12 +41,13 @@ $app->get('/api/payload', function (Request $request, Response $response, array 
     
 });
 
-class payload{
+class payload {
 
     private $userEvents;
     private $userGroups; 
     private $userGroupEvents;
     private $todo;
+
     public function __construct($events, $groups, $todos){
         $this->userEvents = $events;
         $this->userGroups = $groups;

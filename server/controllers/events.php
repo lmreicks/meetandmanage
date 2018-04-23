@@ -7,7 +7,11 @@ use Models\User;
 use Models\Group;
 use Models\EventLookup;
 use Logic\ModelSerializers\EventSerializer;
+use Logic\ModelSerializers\UserSerializer;
+use Logic\Errors\ErrorResponse;
+use Logic\Errors\StatusCodes;
 use Logic\PermissionValidator;
+
 
 /**
  * @api {get} /event Get all events for current user
@@ -138,11 +142,37 @@ $app->get('/api/event', function (Request $request, Response $response, array $a
  *   }
  */
 $app->post('/api/event', function (Request $request, Response $response, array $args) {
+<<<<<<< server/controllers/events.php
+    
+=======
     $pv = new PermissionValidator;
+>>>>>>> server/controllers/events.php
     $es = new EventSerializer;
+    $us = new UserSerializer;
     $body = json_decode($request->getBody());
     $user = $request->getAttribute('user');
     $event = $es->toServer($body);
+<<<<<<< server/controllers/events.php
+
+    $ev = new EventValidator;
+    $result = $ev($event, $response);
+    if ($result->getStatusCode() >= 400){
+        $response = $result;
+        return $response;
+    }
+    $event->save();
+    $event->users()->attach($user->id);
+    $mems = $body->Members;
+    if ($mems == null || count($mems) == 0) goto end;
+    $members = $us->toServerList($mems);
+    $ids = array();
+    foreach($members as $m) array_push($ids, $m->id);
+    $event->users()->attach($ids);
+    $event->save();
+
+    end:
+    $response->getBody()->write(json_encode($es->toApi($event)));
+=======
     $group_id = $event->group_id;
     if ($group_id != NULL){
         $valid = $pv->is_admin($user->id, $group_id);
@@ -163,7 +193,9 @@ $app->post('/api/event', function (Request $request, Response $response, array $
     }
 
     
+>>>>>>> server/controllers/events.php
     return $response;
+    
 });
 
 /**
@@ -173,22 +205,24 @@ $app->post('/api/event', function (Request $request, Response $response, array $
  */
 $app->delete('/api/event/{id}', function (Request $request, Response $response, array $args){
 
+    $re = new ErrorResponse;
     $es = new EventSerializer;
     $user = $request->getAttribute('user');
     $eventID = $args['id'];
     $event = Event::where('id','=',$eventID)->first();
     if ($event == NULL) {
-        $response->write("Event not found");
+        $response = $re($response, StatusCodes::HTTP_BAD_REQUEST, "Event not found");
         return $response;
     }
-    $ownerId = $event->ownerId;
+    
+    $ownerId = $event->owner_id;
     $userId = $user->id;
-    if ($ownerId === $id){
+    if ($ownerId == $userId){
         $event = Event::where('id','=',$eventID)->delete();
-        $response->write(json_encode($es->toApi($event)));
+        $response->write(json_encode(true));
         return $response;
     }
-    // $response->write("Not your event to delete");
+    $response = $re($response, StatusCodes::HTTP_BAD_REQUEST, "Not your event to delete");
     return $response; //switch to error for not owner of event
 });
 
@@ -266,9 +300,29 @@ $app->delete('/api/event/{id}', function (Request $request, Response $response, 
  *   }
  */
 $app->put('/api/event', function (Request $request, Response $response, array $args) {
+    $re = new ErrorResponse;
     $es = new EventSerializer;
     $body = json_decode($request->getBody());
     $event = $es->toServer($body);
+<<<<<<< server/controllers/events.php
+    $ev = new EventValidator;
+    $result = $ev($event, $response);
+    if ($result->getStatusCode() >= 400){
+        $response = $result;
+        return $response;
+    }
+    // $event_id = $es->id;
+    // $event = Event::find($event_id);
+    $existing = Event::find($event->id);
+    $existing->title = $event->title;
+    $existing->location = $event->location;
+    $existing->notes = $event->notes;
+    $user = $request->getAttributes('user');
+    if ($user->id != $event->OwnerId){
+        $response = $re($response, StatusCodes::HTTP_BAD_REQUEST, "Not your event to edit");
+        return $response;
+    }
+=======
     $user = $request->getAttributes('user');
     $group_id = $event->group_id;
     if ($group_id != NULL){
@@ -293,6 +347,7 @@ $app->put('/api/event', function (Request $request, Response $response, array $a
     //     $response->getBody()->write("not your event to edit");
     //     return $response;
     // }
+>>>>>>> server/controllers/events.php
     
     
    
@@ -306,28 +361,30 @@ $app->put('/api/event', function (Request $request, Response $response, array $a
 * takes in an event and validates that there are no errors in the model itself
 */
 class EventValidator {
-    public function __invoke($body){
-        if ($body->StartDate == NULL) return false;
-        if ($body->EndDate == NULL) return false;
+    public function __invoke($body, $response) {
 
+        $er = new ErrorResponse;
+        if ($body->start_date == NULL) return $er($response, StatusCodes::HTTP_BAD_REQUEST, "Event start date null");
+        if ($body->end_date == NULL) return $er($response, StatusCodes::HTTP_BAD_REQUEST, "Event end date null");
 
-        
         $title = $body->Title;
         
         $location = $body->Location;
-        $StartDate = explode('-',$body->StartDate);
-        $endDate = explode('-',$body->EndDate);
-        $startTime = explode(':', $body->StartTime);
-        $endTime = explode(':', $body->EndTime);
-        $eTime = $endTime[0] * 3600 + $endTime[1] * 60 + $endTime[2];
-        $sTime = $startTime[0] * 3600 + $startTime[1] * 60 + $startTime[2];
-        if ($endDate[2] < $startDate[2]) return false;
-        if ($endDate[2] == $startDate[2] && $endDate[0] < $startDate[0]) return false;
-        if ($endDate[2] == $startDate[2] && $endDate[0] == $startDate[0] && $endDate[1] < $startDate[1]) return false;
-        if ($endDate[2] == $startDate[2] && $endDate[0] == $startDate[0] && $endDate[1] == $startDate[1]) return false;
-        if ($endDate[2] == $startDate[2] && $endDate[0] == $startDate[0] && $endDate[1] == $startDate[1] && $eTime < $sTime) return false;
-        if ($title == NULL) return false;
+        $startDate = $body->start_date;
+        $endDate = $body->end_date;
         
-        return true;
+        $sDateArr = date_parse($startDate);
+        $eDateArr = date_parse($endDate);
+       
+        if ($sDateArr['year'] > $eDateArr['year'] ||
+            $sDateArr['year'] == $eDateArr['year'] && $sDateArr['month'] > $eDateArr['month'] ||
+            $sDateArr['year'] == $eDateArr['year'] && $sDateArr['month'] == $eDateArr['month'] && $sDateArr['day'] > $eDateArr['day'] ||
+            $sDateArr['year'] == $eDateArr['year'] && $sDateArr['month'] == $eDateArr['month'] && $sDateArr['day'] == $eDateArr['day'] && $sDateArr['hour'] > $eDateArr['hour'] ||
+            $sDateArr['year'] == $eDateArr['year'] && $sDateArr['month'] == $eDateArr['month'] && $sDateArr['day'] == $eDateArr['day'] && $sDateArr['hour'] == $eDateArr['hour'] && $sDateArr['minute'] > $eDateArr['minute'] ||
+            $sDateArr['year'] == $eDateArr['year'] && $sDateArr['month'] == $eDateArr['month'] && $sDateArr['day'] == $eDateArr['day'] && $sDateArr['hour'] == $eDateArr['hour'] && $sDateArr['minute'] == $eDateArr['minute'] && $sDateArr['second'] > $eDateArr['second']
+        ){
+            return $er($response, StatusCodes::HTTP_BAD_REQUEST, "Start date after end date"); 
+        }      
+        return $response;
     }
 }

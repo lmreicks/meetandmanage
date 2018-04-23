@@ -4,7 +4,7 @@ import { MonthComponent } from "./month/month.component";
 import { DashboardComponent } from "./dashboard.component";
 import { DayComponent } from "./day/day.component";
 
-export const dashboardRoutes: Routes = [
+export const DASHBOARD_ROUTES: Routes = [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: DashboardComponent,
         children: [

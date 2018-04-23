@@ -6,7 +6,7 @@ import { API_ROOT } from '../../constants.module';
 import * as moment from 'moment';
 import { TIME_FORMAT, DATE_FORMAT } from '../../constants.module';
 import { SessionService } from '../services/session.service';
-import { CoreCacheService } from '../services';
+import { CoreCacheService } from '../services/core-cache.service';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Colors } from '../models/colors';
@@ -23,6 +23,11 @@ export class EventService {
                 private router: Router,
                 private fb: FormBuilder) {}
 
+    /**
+     * Attempts to create an event in the server
+     * If successful, adds to event maps
+     * @returns { Promise<ApiEvent> } Newly created event
+     */
     CreateEvent(event: ApiCreateEvent): Promise<ApiEvent> {
         return this.http.post(this.url, event)
             .map(res => {
@@ -30,30 +35,29 @@ export class EventService {
 
                 this.coreCache.AddEvent(apiEvent);
                 return apiEvent;
+            }, err => {
+                return {};
             })
             .toPromise();
     }
 
+    /**
+     * Builds a new event form from either a new or updatable event
+     * @param {ApiCreateEvent | ApiEvent} event 
+     * @param {FormGroup} form 
+     */
     BuildEventForm(event: ApiCreateEvent | ApiEvent, form: FormGroup): FormGroup {
         form = this.fb.group({
             Title: [
                 event.Title, Validators.required
             ],
             OwnerId: this.sessionService.currentUserId,
-            StartDate: [
-                moment(event.StartDate, DATE_FORMAT).toDate(),
+            Start: [
+                moment(event.Start, DATE_FORMAT).toDate(),
                 Validators.required
             ],
-            EndDate: [
-                moment(event.EndDate, DATE_FORMAT).toDate(),
-                Validators.required
-            ],
-            StartTime: [
-                moment(event.StartTime, TIME_FORMAT).toDate(),
-                Validators.required
-            ],
-            EndTime: [
-                moment(event.EndTime, TIME_FORMAT).toDate(),
+            End: [
+                moment(event.End, DATE_FORMAT).toDate(),
                 Validators.required
             ],
             AllDay: false,
@@ -83,8 +87,8 @@ export class EventService {
         });
 
         form.controls.AllDay.valueChanges.subscribe(value => {
-            let startOfDay = this._setTime(moment().startOf('day').format(TIME_FORMAT));
-            let endOfDay = this._setTime(moment().endOf('day').format(TIME_FORMAT));
+            let startOfDay = moment(form.controls.StartTime.value, TIME_FORMAT).startOf('day');
+            let endOfDay = moment(form.controls.EndTime.value, TIME_FORMAT).endOf('day');
 
             form.controls.StartDate.setValue(startOfDay);
             form.controls.EndDate.setValue(endOfDay);
@@ -96,14 +100,10 @@ export class EventService {
         return form;
     }
 
-    private _setTime(time: string): { hour: number, minute: number } {
-        let tempTime = moment(time, TIME_FORMAT);
-        return {
-            hour: tempTime.hours(),
-            minute: tempTime.minutes()
-        };
-    }
-
+    /**
+     * Sets the group form control on the event
+     * @param {number} groupId 
+     */
     private _setGroup(groupId?: number): FormGroup {
         let g = this.fb.group({
             Id: null,
@@ -119,6 +119,10 @@ export class EventService {
         return g;
     }
 
+    /**
+     * Validates Start and End date
+     * @param {FormGroup} form 
+     */
     private _validateDate(form: FormGroup): ValidatorFn {
         let startDate = form.controls.StartDate;
         let endDate = form.controls.EndDate;
@@ -136,6 +140,10 @@ export class EventService {
         };
     }
 
+    /**
+     * Gets an event either from the server or core cache by id
+     * @param {number} id 
+     */
     GetEventById(id: number): Promise<ApiEvent> {
         if (this.events) {
             let event = this.events.get(id);

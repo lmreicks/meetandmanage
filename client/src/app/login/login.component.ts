@@ -10,6 +10,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 
 export class LoginComponent {
+    /**
+     * Login form { email: string, password: string }
+     */
     public loginForm: FormGroup;
 
     constructor(public router: Router, private authService: AuthService, private fb: FormBuilder) {
@@ -19,6 +22,12 @@ export class LoginComponent {
         });
     }
 
+    /**
+     * Attempts to validate credentials and log a user in
+     * On success you should be navigated to dashboard
+     * @param { { email: string, password: string } } userInfo 
+     * @param {boolean} valid 
+     */
     Login(userInfo: { email: string, password: string }, valid: boolean): void {
         console.log(userInfo, valid);
         if (valid) {

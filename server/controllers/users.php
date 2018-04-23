@@ -8,15 +8,17 @@ use Logic\ModelSerializers\UserSerializer;
 use Logic\Errors\ErrorResponse;
 use Logic\Errors\StatusCodes;
 
-// /**
-// * will return the user associated with the given id
-// */
-// $app->get('/api/user/{id}', function (Request $request, Response $response, array $args) {
-//     $response->getBody()->write("get user");
-//     return $response;
-// });
+/**
+ * @apiGroup User
+* will return the user associated with the given id
+*/
+$app->get('/api/user/{id}', function (Request $request, Response $response, array $args) {
+    $response->getBody()->write("get user");
+    return $response;
+});
 
 /**
+ * @apiGroup User
 * will return all users
 */
 $app->get('/api/user', function (Request $request, Response $response, array $args) {
@@ -31,7 +33,9 @@ $app->get('/api/user', function (Request $request, Response $response, array $ar
 });
  
 
-/** takes in 'email', 'password', and 'name' in $body
+/** 
+ * @apiGroup User
+ * takes in 'email', 'password', and 'name' in $body
 * returns error if any fields in $body are null
 * return auth token if user is successfully made
 */

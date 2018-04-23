@@ -4,11 +4,11 @@ import { NgbModule, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DlDateTimePickerDateModule } from 'angular-bootstrap-datetimepicker';
 import { HttpModule, Http, XHRBackend, RequestOptions } from '@angular/http';
-import { appRoutes } from './app.routing';
+import { APP_ROUTES } from './app.routing';
 import { TimepickerModule, ModalModule, PopoverModule, CollapseModule } from 'ngx-bootstrap';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
-import { httpFactory } from './services';
+import { httpFactory } from './services/interceptor';
 
 import { AppComponent } from './app.component';
 import { CoreCacheService } from './services/core-cache.service';
@@ -21,9 +21,7 @@ import { EditEventComponent } from './event/edit-event/edit-event.component';
 import { EventService } from './event/event.service';
 import { SessionService } from './services/session.service';
 import { NgbDateNativeAdapter } from './shared/datepicker-adapter.component';
-import { DropdownModule } from './shared/dropdown/dropdown.module';
-import { ComboBoxComponent } from './shared/combo-box/combo-box.component';
-import { SearchFilterPipe } from './shared/combo-box/search.pipe';
+import { SearchFilterPipe } from './shared/search.pipe';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
 import { AgmCoreModule } from '@agm/core';
 import { UserService } from './user/user.service';
@@ -38,7 +36,6 @@ import { GroupSelectForm } from './group/group-select-form/group-select-form.com
     AppComponent,
     LoginComponent,
     EditEventComponent,
-    ComboBoxComponent,
     SearchFilterPipe,
     NotFoundComponent,
     LocationInput,
@@ -57,8 +54,7 @@ import { GroupSelectForm } from './group/group-select-form/group-select-form.com
       apiKey: "AIzaSyDUJitlzdDW3SpdwzBzDW5YnTS_I-HeMCs",
       libraries: ["places"]
     }),
-    DropdownModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(APP_ROUTES),
     DashboardModule,
     BrowserModule,
     FormsModule,

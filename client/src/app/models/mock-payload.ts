@@ -5,128 +5,62 @@ import * as moment from 'moment';
 import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import { ApiUser } from './user';
 import { ApiTodo } from './todo';
+import { Colors } from './colors';
 
-export const MockEvents: ApiEvent[] = [
-    {
-        Id: 1,
-        Title: 'Doctors Appointment',
-        Location: '1109 South 2nd Street, Ames, IA 50010',
-        OwnerId: 3,
-        StartDate: moment().format(DATE_FORMAT),
-        EndDate: moment().format(DATE_FORMAT),
-        StartTime: '10:30:00',
-        EndTime: '11:30:00',
-        Notes: 'Bring insurance card',
-        Members: []
-    },
-    {
-        Id: 2,
-        Title: '309 Meeting',
-        Location: 'TLA',
-        OwnerId: 3,
-        StartDate: moment().format(DATE_FORMAT),
-        EndDate: moment().format(DATE_FORMAT),
-        StartTime: '15:00:00',
-        EndTime: '16:00:00',
-        Color: '#9C0D38',
-        Members: []
-    },
-    {
-        Id: 3,
-        Title: '230 Class',
-        Location: 'Carver 0001',
-        OwnerId: 3,
-        StartDate: moment().subtract(7, 'days').format(DATE_FORMAT),
-        EndDate: moment().subtract(7, 'days').format(DATE_FORMAT),
-        StartTime: '12:00:00',
-        EndTime: '13:00:00',
-        Color: '#CE5374',
-        Members: []
-    },
-    {
-        Id: 4,
-        Title: '230 Class',
-        Location: 'Carver 0001',
-        OwnerId: 3,
-        StartDate: moment().subtract(3, 'days').format(DATE_FORMAT),
-        EndDate: moment().subtract(3, 'days').format(DATE_FORMAT),
-        StartTime: '12:00:00',
-        EndTime: '13:00:00',
-        Color: '#DBBBF5',
-        Members: []
-    },
-    {
-        Id: 5,
-        Title: '230 Class',
-        Location: 'Carver 0001',
-        OwnerId: 3,
-        StartDate: moment().add(3, 'days').format(DATE_FORMAT),
-        EndDate: moment().add(3, 'days').format(DATE_FORMAT),
-        StartTime: '12:00:00',
-        EndTime: '13:00:00',
-        Color: '#DBBBF5',
-        Members: []
-    },
-    {
-        Id: 6,
-        Title: '230 Class',
-        Location: 'Carver 0001',
-        OwnerId: 3,
-        StartDate: moment().add(6, 'days').format(DATE_FORMAT),
-        EndDate: moment().add(6, 'days').format(DATE_FORMAT),
-        StartTime: '12:00:00',
-        EndTime: '13:00:00',
-        Color: "#731DD8",
-        Members: []
-    },
-    {
-        Id: 7,
-        Title: 'Digital Women Meeting',
-        Location: 'Coover 3043',
-        OwnerId: 3,
-        StartDate: moment().add(9, 'days').format(DATE_FORMAT),
-        EndDate: moment().add(9, 'days').format(DATE_FORMAT),
-        StartTime: '15:00:00',
-        EndTime: '16:00:00',
-        Color: "#577399",
-        Members: []
-    },
-    {
-        Id: 8,
-        Title: 'IEEE Meeting',
-        Location: 'Coover 2001',
-        OwnerId: 3,
-        StartDate: moment().add(9, 'days').format(DATE_FORMAT),
-        EndDate: moment().add(9, 'days').format(DATE_FORMAT),
-        StartTime: '10:00:00',
-        EndTime: '11:00:00',
-        Color: '#006992',
-        Members: []
-    },
-    {
-        Id: 9,
-        Title: 'Spring Break',
-        Location: 'Home',
-        OwnerId: 3,
-        StartDate: moment().add(14, 'days').format(DATE_FORMAT),
-        EndDate: moment().add(14, 'days').format(DATE_FORMAT),
-        StartTime: '01:00:00',
-        EndTime: '23:00:00',
-        Color: '#4286f4',
-        Members: []
-    },
-    {
-        Id: 10,
-        Title: 'Work',
-        Location: 'Airport Road',
-        OwnerId: 3,
-        StartDate: moment().add(20, 'days').format(DATE_FORMAT),
-        EndDate: moment().add(20, 'days').format(DATE_FORMAT),
-        StartTime: '10:00:00',
-        EndTime: '13:00:00',
-        Members: []
-    }
+const locations: string[] = [
+    '1109 South 2nd Street, Ames, IA 50010', 'Carver 0001',
+    'Work', 'Coover 3043', 'Airport Road', 'Home'
 ];
+const titles: string[] = [
+    'Doctors Appointment', '230 Class', '309 Meeting', 'Work', 'Digital Women Meeting',
+    'IEEE Meeting'
+];
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function setStartAndEnd(event): { start: string, end: string } {
+    let s = moment().clone();
+    s.add(getRandomInt(-10, 10), 'days');
+    s.set('hours', getRandomInt(0, 18));
+    s.set('minutes', getRandomInt(0, 59));
+
+    let e = s.clone();
+    e.add(getRandomInt(1, 3), 'hours');
+    e.add(getRandomInt(0, 59), 'minutes');
+
+    event.Start = s.toISOString();
+    event.End = e.toISOString();
+
+    return { start: event.Start, end: event.End };
+}
+
+export const MockEvents: ApiEvent[] = [];
+
+export function generateEvents(): ApiEvent[] {
+    for (let i = 0; i < 20; i++) {
+        let event: ApiEvent = {
+            Id: 1,
+            Title: titles[getRandomInt(0, titles.length)],
+            Location: locations[getRandomInt(0, locations.length)],
+            OwnerId: 3,
+            Start: moment().toISOString(),
+            End: moment().toISOString(),
+            Members: []
+        };
+
+        let sande = setStartAndEnd(event);
+        event.Start = sande.start;
+        event.End = sande.end;
+
+        MockEvents.push(event);
+    }
+    return MockEvents;
+}
+
 
 export const MockUser: ApiUser = {
     Id: 3,

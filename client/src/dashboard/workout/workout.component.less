@@ -39,17 +39,30 @@
 .view {
     display: flex;
     align-items: center;
-    height: 40px;
+    height: 80px;
 }
 
 .workout-list {
 	margin: 0;
-	padding: 0;
-    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
     
-    li {
-        position: relative;
-        font-size: 18px;
+    .workout {
+        display: flex;
+        flex-direction: column;
+        border-right: 2px solid @light-blue;
+
+        .name {
+            font-size: 12pt;
+            display: flex;
+            align-items: center;
+        }
+
+        .description {
+            padding-left: 10%;
+            padding-right: 5%;
+        }
 
         &:hover {
             .destroy {
@@ -59,27 +72,6 @@
 
         &:last-child {
             border-bottom: none;
-        }
-
-        .toggle {
-            border: none; /* Mobile Safari */
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        span {
-            word-break: break-all;
-            transition: color 0.4s;
-        }
-
-        &.completed {
-            .title {
-                color: rgb(117, 117, 117);
-            }
-
-            .done {
-                color: #00C851;
-            }
         }
 
         .destroy {

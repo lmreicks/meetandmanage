@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { DashboardService } from '../dashboard.service';
 import * as moment from 'moment';
 import { WorkoutListService } from './workout.service';
 import { ApiWorkout, Workout } from '../../app/models/workout';
+import { FormBuilder, FormArray, FormGroup, Validators, NgForm } from '@angular/forms';
 
 @Component({
     selector: 'workout-list',
@@ -24,15 +25,17 @@ export class WorkoutListComponent {
                     this.dashboardService.current.subscribe(date => {
                         this.date = date;
                         this.newWorkout = Workout(date.toDate());
+                        console.log(this.newWorkout);
                     });
                 }
 
     /**
      * allows the user to add a workout to their list
      */
-    addWorkout(): void {
+    addWorkout(form: NgForm): void {
         this.workouts.push(this.newWorkout);
         this.workoutService.addWorkout(this.newWorkout);
+        form.form.markAsPristine();
         this.newWorkout = Workout(this.date.toDate());
     }
 

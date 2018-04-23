@@ -1,22 +1,40 @@
 <div class="workout-list-container">
-    <div class="new-workout-container">
-        <input class="new-workout draw meet" placeholder="Add an Exercise" autofocus="" [(ngModel)]="newWorkout.Title" (keyup.enter)="addWorkout()">
+    <form class="new-workout-container" #form="ngForm">
+        <input class="new-workout draw meet" placeholder="Add an Exercise" [(ngModel)]="newWorkout.Name" #name="ngModel" name="name">
+        <div *ngIf="name.dirty">
+        <div class="form-group">
+            <label class="col-sm-3 col-form-label" for="Sets">Sets:</label>
+            <div class="col-sm-9">
+                <input id="Sets" [(ngModel)]="newWorkout.Sets" class="form-control" name="Sets" #sets required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 col-form-label" for="Reps">Reps:</label>
+            <div class="col-sm-9">
+                <input id="Reps" [(ngModel)]="newWorkout.Reps" class="form-control" name="Reps" #reps required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 col-form-label" for="Weight">Weight (lbs.):</label>
+            <div class="col-sm-9">
+                <input id="Weight" [(ngModel)]="newWorkout.Weight" class="form-control" name="Weight" #weight required>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="offset-3 col-sm-9">
+                <button class="btn btn-success pull-right" (click)="addWorkout(form)">Add</button>
+            </div>
+        </div>
     </div>
+    </form>
 
-    <div class="main" *ngIf="workouts.length > 0">
-        <ul class="workout-list">
-            <li *ngFor="let workout of workouts" [class.completed]="workout.Done">
-                <label class="view">
-                    <input class="toggle"
-                        type="checkbox"
-                        [(ngModel)]="workout.Done"
-                        [checked]="workout.Done">
-                    <span class="not-done" *ngIf="!workout.Done"><i class="far fa-circle"></i></span>
-                    <span class="done" *ngIf="workout.Done"><i class="far fa-check-circle"></i></span>
-                    <span class="mx-2 title">{{workout.Title}}</span>
-                    <a class="destroy" (click)="removeWorkout(workout)"></a>
-                </label>
-            </li>
-        </ul>
+    <div class="workout-list" *ngIf="workouts.length > 0">
+        <div *ngFor="let workout of workouts" [class.completed]="workout.Done" class="workout">
+            <div class="name">{{workout.Name}} <a class="destroy" (click)="removeWorkout(workout)"></a></div>
+            <div class="description">-Sets: {{workout.Sets}}</div>
+            <div class="description">-Reps: {{workout.Reps}}</div>
+            <div class="description">-Weight: {{workout.Weight}} lbs.</div>
+            
+        </div>
     </div>
 </div>

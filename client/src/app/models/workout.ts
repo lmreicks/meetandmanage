@@ -4,28 +4,33 @@ export interface ApiWorkout {
      */
     Id?: number;
     /**
-     * Title of workout
+     * Name of workout
      */
-    Title: string;
+    Name: string;
     /**
-     * Description
+     * Amount of sets performed
      */
-    Description?: string;
+    Sets: number;
     /**
-     * Workouts are only displayed on a certain day
+     * Date of workout
      */
     Date: Date;
     /**
-     * Whether or not this workout is done
+     * Amount of reps performed
      */
-    Done: boolean;
+    Reps: number;
+    /**
+     * Amount of weight lifted
+     */
+    Weight: number;
 }
 
 export function Workout(date: Date): ApiWorkout {
     return {
-        Title: "",
-        Description: "",
-        Done: false,
+        Name: "",
+        Sets: 0,
+        Reps: 0,
+        Weight: 0,
         Date: date
     };
 }

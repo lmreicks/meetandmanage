@@ -36,7 +36,7 @@
                     Todo List
                 </div>
                 <div class="section-body">
-                    <todo-list style="width: 100%"></todo-list>
+                    <todo-list [todos]="day.todos" style="width: 100%"></todo-list>
                 </div>
             </div>
             <div class="section">
@@ -44,7 +44,7 @@
                     Workout
                 </div>
                 <div class="section-body">
-                    <workout-list style="width: 100%"></workout-list>
+                    <workout-list [workouts]="day.workouts" style="width: 100%"></workout-list>
                 </div>
             </div>
             <div class="section">

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Input } from '@angular/core';
 import { DashboardService } from '../dashboard.service';
 import * as moment from 'moment';
 import { WorkoutListService } from './workout.service';
@@ -15,10 +15,9 @@ import { FormBuilder, FormArray, FormGroup, Validators, NgForm } from '@angular/
  * workout view that allows the user to record daily tasks they'd like to complete
  */
 export class WorkoutListComponent {
-    public newWorkout: ApiWorkout;
+    @Input('workouts') workouts: ApiWorkout[] = [];
     public date: moment.Moment;
-
-    public workouts: ApiWorkout[] = [];
+    public newWorkout: ApiWorkout;
 
     constructor(private workoutService: WorkoutListService,
                 private dashboardService: DashboardService) {

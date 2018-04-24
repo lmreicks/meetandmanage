@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DlDateTimePickerDateModule } from 'angular-bootstrap-datetimepicker';
 import { HttpModule, Http, XHRBackend, RequestOptions } from '@angular/http';
 import { APP_ROUTES } from './app.routing';
 import { TimepickerModule, ModalModule, PopoverModule, CollapseModule } from 'ngx-bootstrap';
@@ -30,11 +29,13 @@ import { GroupService } from './group/group.service';
 import { CreateGroupComponent } from './group/create-group/create-group.component';
 import { MemberFormComponent } from './user/member/member.component';
 import { GroupSelectForm } from './group/group-select-form/group-select-form.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
+    RegisterComponent,
     EditEventComponent,
     SearchFilterPipe,
     NotFoundComponent,
@@ -59,7 +60,6 @@ import { GroupSelectForm } from './group/group-select-form/group-select-form.com
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    DlDateTimePickerDateModule,
     HttpModule
   ],
   providers: [

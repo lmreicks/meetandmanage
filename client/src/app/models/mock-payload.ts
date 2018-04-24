@@ -6,6 +6,7 @@ import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import { ApiUser } from './user';
 import { ApiTodo } from './todo';
 import { Colors } from './colors';
+import { ApiWorkout } from './workout';
 
 const locations: string[] = [
     '1109 South 2nd Street, Ames, IA 50010', 'Carver 0001',
@@ -72,10 +73,13 @@ export const MockGroups: ApiGroup[] = [];
 
 export const MockTodos: ApiTodo[] = [];
 
+export const MockWorkouts: ApiWorkout[] = [];
+
 export const MockPayload: PayloadModel = {
     User: MockUser,
     Events: MockEvents,
     Groups: MockGroups,
-    Todo: MockTodos
+    Todo: MockTodos,
+    Workout: MockWorkouts
 };
 

@@ -21,6 +21,8 @@ import { TodoListComponent } from './todo-list/todo-list.component';
 import { TodoListService } from './todo-list/todo-list.service';
 import { ScrollToDirective } from './shared/scroll-to.directive';
 import { EventListComponent } from './event-list/event-list.component';
+import { WorkoutListComponent } from './workout/workout.component';
+import { WorkoutListService } from './workout/workout.service';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import { EventListComponent } from './event-list/event-list.component';
     WeekComponent,
     EventPopoverComponent,
     TodoListComponent,
+    WorkoutListComponent,
     ScrollToDirective,
     EventListComponent
   ],
@@ -52,6 +55,7 @@ import { EventListComponent } from './event-list/event-list.component';
   providers: [
     DashboardService,
     TodoListService,
+    WorkoutListService,
     {
       provide: Http,
       useFactory: httpFactory,

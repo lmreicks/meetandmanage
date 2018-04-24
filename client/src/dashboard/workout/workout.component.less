@@ -1,0 +1,92 @@
+@import '../../config.less';
+
+.workout-list-container {
+    padding: 15px;
+}
+
+:focus {
+	outline: 0;
+}
+
+.new-workout {
+    border: none;
+	background: rgba(0, 0, 0, 0.003);
+    font-size: 18px;
+    width: 100%;
+}
+
+.new-workout-container::after {
+    content: '';
+    display: block;
+    margin: auto;
+    height: 3px;
+    width: 100%;
+    background-color: @border-grey;
+}
+
+.new-workout-container:hover::after {
+    width: 100%;
+    background-color: @light-blue;
+}
+
+.main {
+	position: relative;
+    z-index: 2;
+    margin-top: 10px;
+}
+
+
+.view {
+    display: flex;
+    align-items: center;
+    height: 80px;
+}
+
+.workout-list {
+	margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    
+    .workout {
+        display: flex;
+        flex-direction: column;
+        border-right: 2px solid @light-blue;
+
+        .name {
+            font-size: 12pt;
+            display: flex;
+            align-items: center;
+        }
+
+        .description {
+            padding-left: 10%;
+            padding-right: 5%;
+        }
+
+        &:hover {
+            .destroy {
+                display: block;
+            }
+        }
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .destroy {
+            display: none;
+            color: #cc9a9a;
+            font-size: 30px;
+            transition: color 0.2s ease-out;
+
+            &:hover {
+                color: #af5b5e;
+            }
+
+            &:after {
+                content: '×';
+            }
+        }
+    }
+}

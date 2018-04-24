@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ApiTodo, Todo } from '../../app/models/todo';
 import { TodoListService } from './todo-list.service';
 import { DashboardService } from '../dashboard.service';
@@ -14,10 +14,9 @@ import * as moment from 'moment';
  * todo view that allows the user to record daily tasks they'd like to complete
  */
 export class TodoListComponent {
+    @Input('todos') todos: ApiTodo[] = [];
     public newTodo: ApiTodo;
     public date: moment.Moment;
-
-    public todos: ApiTodo[] = [];
 
     constructor(private todoService: TodoListService,
                 private dashboardService: DashboardService) {

@@ -34,10 +34,17 @@ export class AuthService {
     });
   }
 
-  /**
-   * Sets session variable
-   * @param authResult 
-   */
+  public register(userInfo: { name: string, email: string, password: string }): Observable<any> {
+    return this.http.post(API_ROOT + '/register', userInfo).map(res => {
+      res = res.json();
+      this.setSession(res);
+      return res;
+    }, err => {
+        err = err ? err.json().message : 'Username or password incorrect';
+        return Observable.throw(err);
+    });
+  }
+
   private setSession(authResult): void {
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('user_id', authResult.user.id);

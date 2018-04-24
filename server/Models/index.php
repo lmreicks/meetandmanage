@@ -2,8 +2,8 @@
 
 namespace App;
 
-//error_reporting(E_ALL);
-//ini_set('display_errors', '1');
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/config/db-config.php';
@@ -46,7 +46,6 @@ $capsule->bootEloquent();
 
 // error list
 require __DIR__ . '/Logic/Errors/ErrorList.php';
-require __DIR__ . '/Logic/Errors/StatusCodes.php';
 
 // set up depencencies
 require __DIR__ . '/dependencies.php';
@@ -58,6 +57,8 @@ require __DIR__ . '/controllers/auth.php';
 require __DIR__ . '/controllers/todo.php';
 require __DIR__ . '/controllers/payload.php';
 require __DIR__ . '/controllers/group.php';
+require __DIR__ . '/controllers/group_user.php';
+require __DIR__ . '/controllers/recommended.php';
 
 $app->run();
 

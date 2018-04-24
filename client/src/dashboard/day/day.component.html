@@ -43,21 +43,8 @@
                 <div class="section-header">
                     Workouts
                 </div>
-                <div class="section-body" style="height: 50vh;">
-                    <div class="focus" ngbDropdown>
-                        <input ngbDropdownToggle [(ngModel)]="workoutFocus" id="focus" class="form-control">
-                        <div ngbDropdownMenu aria-labelledby="focus">
-                            <li class="dropdown-item">
-                                Legs
-                            </li>
-                            <li class="dropdown-item">
-                                Back
-                            </li>
-                            <li class="dropdown-item">
-                                Arms
-                            </li>
-                        </div>
-                    </div>
+                <div class="section-body">
+                    <workout-list [workouts]="day.workouts" style="width: 100%"></workout-list>
                 </div>
             </div>
             <div class="section">

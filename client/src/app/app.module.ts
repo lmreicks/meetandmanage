@@ -37,11 +37,13 @@ import { GroupMemberService } from './group/group-member.service';
 import { RecommendedComponent } from './group/recommended/recommended.component';
 import { RecommendedService } from './group/recommended/recommended.service';
 import { UpcomingFilter } from './shared/upcoming.pipe';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
+    RegisterComponent,
     EditEventComponent,
     SearchFilterPipe,
     UpcomingFilter,

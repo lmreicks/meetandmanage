@@ -73,29 +73,17 @@ $app->get('/api/group/{id}/member/{member_id}', function (Request $request, Resp
 $app->put('/api/group/{id}/member/{member_id}', function (Request $request, Response $response, array $args) {
     //only for owner and manager
     //owner cannot downgrade themselves
-    $pv = new PermissionValidator;
+    //"maybe" owner could downgrade themselves to regular member if they made someone else an owner 
     $group_id = $args['id'];
     $user_id = $args['member_id'];
-    $user = $request->getAttribute('user');
-    $admin_val = $pv->is_admin($user_id, $group_id);
-    if($admin_val){
-        $owner_val = $pv->is_owner($user->id, $group_id);
-        if($owner_val == 1 && ($user->id == $user_id)){
-            $response->write(json_encode("Owner cannot modifiy their own permission"));
-        }
-        else{
-            $body = json_decode($request->getBody());
-            $permission = $body->Permission;
-            $group = Group::find($group_id);
-            $group->users()->updateExistingPivot($user_id, [permission => $permission]);
-            $group_users = $group->users;
-            $gm_serial = new GroupMemberSerializer;
-            $response->write(json_encode($gm_serial->toApiList($group_users)));
-        }
-    }
-    else{
-        $response->write(json_encode("User permission denied"));
-    }
+    $body = json_decode($request->getBody());
+    $permission = $body->Permission;
+    $group = Group::find($group_id);
+    $group->users()->updateExistingPivot($user_id, [permission => $permission]);
+    $group_users = $group->users;
+    $gm_serial = new GroupMemberSerializer;
+
+    $response->write(json_encode($gm_serial->toApiList($group_users))); 
     return $repsonse;
 });
 
@@ -136,37 +124,23 @@ $app->post('/api/group/{id}/member', function (Request $request, Response $respo
  *    "true"
  */
 $app->delete('/api/group/{id}/member/{member_id}', function (Request $request, Response $response, array $args) {
+    //check if user is deleting themselves
     //check to make sure owner cannot delete themselves
     //check to make sure that an owner or manager is deleting someone
     $group_id = $args['id'];
     $user_id = $args['member_id'];
     $user = $request->getAttribute('user');
     $pv = new PermissionValidator;
-    $can_delete = 0;
-    if(($user->id == $user_id) || $pv->is_admin($user->id, $group_id)){
-        //owner cannot delete themselves
-        $can_delete = 1;
-        if($pv->is_owner($user_id, $group_id)){
-            if($user->id == $user_id){
-                $can_delete = 0;
-            }
+    $group = Group::find($group_id);
+    $val = "false";
+    $group_users = $group->users;
+    foreach ($group_users as $member) {
+        if ($member->id == $user_id) {
+            $val = "true";
+            $group->users()->detach($user_id);
         }
     }
-    if($can_delete){
-        $group = Group::find($group_id);
-        $val = "false";
-        $group_users = $group->users;
-        foreach ($group_users as $member) {
-            if ($member->id == $user_id) {
-                $val = "true";
-                $group->users()->detach($user_id);
-            }
-        }
-        $response->write(json_encode($val));
-    }
-    else{
-        $response->write(json_encode("permission invalid"));
-    }
-    
+    // return true or false based on if it was deleted or not. doesn't work atm
+    $response->write(json_encode($val));
     return $repsonse;
 });

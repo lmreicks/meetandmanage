@@ -11,16 +11,14 @@ import { ApiUser } from '../models/user';
 import { MockPayload, generateEvents } from '../models/mock-payload';
 import { ApiGroup } from '../models/group';
 import * as moment from 'moment';
-import { ApiTodo } from '../models/todo';
+import { ApiTodo, Todo } from '../models/todo';
+import { ApiWorkout } from '../models/workout';
+import { Day } from '../../dashboard/models/day.model';
 import { SessionService } from './session.service';
 
-interface Day {
-    date: string;
-    todos: ApiTodo[];
-    events: ApiEvent[];
-}
-
 @Injectable()
+
+
 
 /**
  * Main service for parsing, holding, and maintaining our information
@@ -30,8 +28,10 @@ export class CoreCacheService {
     payload: PayloadModel;
     promiseForData: Promise<PayloadModel>;
     private events: ApiEvent[];
+
     private dateMap: Map<string, ApiEvent[]>;
     private eventMap: Map<number, ApiEvent>;
+    private dayMap: Map<string, Day>;
     tempPayload: Promise<PayloadModel> = Promise.resolve(MockPayload);
 
     constructor(private http: Http, private session: SessionService) {}
@@ -88,6 +88,7 @@ export class CoreCacheService {
 
         this.dateMap = new Map<string, ApiEvent[]>();
         this.eventMap = new Map<number, ApiEvent>();
+        this.dayMap = new Map<string, Day>();
 
         this.events.forEach(event => {
             event.Hidden = false;
@@ -96,10 +97,52 @@ export class CoreCacheService {
 
             if (this.dateMap.has(key)) {
                 this.dateMap.get(key).push(event);
+                this.dayMap.get(key).events.push(event);
             } else {
                 this.dateMap.set(key, [event]);
+                this.dayMap.set(key, {
+                    day: {
+                        moment: moment(key, DATE_FORMAT)
+                    },
+                    todos: [],
+                    workouts: [],
+                    events: [event]
+                });
             }
         });
+
+        this.payload.Todos.forEach(todo => {
+            let key = moment(todo.Date).format(DATE_FORMAT);
+            if(this.dayMap.has(key)){
+                this.dayMap.get(key);
+            } else {
+                this.dayMap.set(key, {
+                    day: {
+                        moment: moment(key, DATE_FORMAT)
+                    },
+                    todos: [todo],
+                    workouts: [],
+                    events: []
+                });
+            }
+        });
+
+        this.payload.Workouts.forEach(workout => {
+            let key = moment(workout.Date).format(DATE_FORMAT);
+            if(this.dayMap.has(key)){
+                this.dayMap.get(key);
+            } else {
+                this.dayMap.set(key, {
+                    day: {
+                        moment: moment(key, DATE_FORMAT)
+                    },
+                    todos: [],
+                    workouts: [workout],
+                    events: []
+                });
+            }
+        });
+
     }
 
     /**
@@ -145,6 +188,13 @@ export class CoreCacheService {
         } else {
             return this.promiseForData.then(payload => this.eventMap);
         }
+    }
+
+    /**
+     * Returns the day map
+     */
+    public GetDayMap(): Promise<Map<string, Day>> {
+        return this.promiseForData.then(payload => this.dayMap);
     }
 
     /**

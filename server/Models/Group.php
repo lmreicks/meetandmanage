@@ -13,7 +13,7 @@ class Group extends \Illuminate\Database\Eloquent\Model {
         return $this->belongsToMany('Models\User')->withPivot('permission');
     }
 
-    public function events(){
+    public function events() {
         return $this->hasMany('Models\Event');
     }
 

@@ -18,8 +18,6 @@ export class TodoListComponent {
     @Input('todos') todos: ApiTodo[] = [];
     public newTodo: ApiTodo;
     public date: moment.Moment;
-    public workouts: FormArray;
-    public workout: FormGroup;
 
     constructor(private todoService: TodoListService,
                 private dashboardService: DashboardService,

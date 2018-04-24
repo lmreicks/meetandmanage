@@ -6,6 +6,7 @@ import { DATE_FORMAT, TIME_FORMAT } from '../../constants.module';
 import { ApiUser } from './user';
 import { ApiTodo } from './todo';
 import { Colors } from './colors';
+import { ApiWorkout } from './workout';
 
 const lexi: ApiUser = {
     Id: 2,
@@ -127,10 +128,13 @@ export const MockUser: ApiUser = {
 
 export const MockTodos: ApiTodo[] = [];
 
+export const MockWorkouts: ApiWorkout[] = [];
+
 export const MockPayload: PayloadModel = {
     User: MockUser,
     Events: MockEvents,
     Groups: MockGroups,
-    Todos: MockTodos
+    Todos: MockTodos,
+    Workouts: MockWorkouts
 };
 

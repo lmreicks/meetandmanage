@@ -1,5 +1,6 @@
 import { DateObject } from "./date.model";
 import { ApiEvent } from "../../app/models/event";
+import { ApiWorkout } from "../../app/models/workout";
 import { ApiTodo } from "../../app/models/todo";
 
 /**
@@ -8,5 +9,6 @@ import { ApiTodo } from "../../app/models/todo";
 export interface Day {
     day: DateObject;
     events: ApiEvent[];
-    todos?: ApiTodo[];
+    todos: ApiTodo[];
+    workouts: ApiWorkout[];
 }

@@ -19,7 +19,6 @@ class GroupMemberSerializer extends ModelSerializer{
         $apiGroupMember = new \stdClass;
 
         $apiGroupMember->User = $apiUser;
-        //will it be this easy????
         $apiGroupMember->Permission = $user->pivot->permission;
         return $apiGroupMember;
     } 

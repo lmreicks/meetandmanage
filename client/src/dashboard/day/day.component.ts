@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { ApiEvent } from '../../app/models/event';
 import { DashboardService } from '../dashboard.service';
 import { ApiTodo } from '../../app/models/todo';
+import { ApiWorkout } from '../../app/models/workout';
 
 @Component({
     selector: 'mnm-day',
@@ -19,8 +20,7 @@ import { ApiTodo } from '../../app/models/todo';
 export class DayComponent {
     @ViewChild('timeIndicator') timeInticator: ElementRef;
     public current: moment.Moment;
-    public workoutFocus: string = "Legs";
-    public map: Map<string, ApiEvent[]>;
+    public map: Map<string, Day>;
     public day: Day;
     public hours: string[] = [];
     public loading: boolean = true;
@@ -38,7 +38,7 @@ export class DayComponent {
         this.loading = true;
         this.setHours();
 
-        this.coreCache.GetDateMap().then(map => {
+        this.coreCache.GetDayMap().then(map => {
             this.map = map;
             this.dashboardService.current.subscribe(cur => {
                 this.current = cur;
@@ -71,11 +71,7 @@ export class DayComponent {
             moment: curr.utc()
         };
 
-        this.day = {
-            day: dateValue,
-            events: this.map.has(date) ? this.map.get(date) : [],
-            todos: []
-        };
+        this.day = this.map.has(date) ? this.map.get(date) : { day: dateValue, events: [], todos: [], workouts: []}
     }
 
     public changeDate(date: Date): void {

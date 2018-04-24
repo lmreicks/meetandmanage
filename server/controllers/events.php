@@ -4,8 +4,14 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Models\Event;
 use Models\User;
+use Models\Group;
 use Models\EventLookup;
 use Logic\ModelSerializers\EventSerializer;
+use Logic\ModelSerializers\UserSerializer;
+use Logic\Errors\ErrorResponse;
+use Logic\Errors\StatusCodes;
+use Logic\PermissionValidator;
+
 
 /**
  * @api {get} /event Get all events for current user
@@ -54,6 +60,7 @@ use Logic\ModelSerializers\EventSerializer;
 $app->get('/api/event', function (Request $request, Response $response, array $args) {
 
     $es = new EventSerializer;
+    $user = new User;
     $user = $request->getAttribute('user');
     $events = $user->events;
     $return = json_encode($es->toApiList($events));
@@ -135,51 +142,43 @@ $app->get('/api/event', function (Request $request, Response $response, array $a
  *   }
  */
 $app->post('/api/event', function (Request $request, Response $response, array $args) {
-    
-    # need to parse through list of members given in the $request body
-    # if the email is in the database, add it to the table mapping events with all of it's members
-    # at some point down the road we will add an email api to this to include non members into all of the "fun"
 
+    $pv = new PermissionValidator;
     $es = new EventSerializer;
+    $us = new UserSerializer;
     $body = json_decode($request->getBody());
     $user = $request->getAttribute('user');
-    // $event = new Event; 
-    // $validate = new EventValidator($body);
-    // if ($validate != true) return $validate;
-
-    // if ($body->OwnerId == NULL) {
-    //     $response->write('no ownerId');
-    //     return $response;// change to use ann's error handling
-    // }
-    // if ($user->id != $body->OwnerId){
-    //     $resonse->write('user id does not match ownerId');
-    //     return $response;// diddo
-    // }
-    // if ($body->Title == NULL || $body->Title == '') {
-    //     $response->write('no Title');
-    //     return $response; //diddo
-    // }   
-
-    // $event->Title = $body->Title;
-    // $event->OwnerId = $body->OwnerId;
-    // $event->StartTime = date("H:i", strtotime(substr($body->StartTime, 0, 8)));
-    // $event->EndTime = substr($body->EndTime, 0, 8);
-    // $event->StartDate = substr($body->StartDate, 0, 10);
-    // $event->EndDate = substr($body->EndDate, 0, 10);
-    // $event->Notes = $body->Notes;
-    // $event->Location = $body->Location;
-
     $event = $es->toServer($body);
+
+    $ev = new EventValidator;
+    $result = $ev($event, $response);
+    if ($result->getStatusCode() >= 400){
+        $response = $result;
+        return $response;
+    }
+
+    
+    $permission_validate = new PermissionValidator;
+    if ($event->group_id != null){
+        $valid = $permission_validate->is_admin($user->id,$event->group_id);
+        if (!$valid)
+            return $re($response, StatusCodes::HTTP_BAD_REQUEST, "Insufficient permissions");
+    }
+
     $event->save();
     $event->users()->attach($user->id);
+    $mems = $body->Members;
+    if ($mems == null || count($mems) == 0) goto end;
+    $members = $us->toServerList($mems);
     $ids = array();
-    foreach($members as $m) array_push();
-    $event->users()->attach($body->Members);
-
+    foreach($members as $m) array_push($ids, $m->id);
+    $event->users()->attach($ids);
     $event->save();
-    $membersArray = $body->members;
+
+    end:
     $response->getBody()->write(json_encode($es->toApi($event)));
-    return $response;
+
+    return $response; 
 });
 
 /**
@@ -189,22 +188,31 @@ $app->post('/api/event', function (Request $request, Response $response, array $
  */
 $app->delete('/api/event/{id}', function (Request $request, Response $response, array $args){
 
+    $re = new ErrorResponse;
     $es = new EventSerializer;
     $user = $request->getAttribute('user');
     $eventID = $args['id'];
     $event = Event::where('id','=',$eventID)->first();
     if ($event == NULL) {
-        $response->write("Event not found");
+        $response = $re($response, StatusCodes::HTTP_BAD_REQUEST, "Event not found");
         return $response;
     }
-    $ownerId = $event->ownerId;
+    $permission_validate = new PermissionValidator;
+
+    if ($event->group_id != null){
+        $valid = $permission_validate->is_admin($user->id,$event->group_id);
+        if (!$valid)
+            return $re($response, StatusCodes::HTTP_BAD_REQUEST, "Insufficient permissions");
+    }
+
+    $ownerId = $event->owner_id;
     $userId = $user->id;
-    if ($ownerId === $id){
+    if ($ownerId == $userId){
         $event = Event::where('id','=',$eventID)->delete();
-        $response->write(json_encode($es->toApi($event)));
+        $response->write(json_encode(true));
         return $response;
     }
-    // $response->write("Not your event to delete");
+    $response = $re($response, StatusCodes::HTTP_BAD_REQUEST, "Not your event to delete");
     return $response; //switch to error for not owner of event
 });
 
@@ -212,98 +220,32 @@ $app->delete('/api/event/{id}', function (Request $request, Response $response, 
  * @api {put} /event/:id Update an event
  * @apiGroup Event
  * @apiHeader: {string} authentication a users unique authentication token
- * @apiParamExample {json} Request-Example:
- *  {
- *       "Id": 29,
- *       "Title": "309 Meetings",
- *       "OwnerId": "2",
- *       "StartTime": "05:05:00",
- *       "EndTime": "06:05:05",
- *       "StartDate": "2018-03-20",
- *       "EndDate": "2018-03-20",
- *       "Location": "TLA",
- *       "Notes": null,
- *       "Members": [
- *           {
- *               "Id": 1,
- *               "Email": "lexi@gmail.com",
- *               "Name": "lexi"
- *           },
- *           {
- *               "Id": 3,
- *              "Email": "tlnance@iastate.edu",
- *             "Name": "Trevin"
- *           },
- *           {
- *               "Id": 5,
- *              "Email": "bmjensen@iastate.edu",
- *               "Name": "Bailey"
- *           },
- *           {
- *               "Id": 6,
- *               "Email": "anngould@iastate.edu",
- *               "Name": "Ann Gould"
- *           }
- *       ]
- *   }
- * @apiSuccessExample {json} Success-Response:
- *  {
- *       "Id": 29,
- *       "Title": "309 Meetings",
- *       "OwnerId": "2",
- *       "StartTime": "05:05:00",
- *       "EndTime": "06:05:05",
- *       "StartDate": "2018-03-20",
- *       "EndDate": "2018-03-20",
- *       "Location": "TLA",
- *       "Notes": null,
- *       "Members": [
- *           {
- *               "Id": 1,
- *               "Email": "lexi@gmail.com",
- *               "Name": "lexi"
- *           },
- *           {
- *               "Id": 3,
- *              "Email": "tlnance@iastate.edu",
- *             "Name": "Trevin"
- *           },
- *           {
- *               "Id": 5,
- *              "Email": "bmjensen@iastate.edu",
- *               "Name": "Bailey"
- *           },
- *           {
- *               "Id": 6,
- *               "Email": "anngould@iastate.edu",
- *               "Name": "Ann Gould"
- *           }
- *       ]
- *   }
  */
 $app->put('/api/event', function (Request $request, Response $response, array $args) {
+    $re = new ErrorResponse;
     $es = new EventSerializer;
     $body = json_decode($request->getBody());
     $event = $es->toServer($body);
-    echo $event;
-    // $event_id = $es->id;
-    // $event = Event::find($event_id);
-    $existing = Event::find($event->id);
-    $existing->title = $event->title;
-    $existing->location = $event->location;
-    $existing->notes = $event->notes;
+
+    $ev = new EventValidator;
+    $result = $ev($event, $response);
+    if ($result->getStatusCode() >= 400){
+        $response = $result;
+        return $response;
+    }
+    $permission_validate = new PermissionValidator;
+    if ($event->group_id != null){
+        $valid = $permission_validate->is_admin($user->id,$event->group_id);
+        if (!$valid)
+            return $re($response, StatusCodes::HTTP_BAD_REQUEST, "Insufficient permissions");
+    }
+   
     $user = $request->getAttributes('user');
-    // if ($user->id != $event->OwnerId){
-    //     $response->getBody()->write("not your event to edit");
-    //     return $response;
-    // }
-    
-    
-    $existing->save();
-
-    $response->getBody()->write(json_encode($event));
-
-    
+    if ($user->id != $event->OwnerId){
+        $response = $re($response, StatusCodes::HTTP_BAD_REQUEST, "Not your event to edit");
+        return $response;
+    }
+    $event->save();
     return $response;
 
 });
@@ -312,28 +254,30 @@ $app->put('/api/event', function (Request $request, Response $response, array $a
 * takes in an event and validates that there are no errors in the model itself
 */
 class EventValidator {
-    public function __invoke($body){
-        if ($body->StartDate == NULL) return false;
-        if ($body->EndDate == NULL) return false;
+    public function __invoke($body, $response) {
 
+        $er = new ErrorResponse;
+        if ($body->start_date == NULL) return $er($response, StatusCodes::HTTP_BAD_REQUEST, "Event start date null");
+        if ($body->end_date == NULL) return $er($response, StatusCodes::HTTP_BAD_REQUEST, "Event end date null");
 
-        
         $title = $body->Title;
         
         $location = $body->Location;
-        $StartDate = explode('-',$body->StartDate);
-        $endDate = explode('-',$body->EndDate);
-        $startTime = explode(':', $body->StartTime);
-        $endTime = explode(':', $body->EndTime);
-        $eTime = $endTime[0] * 3600 + $endTime[1] * 60 + $endTime[2];
-        $sTime = $startTime[0] * 3600 + $startTime[1] * 60 + $startTime[2];
-        if ($endDate[2] < $startDate[2]) return false;
-        if ($endDate[2] == $startDate[2] && $endDate[0] < $startDate[0]) return false;
-        if ($endDate[2] == $startDate[2] && $endDate[0] == $startDate[0] && $endDate[1] < $startDate[1]) return false;
-        if ($endDate[2] == $startDate[2] && $endDate[0] == $startDate[0] && $endDate[1] == $startDate[1]) return false;
-        if ($endDate[2] == $startDate[2] && $endDate[0] == $startDate[0] && $endDate[1] == $startDate[1] && $eTime < $sTime) return false;
-        if ($title == NULL) return false;
+        $startDate = $body->start_date;
+        $endDate = $body->end_date;
         
-        return true;
+        $sDateArr = date_parse($startDate);
+        $eDateArr = date_parse($endDate);
+       
+        if ($sDateArr['year'] > $eDateArr['year'] ||
+            $sDateArr['year'] == $eDateArr['year'] && $sDateArr['month'] > $eDateArr['month'] ||
+            $sDateArr['year'] == $eDateArr['year'] && $sDateArr['month'] == $eDateArr['month'] && $sDateArr['day'] > $eDateArr['day'] ||
+            $sDateArr['year'] == $eDateArr['year'] && $sDateArr['month'] == $eDateArr['month'] && $sDateArr['day'] == $eDateArr['day'] && $sDateArr['hour'] > $eDateArr['hour'] ||
+            $sDateArr['year'] == $eDateArr['year'] && $sDateArr['month'] == $eDateArr['month'] && $sDateArr['day'] == $eDateArr['day'] && $sDateArr['hour'] == $eDateArr['hour'] && $sDateArr['minute'] > $eDateArr['minute'] ||
+            $sDateArr['year'] == $eDateArr['year'] && $sDateArr['month'] == $eDateArr['month'] && $sDateArr['day'] == $eDateArr['day'] && $sDateArr['hour'] == $eDateArr['hour'] && $sDateArr['minute'] == $eDateArr['minute'] && $sDateArr['second'] > $eDateArr['second']
+        ){
+            return $er($response, StatusCodes::HTTP_BAD_REQUEST, "Start date after end date"); 
+        }      
+        return $response;
     }
 }

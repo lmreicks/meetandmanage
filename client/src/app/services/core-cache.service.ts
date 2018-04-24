@@ -12,6 +12,7 @@ import { MockPayload, generateEvents } from '../models/mock-payload';
 import { ApiGroup } from '../models/group';
 import * as moment from 'moment';
 import { ApiTodo } from '../models/todo';
+import { SessionService } from './session.service';
 
 interface Day {
     date: string;
@@ -33,7 +34,7 @@ export class CoreCacheService {
     private eventMap: Map<number, ApiEvent>;
     tempPayload: Promise<PayloadModel> = Promise.resolve(MockPayload);
 
-    constructor(private http: Http) {}
+    constructor(private http: Http, private session: SessionService) {}
 
     /**
      * When the user is authorized, this methods should be called to make a request to the payload
@@ -58,6 +59,10 @@ export class CoreCacheService {
         return this.http.get(API_ROOT + '/payload')
             .map(res => res.json(), err => new Observable(err))
             .toPromise();
+    }
+
+    GetCurrentUser(): Promise<ApiUser> {
+        return this.promiseForData.then(payload => this.payload.User);
     }
 
     /**

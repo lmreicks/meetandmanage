@@ -36,6 +36,7 @@ import { PermissionService } from './services/permission.service';
 import { GroupMemberService } from './group/group-member.service';
 import { RecommendedComponent } from './group/recommended/recommended.component';
 import { RecommendedService } from './group/recommended/recommended.service';
+import { UpcomingFilter } from './shared/upcoming.pipe';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { RecommendedService } from './group/recommended/recommended.service';
     LoginComponent,
     EditEventComponent,
     SearchFilterPipe,
+    UpcomingFilter,
     NotFoundComponent,
     LocationInput,
     CreateGroupComponent,

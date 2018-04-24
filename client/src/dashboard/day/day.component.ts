@@ -73,7 +73,8 @@ export class DayComponent {
 
         this.day = {
             day: dateValue,
-            events: this.map.has(date) ? this.map.get(date) : []
+            events: this.map.has(date) ? this.map.get(date) : [],
+            todos: []
         };
     }
 

@@ -10,3 +10,26 @@
     border-right: 1px solid @border-grey;
     padding: 1rem;
 }
+
+.card {
+    color: white;
+    &:not(:last-child) {
+        margin-bottom: 0.25rem;
+    }
+
+    .card-header {
+        padding: 0.25rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        .font-awesome {
+            color: white;
+            font-size: 15px;
+        }
+    }
+    
+    .card-body {
+        padding: 0.25rem;
+    }
+}

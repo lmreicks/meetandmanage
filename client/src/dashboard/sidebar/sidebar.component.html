@@ -1,12 +1,12 @@
 <div class="sidebar col-sm-12">
     <mnm-minicalendar></mnm-minicalendar>
-    <div class="row clickable mt-4" (click)="togglePanel()">
+    <div class="row clickable mt-4">
         <div class="panel-heading col-sm-12">
-            <label>My Groups</label>
-            <div class="font-awesome" *ngIf="isOpen">
+            <a [routerLink]="['/group']">My Groups</a>
+            <div class="font-awesome" *ngIf="isOpen" (click)="togglePanel()">
                 <i class="fas fa-angle-down"></i>
             </div>
-            <div class="font-awesome" *ngIf="!isOpen">
+            <div class="font-awesome" *ngIf="!isOpen" (click)="togglePanel()">
                 <i class="fas fa-angle-right"></i>
             </div>
         </div>

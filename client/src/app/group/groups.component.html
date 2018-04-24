@@ -1,38 +1,47 @@
 <mnm-header></mnm-header>
 <div class="group-container">
-    <recommended style="width: 15%"></recommended>
-    <div class="groups" *ngIf="groups">
+    <recommended style="width: 16%"></recommended>
+<div class="groups-page" *ngIf="groups">
+    <div class="card mx-1 mt-3 page-header">
+        <h2 class="card-header">Groups</h2>
+    </div>
+    <div class="groups">
     <div *ngFor="let group of groups" class="card mx-1">
         <h3 class="card-header">
-            {{group.Name}}
+            {{group.Name}} - {{getPermission(group)}}
         </h3>
         <div class="card-body events">
-            <div *ngIf="group.Events.length === 0" class="no-events">
-                No Events {{upcomingGranularity}}
-            </div>
-            <div class="event card"
-                *ngFor="let event of group.Events; let i = index"
+            <div class="event"
+                *ngFor="let event of group.Events | upcoming: upcomingGranularity; let i = index"
                 (click)="editEvent($event, event)">
-                <!-- <div class="break" *ngIf="weekBreak(i, i + 1)"></div> -->
-                <div class="card-header" [style.background-color]="darken(group.Color, -20)">
-                    <div class="title">
-                        {{event.Title}}
+                <div class="card" *ngIf="event !== -1">
+                    <div class="card-header" [style.background-color]="darken(group.Color, -20)">
+                        <div class="title">
+                            {{event.Title}}
+                        </div>
+                    </div>
+                    <div class="card-body" [style.background-color]="event.Color ? event.Color : group.Color">
+                        <div class="time">
+                            {{formatDate(event)}}
+                        </div>
                     </div>
                 </div>
-                <div class="card-body" [style.background-color]="event.Color ? event.Color : group.Color">
-                    <div class="time">
-                        {{formatDate(event)}}
-                    </div>
+                <div *ngIf="event === -1" class="no-events">
+                        No Events {{upcomingGranularity}}
                 </div>
             </div>
         </div>
     </div>
-    <div class="card new-group" style="width: 18rem">
-        <div class="card-header">
+    <div class="card new-group mx-1">
+        <h3 class="card-header">
             New Group
-        </div>
+            <div class="add">
+                <i class="fas fa-plus"></i>
+            </div>
+        </h3>
         <div class="card-body">
         </div>
+    </div>
     </div>
 </div>
 </div>

@@ -1,7 +1,7 @@
 <div class="pr-2" *ngIf="recommendedGroups">
     <div class="recommended px-2 pt-3">
-        <h3 class="my-2">Recommended Groups</h3>
-        <hr>
+        <div style="font-size: 18px">Recommended Groups</div>
+        <hr class="my-2">
         <div *ngFor="let rec of recommendedGroups" class="card group">
             <div class="card-header" [style.background-color]="darken(rec.Color, -20)">
                 {{rec.Name}}

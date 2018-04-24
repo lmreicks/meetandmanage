@@ -5,6 +5,7 @@ import { ApiGroup, GroupPermission } from '../../models/group';
 import { ApiEvent } from '../../models/event';
 import * as moment from 'moment';
 import { PermissionService } from '../../services/permission.service';
+import { darken } from '../groups.component';
 
 @Component({
     selector: 'group',
@@ -20,6 +21,8 @@ export class GroupComponent {
     public loading: boolean = true;
     public GroupPermission = GroupPermission;
     public editName: boolean = false;
+    public darken = darken;
+
     constructor(private coreCache: CoreCacheService,
                 private route: ActivatedRoute,
                 private permission: PermissionService,
@@ -27,6 +30,7 @@ export class GroupComponent {
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
+            if (params.id === 'create') return;
             this.loading = true;
             this.coreCache.GetGroupById(+params.id).then(group => {
                 this.userPermission = this.permission.GetPermission(group);

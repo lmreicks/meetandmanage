@@ -1,13 +1,23 @@
 <mnm-header></mnm-header>
 <div class="group-container">
-    <recommended style="width: 16%"></recommended>
+    <recommended style="width: 17%"></recommended>
 <div class="groups-page" *ngIf="groups">
     <div class="card mx-1 mt-3 page-header">
-        <h2 class="card-header">Groups</h2>
+        <div class="card-header">
+            <div style="font-size: 1.5rem">Groups</div>
+            <div ngbDropdown>
+                <button class="btn" ngbDropdownToggle id="upcoming">{{upcomingGranularity}}</button>
+                <div ngbDropdownMenu aria-labelledby="upcoming">
+                    <li class="dropdown-item" (click)="selectUpcoming('Today')">Today</li>
+                    <li class="dropdown-item" (click)="selectUpcoming('Next Week')">Next Week</li>
+                    <li class="dropdown-item" (click)="selectUpcoming('Next Month')">Next Month</li>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="groups">
     <div *ngFor="let group of groups" class="card mx-1">
-        <h3 class="card-header">
+        <h3 class="card-header clickable" (click)="goToGroup(group)">
             {{group.Name}} - {{getPermission(group)}}
         </h3>
         <div class="card-body events">
@@ -35,9 +45,9 @@
     <div class="card new-group mx-1">
         <h3 class="card-header">
             New Group
-            <div class="add">
+            <a class="add" [routerLink]="['/group/create']">
                 <i class="fas fa-plus"></i>
-            </div>
+            </a>
         </h3>
         <div class="card-body">
         </div>

@@ -32,7 +32,8 @@ export class RecommendedComponent {
             Permission: GroupPermission.Member
         };
         this.groupMemberService.AddMember(group, groupMember).then(res => {
-            console.log(res);
+            let index = this.recommendedGroups.indexOf(group);
+            this.recommendedGroups.splice(index, 1);
         });
     }
 }

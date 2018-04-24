@@ -6,6 +6,7 @@
 
 .groups-page {
     width: 85%;
+    min-height: 100vh;
 
     .page-header{
 
@@ -13,9 +14,16 @@
             width: 32%;
             .card-header {
                 border-bottom: none;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
             }
         }
     }
+}
+
+#upcoming {
+    border: 1px solid @border-grey;
 }
 
 .groups {
@@ -63,4 +71,12 @@
     border-radius: 3px;
     padding: 10px;
     color: black;
+}
+
+.new-group {
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 }

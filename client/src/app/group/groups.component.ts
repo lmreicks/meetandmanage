@@ -97,4 +97,12 @@ export class GroupsComponent {
         if (index > -1) return GroupPermission[group.Members[index].Permission];
         return '';
     }
+
+    public selectUpcoming(upcomingGranularity: string) {
+        this.upcomingGranularity = upcomingGranularity;
+    }
+
+    public goToGroup(group: ApiGroup): void {
+        this.router.navigate(['/group', group.Id]);
+    }
 }

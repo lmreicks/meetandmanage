@@ -1,14 +1,23 @@
 @import '../../../config.less';
 
-.group-header {
-    padding: 15px;
+.container {
+    background: @background-light;
+    border: 1px solid @border-grey;
+    height: 100vh;
+}
+
+.page-header {
+    padding: 0.5rem 1rem;
+}
+
+.card-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
 
-    .group-name {
-        display: inline-flex;
-        font-size: 25px;
-        margin-right: 15px;
+    .header-title {
+        font-size: 1.25rem;
     }
 
     :focus {
@@ -35,6 +44,10 @@
         width: 100%;
         background-color: @light-blue;
     }
+}
+
+.card-body {
+    padding: 1rem;
 }
 
 .break {
@@ -91,11 +104,25 @@
 }
 
 .event {
-    margin-bottom: 10px;
-    font-size: 16px;
-    padding: 15px;
-    border-radius: 3px;
     color: white;
+    margin-bottom: 0.5rem;
+
+    .card {
+        width: 100%;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+        
+        .card-header {
+            padding: 0.25rem;
+        }
+    
+        .card-body {
+           // background-color: @light-blue;
+            padding: 0.25rem;
+        }
+    }
 }
 
 .member {
@@ -107,4 +134,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.role {
+    :focus {
+        outline: none;
+    }
+    #member-permission {
+        border: 1px solid @border-grey;
+    }
 }

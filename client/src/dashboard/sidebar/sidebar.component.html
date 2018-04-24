@@ -1,22 +1,32 @@
-<div class="sidebar mx-2">
-    <div class="px-2">
-        <mnm-minicalendar></mnm-minicalendar>
-        <button class="btn form-group" (click)="newGroup()">New Group</button>
-        <div class="panel-heading" (click)="togglePanel()">
+<div class="sidebar col-sm-12">
+    <mnm-minicalendar></mnm-minicalendar>
+    <div class="row clickable mt-4" (click)="togglePanel()">
+        <div class="panel-heading col-sm-12">
             <label>My Groups</label>
-            <div class="font-awesome">
+            <div class="font-awesome" *ngIf="isOpen">
                 <i class="fas fa-angle-down"></i>
             </div>
-        </div>
-    </div>
-    <div class="panel-collapse collapse" role="tabpanel" [collapse]="!isOpen">
-        <div class="panel-body card-block card-body">
-            <div *ngFor="let group of groups" class="group checkbox" (click)="filterGroup(group)">
-                <label>
-                    <input type="checkbox" [(ngModel)]="group.ShowEvents">
-                    {{group.Name}}
-                </label>
+            <div class="font-awesome" *ngIf="!isOpen">
+                <i class="fas fa-angle-right"></i>
             </div>
         </div>
     </div>
+    <div class="panel-collapse collapse row" role="tabpanel" [collapse]="!isOpen">
+        <div class="panel-body card-block">
+            <a *ngFor="let group of groups" class="group checkbox col-sm-12" (click)="goToGroup($event, group)">
+                <label class="toggle-switch">
+                    <input
+                        class="toggle-switch__input"
+                        name="{{group.Name}}"
+                        (change)="filterGroup(group)"
+                        [checked]="group.ShowEvents"
+                        type="checkbox"
+                    />
+                    <span class="toggle-switch__slider"></span>
+                </label>
+                <span>{{group.Name}}</span>
+            </a>
+        </div>
+    </div>
+    <button class="btn mt-3" (click)="newGroup()">New Group</button>
 </div>

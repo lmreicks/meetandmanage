@@ -18,12 +18,7 @@
             <span class="day-number">{{day.day.display}}</span>
             <span class="events" *ngFor="let event of day.events" (dblclick)="doubleClickEvent($event, event)">
                 <a class="event"
-                    *ngIf="!event.Hidden"
-                    id="{{event.Id}}"
-                    [ngbPopover]="popContent"
-                    popoverTitle="{{event.Title}}"
-                    #p="ngbPopover" triggers="manual"
-                (click)="togglePopover(p, event)">
+                    *ngIf="!event.Hidden">
                     <span class="event-title">{{event.Title}}</span>
                     <span class="time">{{ friendlyTime(event.Start) }}</span>
                 </a>

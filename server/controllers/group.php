@@ -4,10 +4,10 @@ use Slim\Http\Response;
 use Models\User;
 use Models\Group;
 use Logic\ModelSerializers\GroupSerializer;
-use Logic\ModelSerializers\UserSerializer;
-
+use Logic\ModelSerializers\GroupMemberSerializer;
+use Logic\PermissionValidator;
 /**
- * @api {post} /group Create
+ * @api {post} api/group Create
  * @apiGroup Group
  *
  *@apiParam {String} name 
@@ -33,19 +33,11 @@ use Logic\ModelSerializers\UserSerializer;
  */
 $app->post('/api/group', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());    
-    $user = $request->getAttribute('user'); 
+    $user = $request->getAttribute('user');
+    //add members in group member handler instead
 
-   
-    $members = $body->Members;
- 
-    $us = new UserSerializer;
     $group_serial = new GroupSerializer;
     $group = $group_serial->toServer($body);
-    $group->save();
-    $mems = $us->toServerList($members);
-    $ids = array();
-    foreach($mems as $member) array_push($ids, $member->id);
-    $group->users()->attach($ids);
     $group->save();
 
     $response->write(json_encode($group_serial->toApi($group)));
@@ -53,7 +45,7 @@ $app->post('/api/group', function (Request $request, Response $response, array $
 });
 
 /**
- * @api {get} /group Get All
+ * @api {get} api/group Get All
  * 
  * @apiGroup Group
  *
@@ -94,14 +86,15 @@ $app->post('/api/group', function (Request $request, Response $response, array $
  *    ]
  */
 $app->get('/api/group', function (Request $request, Response $response, array $args) {
+    $user = new User;
     $user = $request->getAttribute('user');
-    $groups = $user->groups();
+    $groups = $user->groups;
     $group_serial = new GroupSerializer;
     return json_encode($group_serial->toApiList($groups));
 });
 
 /**
- * @api {put} /group Update
+ * @api {put} api/group Update
  * @apiGroup Group
  *
  * @apiDescription Modifies fields of group... No params as no fields are required. Returns modified group
@@ -125,21 +118,29 @@ $app->get('/api/group', function (Request $request, Response $response, array $a
 $app->put('/api/group', function (Request $request, Response $response, array $args) {    
     $body = json_decode($request->getBody());
     $user = $request->getAttribute('user');
-
     $group_serial = new GroupSerializer;
     $group = $group_serial->toServer($body);
-    $members = $body->members;
-    $group->attach($group_serial->toServerList($members));
-    $group->save();
 
-    $output = $group_serial->toApi($group);
-    $response->write($output);
+    $modify_group = Group::find($group->id);
+    //only returns something if user is owner
+    $permission_validate = new PermissionValidator;
+    $valid = $permission_validate->is_owner($user->id,$group->id);
+    if($valid){
+        $response->write($modify_group);
+        $modify_group->name = $group->name;
+        $modify_group->description = $group->description;
+        $modify_group->save();
+    }
+    else{
+        $response->write(json_encode("Invalid permission"));
+    }
+    //$response->getBody()->write($output);
     return $response;
 });
 
 
 /**
- * @api {delete} /group Delete
+ * @api {delete} api/group Delete
  * @apiGroup Group
  * 
  * @apiParam {User} user Current user logged in
@@ -147,31 +148,31 @@ $app->put('/api/group', function (Request $request, Response $response, array $a
  * @apiDescription Deletes a group based off of user and group id. Returns removed group.
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
- *    [
- *    {
- *       "Id": 7,
- *       "Name": "Another cool group",
- *       "Members": [
- *           {
- *           "id": "6",
- *           "email": "anngould@iastate.edu",
- *           "name": "Ann Gould"
- *           }
- *       ]
- *       "Description": "only one person"
- *     }
- *    ]
+ *     "true"
  */
 $app->delete('/api/group', function (Request $request, Response $response, array $args) {
     $body = json_decode($request->getBody());
     $user = $request->getAttribute('user');
-    $group = $body->group;
+    $val = "false";
+    $group_serial = new GroupSerializer;
+    $permission_validate = new PermissionValidator;
 
-    $group_serial = new GroupSerializer; 
-    $group = $group_serial->toApi($group);
-    $group->delete();
-
-    $output = json_encode($global_serial->toApi($group));
+    $group = $group_serial->toServer($body);
+    $valid = $permission_validate->is_owner($user->id,$group->id);
+    if($valid){
+        $group_del = Group::find($group->id);
+        if($group_del != NULL){
+            $group_del->delete();
+            $val = "true";
+        }
+        $output = json_encode($val);
+    }
+    else{
+        //invalid permission...
+        $output = json_encode("Invalid permission");
+    }
+    
+    
     $response->write($output);
     return $response;
 }); 

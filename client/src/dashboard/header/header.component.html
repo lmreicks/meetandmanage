@@ -13,7 +13,7 @@
             </div>
         </div>
         <span class="month-year ml-2">{{monthYearDisplay}}</span>
-        <div class="granularity-dropdown">
+        <div class="granularity-dropdown" *ngIf="!groups">
             <div ngbDropdown class="d-inline-block">
                 <button class="btn" id="granularityDropdown" ngbDropdownToggle>{{ granularity }}</button>
                 <div ngbDropdownMenu aria-labelledby="granularityDropdown">

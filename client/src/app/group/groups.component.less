@@ -1,0 +1,50 @@
+@import '../../config.less';
+
+.group-container {
+    display: flex;
+}
+
+.groups {
+    display: flex;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    width: 85%;
+    
+    .card {
+        width: 32%;
+        margin-bottom: 1rem;
+        max-height: 25rem;
+
+        &.event {
+            width: 100%;
+            color: white;
+            margin-bottom: 0.5rem;
+            
+            .card-header {
+                // background-color: darken(@light-blue, 5%);
+                padding: 0.25rem;
+            }
+        
+            .card-body {
+               // background-color: @light-blue;
+                padding: 0.25rem;
+            }
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+    }
+}
+
+.card-body {
+    overflow: auto;
+    max-height: 100%;
+}
+
+.no-events {
+    border: 1px solid @border-grey;
+    border-radius: 3px;
+    padding: 10px;
+    font-size: 16px;
+}

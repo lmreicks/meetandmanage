@@ -2,9 +2,6 @@
 
 namespace Models;
 
-/**
-* server side group model
-*/
 class Group extends \Illuminate\Database\Eloquent\Model {
     protected $table = 'group';
 
@@ -13,10 +10,11 @@ class Group extends \Illuminate\Database\Eloquent\Model {
     ];
 
     public function users() {
-        return $this->belongsToMany('Models\User');
+        return $this->belongsToMany('Models\User')->withPivot('permission');
     }
 
     public function events(){
-        return $this->belongsToMany('Models\Event');
+        return $this->hasMany('Models\Event');
     }
+
 }

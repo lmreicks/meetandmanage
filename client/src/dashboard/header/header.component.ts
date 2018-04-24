@@ -34,6 +34,8 @@ export class HeaderComponent {
     public month: number;
     public day: number;
 
+    public groups: boolean = false;
+
     constructor(private auth: AuthService,
                 private route: ActivatedRoute,
                 private dashboardService: DashboardService,
@@ -43,19 +45,23 @@ export class HeaderComponent {
      * Oninit we subscribe to the url, so when the url changes the header is updated
      */
     ngOnInit(): void {
-        this.route.children[0].url.subscribe((url: UrlSegment[]) => {
-            this.granularity = url[0].path;
+        if (!this.route.children || this.route.children.length === 0) {
+            this.groups = true;
+        } else {
+            this.route.children[0].url.subscribe((url: UrlSegment[]) => {
+                this.granularity = url[0].path;
 
-            if (url.length === 4) {
-                this.year = +url[1].path;
-                this.month = +url[2].path;
-                this.day = +url[3].path;
+                if (url.length === 4) {
+                    this.year = +url[1].path;
+                    this.month = +url[2].path;
+                    this.day = +url[3].path;
 
-                this.active = moment(this.year + '-' + this.month + '-' + this.day, DATE_FORMAT);
-            }
+                    this.active = moment(this.year + '-' + this.month + '-' + this.day, DATE_FORMAT);
+                }
 
-            this.monthYearDisplay = this.active.format('MMMM YYYY');
-        });
+                this.monthYearDisplay = this.active.format('MMMM YYYY');
+            });
+        }
 
         this.dashboardService.current.subscribe(date => {
             this.active = date;

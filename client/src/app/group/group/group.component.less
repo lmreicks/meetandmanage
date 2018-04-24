@@ -1,0 +1,110 @@
+@import '../../../config.less';
+
+.group-header {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+
+    .group-name {
+        display: inline-flex;
+        font-size: 25px;
+        margin-right: 15px;
+    }
+
+    :focus {
+        outline: 0;
+    }
+
+    .alt-input {
+        border: none;
+        background: rgba(0, 0, 0, 0.003);
+        font-size: 25px;
+        width: 250px;
+    }
+    
+    .input-container::after {
+        content: '';
+        display: block;
+        margin: auto;
+        height: 3px;
+        width: 100%;
+        background-color: @border-grey;
+    }
+    
+    .input-container:hover::after {
+        width: 100%;
+        background-color: @light-blue;
+    }
+}
+
+.break {
+    width: 100%;
+    height: 10px;
+    background: blue;
+}
+
+.group-image {
+    height: 3rem;
+
+    img {
+        height: 100%;
+        width: auto;
+    }
+}
+
+.section {
+    padding-left: 15px;
+    padding-right: 15px;
+    max-height: 70vh;
+
+    .section-header {
+        padding-left: 15px;
+        padding-right: 15px;
+        font-size: 1.25rem;
+        background-color: @background-dark;
+        border: 1px solid @border-grey;
+        border-radius: 3px 3px 0 0;
+        border-bottom: none;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .section-body {
+        &.events {
+            overflow: auto;
+        }
+        padding: 15px;
+        max-height: 100%;
+        background-color: @background-light;
+        border: 1px solid @border-grey;
+        border-radius: 0 0 3px 3px;
+    }
+}
+
+.no-events {
+    border: 1px solid @border-grey;
+    border-radius: 3px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.event {
+    margin-bottom: 10px;
+    font-size: 16px;
+    padding: 15px;
+    border-radius: 3px;
+    color: white;
+}
+
+.member {
+    margin-bottom: 10px;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid @border-grey;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

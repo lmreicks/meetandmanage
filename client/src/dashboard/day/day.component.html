@@ -36,15 +36,28 @@
                     Todo List
                 </div>
                 <div class="section-body">
-                    <todo-list style="width: 100%"></todo-list>
+                    <todo-list [todos]="day.todos" style="width: 100%"></todo-list>
                 </div>
             </div>
             <div class="section">
                 <div class="section-header">
-                    Workout
+                    Workouts
                 </div>
-                <div class="section-body">
-                    <todo-list style="width: 100%"></todo-list>
+                <div class="section-body" style="height: 50vh;">
+                    <div class="focus" ngbDropdown>
+                        <input ngbDropdownToggle [(ngModel)]="workoutFocus" id="focus" class="form-control">
+                        <div ngbDropdownMenu aria-labelledby="focus">
+                            <li class="dropdown-item">
+                                Legs
+                            </li>
+                            <li class="dropdown-item">
+                                Back
+                            </li>
+                            <li class="dropdown-item">
+                                Arms
+                            </li>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="section">
@@ -52,7 +65,6 @@
                     Nutrition
                 </div>
                 <div class="section-body">
-                    <todo-list style="width: 100%"></todo-list>
                 </div>
             </div>
         </div>

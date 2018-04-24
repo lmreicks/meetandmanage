@@ -10,7 +10,7 @@ import { Colors } from '../../app/models/colors';
 })
 
 export class EventListComponent {
-    @Input('events') events: ApiEvent[];
+    @Input('events') events: ApiEvent[] = [];
 
     ngOnInit(): void {
         this.parseEvents(this.events);

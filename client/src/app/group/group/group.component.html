@@ -1,0 +1,86 @@
+<div class="group-component container" *ngIf="!loading">
+    <div class="group-header">
+        <div class="input-container">
+            <input size="250" class="alt-input" *ngIf="editName" [(ngModel)]="group.Name">
+        </div>
+        <div class="alt-input" *ngIf="!editName">
+            {{group.Name}}
+        </div>
+        <div class="font-awesome clickable ml-2" (click)="toggleEditName()">
+            <i class="fas fa-pencil-alt"></i>
+        </div>
+        <div class="group-image ml-2">
+            <img [src]="group.Image">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="section col-sm-6">
+            <div class="section-header">
+                Upcoming Events
+                <div ngbDropdown>
+                    <button class="btn" ngbDropdownToggle id="upcoming">{{upcomingGranularity}}</button>
+                    <div ngbDropdownMenu aria-labelledby="upcoming">
+                        <li class="dropdown-item" (click)="selectUpcoming('Today')">Today</li>
+                        <li class="dropdown-item" (click)="selectUpcoming('Next Week')">Next Week</li>
+                        <li class="dropdown-item" (click)="selectUpcoming('Next Month')">Next Month</li>
+                    </div>
+                </div>
+            </div>
+            <div class="section-body events">
+                <div *ngIf="upcomingEvents.length === 0" class="no-events">
+                    No Events {{upcomingGranularity}}
+                </div>
+                <div class="event"
+                    *ngFor="let event of upcomingEvents; let i = index"
+                    [style.background-color]="event.Color"
+                    (click)="editEvent($event, event)">
+                    <!-- <div class="break" *ngIf="weekBreak(i, i + 1)"></div> -->
+                    <div class="title">
+                        {{event.Title}}
+                    </div>
+                    <div class="time">
+                        {{formatDate(event)}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section col-sm-6">
+            <div class="section-header">
+                Group Members
+            </div>
+            <div class="section-body">
+                <div class="member" *ngFor="let member of group.Members">
+                    <div class="title">
+                        {{member.User.Name}}
+                        <small>{{member.User.Email}}</small>
+                    </div>
+                    <div class="role" ngbDropdown placement="bottom-right" *ngIf="userPermission > GroupPermission.Member">
+                        <button class="btn" id="member-permission" ngbDropdownToggle>{{GroupPermission[member.Permission]}}</button>
+                        <div aria-labelledby="member-permission" ngbDropdownMenu>
+                            <li class="dropdown-item"
+                                (click)="changePermisson(member, GroupPermission.None)">
+                                Remove
+                            </li>
+                            <li class="dropdown-item"
+                                (click)="changePermisson(member, GroupPermission.Member)">
+                                {{GroupPermission[1]}}
+                            </li>
+                            <li class="dropdown-item"
+                                (click)="changePermisson(member, GroupPermission.Manager)">
+                                {{GroupPermission[2]}}
+                            </li>
+                            <li class="dropdown-item"
+                                (click)="changePermisson(member, GroupPermission.Owner)">
+                                {{GroupPermission[3]}}
+                            </li>
+                        </div>
+                    </div>
+                    <div class="role" *ngIf="userPermission === GroupPermission.Member">
+                        {{GroupPermission[member.Permission]}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

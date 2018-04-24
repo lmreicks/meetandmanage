@@ -90,12 +90,12 @@ export class EventService {
             let startOfDay = moment(form.controls.StartTime.value, TIME_FORMAT).startOf('day');
             let endOfDay = moment(form.controls.EndTime.value, TIME_FORMAT).endOf('day');
 
-            form.controls.StartDate.setValue(startOfDay);
-            form.controls.EndDate.setValue(endOfDay);
+            form.controls.Start.setValue(startOfDay);
+            form.controls.End.setValue(endOfDay);
         });
 
-        form.controls.StartDate.setValidators(this._validateDate(form));
-        form.controls.EndDate.setValidators(this._validateDate(form));
+        form.controls.Start.setValidators(this._validateDate(form));
+        form.controls.End.setValidators(this._validateDate(form));
 
         return form;
     }

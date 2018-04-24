@@ -19,5 +19,5 @@ export interface PayloadModel {
     /**
      * List of todos for current user
      */
-    Todo: ApiTodo[];
+    Todos: ApiTodo[];
 }

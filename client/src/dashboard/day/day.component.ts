@@ -19,6 +19,7 @@ import { ApiTodo } from '../../app/models/todo';
 export class DayComponent {
     @ViewChild('timeIndicator') timeInticator: ElementRef;
     public current: moment.Moment;
+    public workoutFocus: string = "Legs";
     public map: Map<string, ApiEvent[]>;
     public day: Day;
     public hours: string[] = [];

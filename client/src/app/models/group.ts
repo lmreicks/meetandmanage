@@ -1,6 +1,18 @@
 import { ApiUser } from './user';
 import { ApiEvent } from './event';
 
+export enum GroupPermission {
+    None = -1,
+    Member,
+    Manager,
+    Owner
+}
+
+export interface ApiGroupMember {
+    User: ApiUser;
+    Permission: GroupPermission;
+}
+
 export interface ApiCreateGroup {
     /**
      * Name of the group
@@ -13,7 +25,7 @@ export interface ApiCreateGroup {
     /**
      * List of members that belong to the group
      */
-    Members: ApiUser[];
+    Members: ApiGroupMember[];
 }
 
 export interface ApiGroup extends ApiCreateGroup {
@@ -25,6 +37,8 @@ export interface ApiGroup extends ApiCreateGroup {
      * Events the belong to the group
      */
     Events: ApiEvent[];
+    Image?: string;
+    Color?: string;
     /**
      * Whether or not we should show this groups events
      */

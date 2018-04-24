@@ -17,47 +17,47 @@
   display: block;
   max-width: 1051px;
   border-radius: 3px;
+}
 
-  .day-container {
-    width: 100%;
-    margin-right: -15px;
-    margin-left: -15px;
-    display: flex;
-  }
+.day-container {
+  width: 100%;
+  margin-right: -15px;
+  margin-left: -15px;
+  display: flex;
+}
 
-  .col {
+.col {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 90vh;
+}
+
+.section {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-bottom: 15px;
+
+  .section-header {
     display: flex;
-    flex-direction: column;
-    width: 50%;
-    height: 90vh;
+    font-size: 18pt;
+    background-color: @background-dark;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid @border-grey;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
   }
   
-  .section {
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-bottom: 15px;
-
-    .section-header {
-      display: flex;
-      font-size: 18pt;
-      background-color: #e9ebec;
-      justify-content: center;
-      align-items: center;
+  .section-body {
+      width: 100%;
+      background-color: @background-light;
       border: 1px solid @border-grey;
-      border-top-left-radius: 3px;
-      border-top-right-radius: 3px;
-    }
-    
-    .section-body {
-        width: 100%;
-        background-color: #f3f3f3;
-        border: 1px solid @border-grey;
-        border-top: none;
-        border-bottom-left-radius: 3px;
-        border-bottom-right-radius: 3px;
-        height: 100%;
-        overflow: auto;
-    }
+      border-top: none;
+      border-bottom-left-radius: 3px;
+      border-bottom-right-radius: 3px;
+      height: 100%;
+      overflow: auto;
   }
 }
 

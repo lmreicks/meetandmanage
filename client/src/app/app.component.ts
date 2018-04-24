@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { CoreCacheService } from './services/core-cache.service';
+import { GoogleEventsService } from './event/google-event.service';
 
 @Component({
   moduleId: 'app',
@@ -9,5 +10,5 @@ import { CoreCacheService } from './services/core-cache.service';
   styleUrls: ['app.component.less']
 })
 export class AppComponent {
-  constructor(private authService: AuthService, private coreCache: CoreCacheService) {}
+  constructor(private authService: AuthService, private coreCache: CoreCacheService, private goog: GoogleEventsService) {}
 }

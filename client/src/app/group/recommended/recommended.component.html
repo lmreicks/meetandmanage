@@ -1,0 +1,8 @@
+<div class="pr-2" *ngIf="recommendedGroups">
+    <div class="recommended">
+        <h3>Recommended Groups</h3>
+        <div *ngFor="let rec of recommendedGroups">
+            {{rec.Name}}
+        </div>
+    </div>
+</div>

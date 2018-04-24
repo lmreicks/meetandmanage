@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-import { DateObject } from '../../dashboard/models/date.model';
 import { ApiEvent } from '../models/event';
 import { API_ROOT, DATE_FORMAT } from '../../constants.module';
 import { PayloadModel } from '../models/payload';
@@ -12,6 +11,13 @@ import { ApiUser } from '../models/user';
 import { MockPayload, generateEvents } from '../models/mock-payload';
 import { ApiGroup } from '../models/group';
 import * as moment from 'moment';
+import { ApiTodo } from '../models/todo';
+
+interface Day {
+    date: string;
+    todos: ApiTodo[];
+    events: ApiEvent[];
+}
 
 @Injectable()
 
@@ -22,18 +28,19 @@ export class CoreCacheService {
     currentUser: ApiUser;
     payload: PayloadModel;
     promiseForData: Promise<PayloadModel>;
-    constructor(private http: Http) {}
     private events: ApiEvent[];
     private dateMap: Map<string, ApiEvent[]>;
     private eventMap: Map<number, ApiEvent>;
     tempPayload: Promise<PayloadModel> = Promise.resolve(MockPayload);
 
+    constructor(private http: Http) {}
+
     /**
      * When the user is authorized, this methods should be called to make a request to the payload
      */
     OnAuth(): Promise<PayloadModel> {
-        this.promiseForData = this.tempPayload
-        //this.promiseForData = this.Payload()
+        //this.promiseForData = this.tempPayload
+        this.promiseForData = this.Payload()
                 .then(p => {
                     p.Events = generateEvents();
                     this.payload = p;
@@ -72,7 +79,7 @@ export class CoreCacheService {
             return;
         }
 
-        this._sortEvents(this.events);
+        this.sortEvents(this.events);
 
         this.dateMap = new Map<string, ApiEvent[]>();
         this.eventMap = new Map<number, ApiEvent>();
@@ -94,7 +101,7 @@ export class CoreCacheService {
      * Sorts events by Start date
      * @param {ApiEvent[]} events 
      */
-    private _sortEvents(events: ApiEvent[]) {
+    public sortEvents(events: ApiEvent[]) {
         events.sort((a, b) => {
             if (a.Start < b.Start) {
                 return -1;

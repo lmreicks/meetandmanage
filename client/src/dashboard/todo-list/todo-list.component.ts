@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ApiTodo, Todo } from '../../app/models/todo';
 import { TodoListService } from './todo-list.service';
 import { DashboardService } from '../dashboard.service';
 import * as moment from 'moment';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 
 @Component({
     selector: 'todo-list',
@@ -14,13 +15,15 @@ import * as moment from 'moment';
  * todo view that allows the user to record daily tasks they'd like to complete
  */
 export class TodoListComponent {
+    @Input('todos') todos: ApiTodo[] = [];
     public newTodo: ApiTodo;
     public date: moment.Moment;
-
-    public todos: ApiTodo[] = [];
+    public workouts: FormArray;
+    public workout: FormGroup;
 
     constructor(private todoService: TodoListService,
-                private dashboardService: DashboardService) {
+                private dashboardService: DashboardService,
+                private fb: FormBuilder) {
                     this.dashboardService.current.subscribe(date => {
                         this.date = date;
                         this.newTodo = Todo(date.toDate());

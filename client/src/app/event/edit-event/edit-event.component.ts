@@ -9,7 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiUser } from '../../models/user';
 import { UserService } from '../../user/user.service';
 import { CoreCacheService } from '../../services/core-cache.service';
-import { ApiGroup } from '../../models/group';
+import { ApiGroup, GroupPermission } from '../../models/group';
+import { PermissionService } from '../../services/permission.service';
 
 @Component({
     selector: 'mnm-edit-event',
@@ -35,6 +36,7 @@ export class EditEventComponent {
                 private eventService: EventService,
                 private userService: UserService,
                 private coreCache: CoreCacheService,
+                private permission: PermissionService,
                 private fb: FormBuilder) {}
 
     /**
@@ -45,24 +47,36 @@ export class EditEventComponent {
         this.userService.GetAll().then(users => this.users = users);
         this.coreCache.GetGroups().then(groups => this.groups = groups);
 
-        let id = this.route.snapshot.paramMap.get('id');
-        if (!!id && id !== 'create') {
-            this.edit = true;
-            this.eventService
-                .GetEventById(+id)
-                .then(event => {
-                    this.eventForm = this.eventService.BuildEventForm(event, this.eventForm);
-                });
-        } else {
-            let createEvent: ApiCreateEvent = {
-                Title: null,
-                OwnerId: 3, // change this!!
-                Start: moment().toLocaleString(),
-                End: moment().toLocaleString(),
-                Location: "", Color: "", Notes: "", Members: []
-            };
-            this.eventForm = this.eventService.BuildEventForm(createEvent, this.eventForm);
-        }
+        this.route.params.subscribe(params => {
+            if (params.id === 'create') {
+                let createEvent: ApiCreateEvent = {
+                    Title: null,
+                    OwnerId: 3, // change this!!
+                    Start: moment().toLocaleString(),
+                    End: moment().toLocaleString(),
+                    Location: "", Color: "", Notes: "", Members: []
+                };
+                this.eventForm = this.eventService.BuildEventForm(createEvent, this.eventForm);
+            } else {
+                this.edit = true;
+                this.eventService
+                    .GetEventById(+params.id)
+                    .then(event => {
+                        if (event.GroupId) {
+                            this.coreCache.GetGroupById(event.GroupId)
+                                .then(group => {
+                                    if (this.permission.GetPermission(group) < GroupPermission.Manager) {
+                                        this.router.navigate(['dashboard']);
+                                    } else {
+                                        this.eventForm = this.eventService.BuildEventForm(event, this.eventForm);
+                                    }
+                                });
+                        } else {
+                            this.eventForm = this.eventService.BuildEventForm(event, this.eventForm);
+                        }
+                    });
+            }
+        });
     }
 
     /**

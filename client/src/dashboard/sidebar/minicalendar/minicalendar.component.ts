@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import * as moment from 'moment';
 import { DateObject } from '../../models/date.model';
 import { DATE_FORMAT, TIME_FORMAT } from '../../../constants.module';
@@ -6,14 +6,13 @@ import { Month, Months } from '../../models/month.model';
 import { Week, WeekDays } from '../../models/week.model';
 import { Day } from '../../models';
 import { SessionService } from '../../../app/services/session.service';
-import { EventService } from '../../../app/event/event.service';
-import { Router, ActivatedRoute, UrlSegment } from '@angular/router';
+import { Router } from '@angular/router';
 import { DashboardService } from '../../dashboard.service';
 
 @Component({
     selector: 'mnm-minicalendar',
     templateUrl: 'minicalendar.component.html',
-    styleUrls: ['minicalendar.component.less']
+    styleUrls: ['minicalendar.component.less', '../../shared/shared.less']
 })
 
 /**

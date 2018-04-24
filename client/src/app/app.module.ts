@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DlDateTimePickerDateModule } from 'angular-bootstrap-datetimepicker';
 import { HttpModule, Http, XHRBackend, RequestOptions } from '@angular/http';
 import { APP_ROUTES } from './app.routing';
 import { TimepickerModule, ModalModule, PopoverModule, CollapseModule } from 'ngx-bootstrap';
@@ -30,6 +29,13 @@ import { GroupService } from './group/group.service';
 import { CreateGroupComponent } from './group/create-group/create-group.component';
 import { MemberFormComponent } from './user/member/member.component';
 import { GroupSelectForm } from './group/group-select-form/group-select-form.component';
+import { GoogleEventsService } from './event/google-event.service';
+import { GroupComponent } from './group/group/group.component';
+import { GroupsComponent } from './group/groups.component';
+import { PermissionService } from './services/permission.service';
+import { GroupMemberService } from './group/group-member.service';
+import { RecommendedComponent } from './group/recommended/recommended.component';
+import { RecommendedService } from './group/recommended/recommended.service';
 
 @NgModule({
   declarations: [
@@ -41,7 +47,10 @@ import { GroupSelectForm } from './group/group-select-form/group-select-form.com
     LocationInput,
     CreateGroupComponent,
     MemberFormComponent,
-    GroupSelectForm
+    GroupSelectForm,
+    GroupComponent,
+    GroupsComponent,
+    RecommendedComponent
   ],
   imports: [
     NgbModule.forRoot(),
@@ -59,7 +68,6 @@ import { GroupSelectForm } from './group/group-select-form/group-select-form.com
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    DlDateTimePickerDateModule,
     HttpModule
   ],
   providers: [
@@ -70,6 +78,10 @@ import { GroupSelectForm } from './group/group-select-form/group-select-form.com
     SessionService,
     UserService,
     GroupService,
+    GoogleEventsService,
+    PermissionService,
+    GroupMemberService,
+    RecommendedService,
     {
       provide: NgbDateAdapter,
       useClass: NgbDateNativeAdapter

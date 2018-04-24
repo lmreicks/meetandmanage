@@ -47,7 +47,9 @@ import { EventListComponent } from './event-list/event-list.component';
     HttpModule
   ],
   exports: [
-      DashboardComponent
+      DashboardComponent,
+      HeaderComponent,
+      EventListComponent
   ],
   providers: [
     DashboardService,

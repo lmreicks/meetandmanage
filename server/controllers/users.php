@@ -37,7 +37,7 @@ $app->get('/api/user', function (Request $request, Response $response, array $ar
 * returns error if any fields in $body are null
 * return auth token if user is successfully made
 */
-$app->post('/api/user', function (Request $request, Response $response, array $args){
+$app->post('/api/register', function (Request $request, Response $response, array $args){
     
     #user must have timezone ID made in table
     $body = $request->getParsedBody();
@@ -70,7 +70,7 @@ $app->post('/api/user', function (Request $request, Response $response, array $a
 
     $UserToken = array(
         "accessToken" => $token,
-        "user" => $user
+        "User" => $user
     );
     
     $response->write(json_encode($UserToken));

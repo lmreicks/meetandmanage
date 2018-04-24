@@ -142,24 +142,13 @@ $app->get('/api/event', function (Request $request, Response $response, array $a
  *   }
  */
 $app->post('/api/event', function (Request $request, Response $response, array $args) {
-<<<<<<< HEAD
+
     $pv = new PermissionValidator;
-=======
-<<<<<<< server/controllers/events.php
-    
-=======
-    $pv = new PermissionValidator;
->>>>>>> server/controllers/events.php
->>>>>>> 4b1e3a0bccb8a5e64b0902e7d85ce4dd21831267
     $es = new EventSerializer;
     $us = new UserSerializer;
     $body = json_decode($request->getBody());
     $user = $request->getAttribute('user');
     $event = $es->toServer($body);
-<<<<<<< HEAD
-=======
-<<<<<<< server/controllers/events.php
->>>>>>> 4b1e3a0bccb8a5e64b0902e7d85ce4dd21831267
 
     $ev = new EventValidator;
     $result = $ev($event, $response);
@@ -167,15 +156,15 @@ $app->post('/api/event', function (Request $request, Response $response, array $
         $response = $result;
         return $response;
     }
-<<<<<<< HEAD
+
     
     $permission_validate = new PermissionValidator;
-    $valid = $permission_validate->is_owner($user->id,$event->group_id) ||  $permission_validate->is_admin($user->id,$event->group_id);
-    if (!$valid)
-        return $re($response, StatusCodes::HTTP_BAD_REQUEST, "Insufficient permissions");
+    if ($event->group_id != null){
+        $valid = $permission_validate->is_admin($user->id,$event->group_id);
+        if (!$valid)
+            return $re($response, StatusCodes::HTTP_BAD_REQUEST, "Insufficient permissions");
+    }
 
-=======
->>>>>>> 4b1e3a0bccb8a5e64b0902e7d85ce4dd21831267
     $event->save();
     $event->users()->attach($user->id);
     $mems = $body->Members;
@@ -188,33 +177,8 @@ $app->post('/api/event', function (Request $request, Response $response, array $
 
     end:
     $response->getBody()->write(json_encode($es->toApi($event)));
-<<<<<<< HEAD
-=======
-=======
-    $group_id = $event->group_id;
-    if ($group_id != NULL){
-        $valid = $pv->is_admin($user->id, $group_id);
-        if($valid){
-            $event->save();
-            $event->users()->attach($user->id);
-            $ids = array();
-            foreach($members as $m) array_push();
-            $event->users()->attach($body->Members);
 
-            $event->save();
-            $membersArray = $body->members;
-            $response->getBody()->write(json_encode($es->toApi($event)));
-        }
-        else{
-            $response->getBody()->write(json_encode("User permission denied"));
-        }
-    }
-
-    
->>>>>>> server/controllers/events.php
->>>>>>> 4b1e3a0bccb8a5e64b0902e7d85ce4dd21831267
-    return $response;
-    
+    return $response; 
 });
 
 /**
@@ -235,9 +199,11 @@ $app->delete('/api/event/{id}', function (Request $request, Response $response, 
     }
     $permission_validate = new PermissionValidator;
 
-    $valid = $permission_validate->is_owner($user->id,$event->group_id) ||  $permission_validate->is_admin($user->id,$event->group_id);
-    if (!$valid)
-        return $re($response, StatusCodes::HTTP_BAD_REQUEST, "Insufficient permissions");
+    if ($event->group_id != null){
+        $valid = $permission_validate->is_admin($user->id,$event->group_id);
+        if (!$valid)
+            return $re($response, StatusCodes::HTTP_BAD_REQUEST, "Insufficient permissions");
+    }
 
     $ownerId = $event->owner_id;
     $userId = $user->id;
@@ -254,142 +220,32 @@ $app->delete('/api/event/{id}', function (Request $request, Response $response, 
  * @api {put} /event/:id Update an event
  * @apiGroup Event
  * @apiHeader: {string} authentication a users unique authentication token
- * @apiParamExample {json} Request-Example:
- *  {
- *       "Id": 29,
- *       "Title": "309 Meetings",
- *       "OwnerId": "2",
- *       "StartTime": "05:05:00",
- *       "EndTime": "06:05:05",
- *       "StartDate": "2018-03-20",
- *       "EndDate": "2018-03-20",
- *       "Location": "TLA",
- *       "Notes": null,
- *       "Members": [
- *           {
- *               "Id": 1,
- *               "Email": "lexi@gmail.com",
- *               "Name": "lexi"
- *           },
- *           {
- *               "Id": 3,
- *              "Email": "tlnance@iastate.edu",
- *             "Name": "Trevin"
- *           },
- *           {
- *               "Id": 5,
- *              "Email": "bmjensen@iastate.edu",
- *               "Name": "Bailey"
- *           },
- *           {
- *               "Id": 6,
- *               "Email": "anngould@iastate.edu",
- *               "Name": "Ann Gould"
- *           }
- *       ]
- *   }
- * @apiSuccessExample {json} Success-Response:
- *  {
- *       "Id": 29,
- *       "Title": "309 Meetings",
- *       "OwnerId": "2",
- *       "StartTime": "05:05:00",
- *       "EndTime": "06:05:05",
- *       "StartDate": "2018-03-20",
- *       "EndDate": "2018-03-20",
- *       "Location": "TLA",
- *       "Notes": null,
- *       "Members": [
- *           {
- *               "Id": 1,
- *               "Email": "lexi@gmail.com",
- *               "Name": "lexi"
- *           },
- *           {
- *               "Id": 3,
- *              "Email": "tlnance@iastate.edu",
- *             "Name": "Trevin"
- *           },
- *           {
- *               "Id": 5,
- *              "Email": "bmjensen@iastate.edu",
- *               "Name": "Bailey"
- *           },
- *           {
- *               "Id": 6,
- *               "Email": "anngould@iastate.edu",
- *               "Name": "Ann Gould"
- *           }
- *       ]
- *   }
  */
 $app->put('/api/event', function (Request $request, Response $response, array $args) {
     $re = new ErrorResponse;
     $es = new EventSerializer;
     $body = json_decode($request->getBody());
     $event = $es->toServer($body);
-<<<<<<< HEAD
-=======
-<<<<<<< server/controllers/events.php
->>>>>>> 4b1e3a0bccb8a5e64b0902e7d85ce4dd21831267
+
     $ev = new EventValidator;
     $result = $ev($event, $response);
     if ($result->getStatusCode() >= 400){
         $response = $result;
         return $response;
     }
-<<<<<<< HEAD
     $permission_validate = new PermissionValidator;
-    $valid = $permission_validate->is_owner($user->id,$event->group_id) ||  $permission_validate->is_admin($user->id,$event->group_id);
-    if (!$valid)
-        return $re($response, StatusCodes::HTTP_BAD_REQUEST, "Insufficient permissions");
-=======
->>>>>>> 4b1e3a0bccb8a5e64b0902e7d85ce4dd21831267
-    // $event_id = $es->id;
-    // $event = Event::find($event_id);
-    $existing = Event::find($event->id);
-    $existing->title = $event->title;
-    $existing->location = $event->location;
-    $existing->notes = $event->notes;
+    if ($event->group_id != null){
+        $valid = $permission_validate->is_admin($user->id,$event->group_id);
+        if (!$valid)
+            return $re($response, StatusCodes::HTTP_BAD_REQUEST, "Insufficient permissions");
+    }
+   
     $user = $request->getAttributes('user');
     if ($user->id != $event->OwnerId){
         $response = $re($response, StatusCodes::HTTP_BAD_REQUEST, "Not your event to edit");
         return $response;
     }
-<<<<<<< HEAD
-=======
-=======
-    $user = $request->getAttributes('user');
-    $group_id = $event->group_id;
-    if ($group_id != NULL){
-        $valid = $pv->is_admin($user->id, $group_id);
-        if($valid){
-            $existing = Event::find($event->id);
-            $existing->title = $event->title;
-            $existing->location = $event->location;
-            $existing->notes = $event->notes;
-            $existing->save();
-            $response->getBody()->write(json_encode($event));
-        }
-        else{
-            $response->getBody()->write(json_encode("User permission denied"));
-        }
-    }
-    // $event_id = $es->id;
-    // $event = Event::find($event_id);
-    
-
-    // if ($user->id != $event->OwnerId){
-    //     $response->getBody()->write("not your event to edit");
-    //     return $response;
-    // }
->>>>>>> server/controllers/events.php
-    
-    
-   
-
-    
->>>>>>> 4b1e3a0bccb8a5e64b0902e7d85ce4dd21831267
+    $event->save();
     return $response;
 
 });

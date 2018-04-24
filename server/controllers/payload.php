@@ -32,8 +32,8 @@ $app->get('/api/payload', function (Request $request, Response $response, array 
     $out = array(
         'Events' => $es->toApiList($events),
         'Groups' => $gs->toApiList($user->groups),
-        'Todos' => $ts->toApiList($todos),
-        'Workouts' => $ws->toApiList($workouts)
+        'Todos' => $ts->toApiList($todos)
+        //'Workouts' => $ws->toApiList($workouts)
     );
     $response->getBody()->write(json_encode($out));
     return $response;

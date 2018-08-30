@@ -73,7 +73,9 @@ export class WeekComponent {
 
             let day = {
                 day: dateValue,
-                events: []
+                events: [],
+                todos: [],
+                workouts: []
             };
 
             if (this.map.has(dayMoment.format(DATE_FORMAT))) {

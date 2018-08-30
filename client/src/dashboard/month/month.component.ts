@@ -88,7 +88,9 @@ export class MonthComponent {
 
             let day = {
                 day: dateValue,
-                events: []
+                events: [],
+                todos: [],
+                workouts: []
             };
 
             if (this.eventMap.has(dayMoment.format(DATE_FORMAT))) {

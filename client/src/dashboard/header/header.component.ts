@@ -45,28 +45,12 @@ export class HeaderComponent {
      * Oninit we subscribe to the url, so when the url changes the header is updated
      */
     ngOnInit(): void {
-        if (!this.route.children || this.route.children.length === 0) {
-            this.groups = true;
-        } else {
-            this.route.children[0].url.subscribe((url: UrlSegment[]) => {
-                this.granularity = url[0].path;
-
-                if (url.length === 4) {
-                    this.year = +url[1].path;
-                    this.month = +url[2].path;
-                    this.day = +url[3].path;
-
-                    this.active = moment(this.year + '-' + this.month + '-' + this.day, DATE_FORMAT);
-                }
-
-                this.monthYearDisplay = this.active.format('MMMM YYYY');
-            });
-        }
-
         this.dashboardService.current.subscribe(date => {
             this.active = date;
             this.monthYearDisplay = date.format('MMMM YYYY');
         });
+
+        this.granularity = this.dashboardService.granularity;
     }
 
     /**
@@ -99,6 +83,7 @@ export class HeaderComponent {
                 this.active.add(index, 'months');
                 break;
         }
+
         this.changeDate(this.active);
     }
 
@@ -108,7 +93,7 @@ export class HeaderComponent {
      */
     public changeDate(moment: moment.Moment): void {
         this.monthYearDisplay = this.active.format('MMMM YYYY');
-        this.dashboardService.current.next(this.active);
+        this.dashboardService.changeDate(this.active);
     }
 
     /**

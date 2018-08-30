@@ -17,9 +17,6 @@ import { Day } from '../../dashboard/models/day.model';
 import { SessionService } from './session.service';
 
 @Injectable()
-
-
-
 /**
  * Main service for parsing, holding, and maintaining our information
  */
@@ -40,8 +37,8 @@ export class CoreCacheService {
      * When the user is authorized, this methods should be called to make a request to the payload
      */
     OnAuth(): Promise<PayloadModel> {
-        //this.promiseForData = this.tempPayload
-        this.promiseForData = this.Payload()
+        this.promiseForData = this.tempPayload
+        // this.promiseForData = this.Payload()
                 .then(p => {
                     p.Events = generateEvents();
                     this.payload = p;

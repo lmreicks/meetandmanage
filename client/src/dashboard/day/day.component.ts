@@ -72,6 +72,7 @@ export class DayComponent {
         };
 
         this.day = this.map.has(date) ? this.map.get(date) : { day: dateValue, events: [], todos: [], workouts: []}
+        this.day.day = dateValue;
     }
 
     public changeDate(date: Date): void {

@@ -29,16 +29,16 @@ export class EventService {
      * @returns { Promise<ApiEvent> } Newly created event
      */
     CreateEvent(event: ApiCreateEvent): Promise<ApiEvent> {
-        return this.http.post(this.url, event)
-            .map(res => {
-                let apiEvent = res.json();
+        /// return this.http.post(this.url, event)
+            // .map(res => {
+            return Promise.resolve(event).then(res => {
+                let apiEvent = res as ApiEvent;
 
                 this.coreCache.AddEvent(apiEvent);
                 return apiEvent;
             }, err => {
-                return {};
-            })
-            .toPromise();
+                return {} as ApiEvent;
+            });
     }
 
     /**

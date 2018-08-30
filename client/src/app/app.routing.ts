@@ -14,13 +14,13 @@ export const APP_ROUTES: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'event', children: [
-        { path: ':id', component: EditEventComponent },
-        { path: 'create', component: EditEventComponent }
+        { path: 'create', component: EditEventComponent },
+        { path: ':id', component: EditEventComponent }
     ]},
     { path: 'group', children: [
         { path: '', component: GroupsComponent },
-        { path: ':id', component: GroupComponent },
-        { path: 'create', component: CreateGroupComponent }
+        { path: 'create', component: CreateGroupComponent },
+        { path: ':id', component: GroupComponent }
     ]},
     { path: 'not-found', component: NotFoundComponent },
     { path: '**', redirectTo: 'dashboard' }

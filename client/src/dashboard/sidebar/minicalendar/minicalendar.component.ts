@@ -77,7 +77,9 @@ export class MiniCalendarComponent {
 
             let day = {
                 day: dateValue,
-                events: []
+                events: [],
+                todos: [],
+                workouts: []
             };
 
             week.days.push(day);
